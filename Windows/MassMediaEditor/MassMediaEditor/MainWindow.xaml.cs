@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,6 +32,11 @@ namespace MassMediaEditor
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            if (rdoPictures.IsChecked == true)
+            {
+                dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+            }
+
             dlg.Multiselect = true;
             
 
@@ -39,52 +45,40 @@ namespace MassMediaEditor
 
             if (result == true)
             {
-                var fileContent = string.Empty;
-
                 lstvInfoBox.IsEnabled = true;
-                lstvInfoBox.Items.Clear();
+                List<Picture> pictures = new List<Picture>();
 
-                string filePath = dlg.FileName;
-                var file = ShellFile.FromFilePath(filePath);
-
-                List<String> ImageHeaders = new List<string>(new string[] {"File Name" ,"Title", "Subject", "Rating", "Tags", "Comments", "Authors", "Date Taken", "Program Name", "Date Aquired", "Copyright" });
-
-                for (int index = 0; index < ImageHeaders.Count; index++)
-                {
-                    if (((GridView)lstvInfoBox.View).Columns.Count <= index)
-                    {
-                        GridViewColumn newCol = new GridViewColumn();
-                        newCol.Width = double.NaN; //Auto-size the width of the columns
-
-                        //Next
-                        //newCol.DisplayMemberBinding
-
-                        ((GridView)lstvInfoBox.View).Columns.Add(newCol);
-                    }
-
-                    ((GridView)lstvInfoBox.View).Columns[index].Header = ImageHeaders[index];
+                foreach (string fp in dlg.FileNames)
+                {                    
+                    Picture p = new Picture(fp);
+                    pictures.Add(p);
                 }
 
-                // Set the list view to the opened files
-                lstvInfoBox.ItemsSource = dlg.SafeFileNames;
+                GridView  gv = GenerateGridView();
 
-                
+                lstvInfoBox.View = gv;
+                lstvInfoBox.ItemsSource = pictures;
             }
         }
 
-        private void RdoPictures_Checked(object sender, RoutedEventArgs e)
+
+        //ToDo: This needs to either be mutable for types, or have one for each type
+        private static GridView GenerateGridView()
         {
+            Picture p = new Picture();
+            GridView gv = new GridView();
+            Dictionary<string,Binding>  headers =  p.GenerateBindings();
 
-        }
+            for (int index = 0; index < headers.Count; index++)
+            {
+                GridViewColumn newCol = new GridViewColumn();
+                newCol.Header = headers.Keys.ElementAt(index).ToString();
+                newCol.Width = double.NaN; //Auto-size the width of the columns
+                newCol.DisplayMemberBinding = headers.Values.ElementAt(index);
+                gv.Columns.Add(newCol);
+            }
 
-        private void RdoVideo_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void RdoAudio_Checked(object sender, RoutedEventArgs e)
-        {
-
+            return gv;
         }
     }
 }

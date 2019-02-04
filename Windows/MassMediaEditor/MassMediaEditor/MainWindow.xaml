@@ -16,8 +16,8 @@
             </ListView.View>
         </ListView>
         <Button x:Name="btnSettings" Content="Settings" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75"/>
-        <RadioButton x:Name="rdoPictures" Content="Pictures" HorizontalAlignment="Left" Margin="10,354,0,0" VerticalAlignment="Top" Checked="RdoPictures_Checked"/>
-        <RadioButton x:Name="rdoAudio" Content="Audio" HorizontalAlignment="Left" Margin="10,374,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.035,3.6" Checked="RdoAudio_Checked"/>
-        <RadioButton x:Name="rdoVideo" Content="Video" HorizontalAlignment="Left" Margin="10,394,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.329,-1.8" Checked="RdoVideo_Checked"/>
+        <RadioButton x:Name="rdoPictures" Content="Pictures" HorizontalAlignment="Left" Margin="10,354,0,0" VerticalAlignment="Top" />
+        <RadioButton x:Name="rdoAudio" Content="Audio" HorizontalAlignment="Left" Margin="10,374,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.035,3.6" />
+        <RadioButton x:Name="rdoVideo" Content="Video" HorizontalAlignment="Left" Margin="10,394,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.329,-1.8" />
     </Grid>
 </Window>
