@@ -4,15 +4,15 @@
 winexe
 C#
 .cs
-X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Release\
 MassMediaEditor
 none
 false
-DEBUG;TRACE
+TRACE
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\App.xaml
 2651524704
 
-12-1236140986
+8-160016333
 16125476801
 EditWindow.xaml;MainWindow.xaml;
 

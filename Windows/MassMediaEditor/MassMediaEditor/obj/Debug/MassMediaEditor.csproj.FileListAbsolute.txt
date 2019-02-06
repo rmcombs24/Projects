@@ -48,3 +48,5 @@ X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEdi
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.csproj.CopyComplete
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.exe
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.pdb
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\EditWindow.g.cs
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\EditWindow.baml

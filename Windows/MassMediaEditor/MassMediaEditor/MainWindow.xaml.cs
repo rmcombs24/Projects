@@ -32,10 +32,13 @@ namespace MassMediaEditor
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
             if (rdoPictures.IsChecked == true)
             {
                 dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
             }
+            else if (rdoAudio.IsChecked == true) { }
+            else if (rdoVideo.IsChecked == true) { }
 
             dlg.Multiselect = true;
             
@@ -57,7 +60,10 @@ namespace MassMediaEditor
                 GridView  gv = GenerateGridView();
 
                 lstvInfoBox.View = gv;
+                
                 lstvInfoBox.ItemsSource = pictures;
+
+                btnEdit.IsEnabled = true;   
             }
         }
 
@@ -67,7 +73,10 @@ namespace MassMediaEditor
         {
             Picture p = new Picture();
             GridView gv = new GridView();
-            Dictionary<string,Binding>  headers =  p.GenerateBindings();
+            Dictionary<String, Binding>  headers =  p.GenerateBindings();
+            Window window = Application.Current.MainWindow;
+            DataTemplate s = (DataTemplate)window.FindResource("dtmplCheckbox");
+            gv.Columns.Add(new GridViewColumn { Header = String.Empty, CellTemplate = s });
 
             for (int index = 0; index < headers.Count; index++)
             {
@@ -79,6 +88,20 @@ namespace MassMediaEditor
             }
 
             return gv;
+        }
+
+
+        private void BtnExit_Click(object sender, RoutedEventArgs e)
+        {
+            System.Environment.Exit(0);
+        }
+
+        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            this.IsEnabled = false;
+            EditWindow editWindow = new EditWindow();
+
+            editWindow.Show();
         }
     }
 }

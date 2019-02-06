@@ -26,7 +26,8 @@ namespace MassMediaEditor
         public String Subject { get; set; }
         public String Comments { get; set; }
         public uint? Rating { get; set; }
-        public List<String> Tags { get; set; }
+        public String Tags { get; set; }
+        public bool isChecked { get; set; }
 
         //ToDo: Add a method that smartly detects the subclass based off of the extension of the filetype.
     }
@@ -42,10 +43,7 @@ namespace MassMediaEditor
          * Copyright
          */
 
-        public Picture()
-        {
-
-        }
+        public Picture(){/*Default Constructor*/}
 
         public Picture(string filePath)
         {
@@ -64,14 +62,15 @@ namespace MassMediaEditor
             Rating      = file.Properties.System.Rating.Value;
 
             //DateTaken   = file.Properties.System.DateAccessed.Value;
-            //Tags        = file.Properties.System.Tags;
+
+            string delim = ";";
+            Tags = file.Properties.System.Keywords.Value.ToList().Aggregate((i, j) => i + delim + j);
         }
 
         public Dictionary<String, Binding> GenerateBindings()
         {
             var d = new Dictionary<String, Binding>();
 
-    
             d.Add("File Name", new Binding("FileName"));
             d.Add("Title", new Binding("Title"));
             d.Add("Subject", new Binding("Subject"));
@@ -80,6 +79,7 @@ namespace MassMediaEditor
             d.Add("Author", new Binding("Author"));
             d.Add("Date Aquired", new Binding("DateAquired"));
             d.Add("Copyright", new Binding("Copyright"));
+            d.Add("Tags", new Binding("Tags"));
 
             return d;
         }
