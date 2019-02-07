@@ -42,13 +42,11 @@ namespace MassMediaEditor
 
             dlg.Multiselect = true;
             
-
             // Display OpenFileDialog by calling ShowDialog method 
             Nullable<bool> result = dlg.ShowDialog();
 
             if (result == true)
             {
-                lstvInfoBox.IsEnabled = true;
                 List<Picture> pictures = new List<Picture>();
 
                 foreach (string fp in dlg.FileNames)
@@ -59,9 +57,9 @@ namespace MassMediaEditor
 
                 GridView  gv = GenerateGridView();
 
-                lstvInfoBox.View = gv;
-                
+                lstvInfoBox.View = gv;                
                 lstvInfoBox.ItemsSource = pictures;
+                lstvInfoBox.IsEnabled = true;
 
                 btnEdit.IsEnabled = true;   
             }

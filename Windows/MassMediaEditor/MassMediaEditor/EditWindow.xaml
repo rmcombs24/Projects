@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
+        Closed="WndEdit_Closed"
         Title="Edit" Height="103.121" Width="771">
     <Grid Background="#FF5D5A5A">
-        <ComboBox x:Name="ddlFields" HorizontalAlignment="Left" Margin="117,10,0,0" VerticalAlignment="Top" Width="155" RenderTransformOrigin="0.51,0.21" Height="20"/>
+        <ComboBox x:Name="ddlFields" HorizontalAlignment="Left" Margin="117,10,0,0" VerticalAlignment="Top" Width="155" RenderTransformOrigin="0.51,0.21" Height="20" SelectionChanged="ddlFields_SelectionChanged"/>
         <Label x:Name="lblFields" Content="Media Properties:" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.499,-0.111" Background="{x:Null}" Foreground="White"/>
         <TextBox x:Name="txtFieldData" HorizontalAlignment="Left" Height="48" Margin="277,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471"/>
-        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="117,35,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.043,-0.209" Height="23"/>
-        <Button x:Name="btnClose" Content="Close" HorizontalAlignment="Left" Margin="197,35,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="BtnClose_Click"/>
+        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="117,35,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.043,-0.209" Height="23" Click="BtnSave_Click"/>
+        <Button x:Name="btnClose" Content="Close" Click="btnClose_Click" HorizontalAlignment="Left" Margin="197,35,0,0" VerticalAlignment="Top" Width="75" Height="23"/>
     </Grid>
 </Window>
