@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using System.Windows.Controls.Primitives;
 
 namespace MassMediaEditor
 {
@@ -24,6 +25,9 @@ namespace MassMediaEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        List<object> selectedItems = new List<object>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -32,7 +36,7 @@ namespace MassMediaEditor
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-
+            
             if (rdoPictures.IsChecked == true)
             {
                 dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
@@ -55,28 +59,26 @@ namespace MassMediaEditor
                     pictures.Add(p);
                 }
 
-                GridView  gv = GenerateGridView();
-
-                lstvInfoBox.View = gv;                
-                lstvInfoBox.ItemsSource = pictures;
-                lstvInfoBox.IsEnabled = true;
-
-                btnEdit.IsEnabled = true;   
+                GenerateGridView(lvInfoBox, pictures);
             }
         }
 
 
-        //ToDo: This needs to either be mutable for types, or have one for each type
-        private static GridView GenerateGridView()
+        //ToDo: This needs to either be mutable for multiple types, or have one for each.
+        private  void GenerateGridView(ListView lv, List<Picture> pictures)
         {
             Picture p = new Picture();
             GridView gv = new GridView();
-            Dictionary<String, Binding>  headers =  p.GenerateBindings();
-            Window window = Application.Current.MainWindow;
-            DataTemplate s = (DataTemplate)window.FindResource("dtmplCheckbox");
-            gv.Columns.Add(new GridViewColumn { Header = String.Empty, CellTemplate = s });
+            Dictionary <String, Binding>  headers =  p.GenerateBindings();
+            DataTemplate dt = (DataTemplate)lv.FindResource("tmplCheckbox");
+            DependencyObject depObj = dt.LoadContent();
 
-            for (int index = 0; index < headers.Count; index++)
+            ((CheckBox)depObj).SetBinding(ToggleButton.IsCheckedProperty, headers.Values.ElementAt(0));
+
+            gv.Columns.Add(
+                new GridViewColumn { Header = String.Empty, CellTemplate = dt });
+
+            for (int index = 1; index < headers.Count; index++)
             {
                 GridViewColumn newCol = new GridViewColumn();
                 newCol.Header = headers.Keys.ElementAt(index).ToString();
@@ -85,7 +87,9 @@ namespace MassMediaEditor
                 gv.Columns.Add(newCol);
             }
 
-            return gv;
+            lv.View = gv;
+            lv.ItemsSource = pictures;
+            lv.IsEnabled = true;
         }
 
 
@@ -100,6 +104,24 @@ namespace MassMediaEditor
             EditWindow editWindow = new EditWindow();
 
             editWindow.Show();
+        }
+
+        private void checkBox_Checking(object sender, RoutedEventArgs e)
+        {
+            var chkBox = (CheckBox) e.OriginalSource;
+            var dataSource = (Picture) chkBox.DataContext;
+
+            if (chkBox.IsChecked == true && !selectedItems.Contains(dataSource))
+            {
+                selectedItems.Add(dataSource);
+            }
+            else if ((chkBox.IsChecked == false && selectedItems.Contains(dataSource)))
+            {
+                selectedItems.Remove(dataSource);
+            }
+
+            //If no files are selected turn off the edit button, otherwise keep it on.
+            btnEdit.IsEnabled = selectedItems.Count > 0 ? btnEdit.IsEnabled = true : btnEdit.IsEnabled = false;            
         }
     }
 }

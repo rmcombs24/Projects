@@ -27,7 +27,7 @@ namespace MassMediaEditor
         {
             InitializeComponent();
 
-            GridView gv = (GridView)((MainWindow)Application.Current.MainWindow).lstvInfoBox.View;
+            GridView gv = (GridView)((MainWindow)Application.Current.MainWindow).lvInfoBox.View;
 
             List<String> properties = new List<string>();
 
@@ -60,6 +60,11 @@ namespace MassMediaEditor
                     break;
                 }
             }
+        }
+
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)

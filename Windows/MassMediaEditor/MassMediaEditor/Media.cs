@@ -64,13 +64,22 @@ namespace MassMediaEditor
             //DateTaken   = file.Properties.System.DateAccessed.Value;
 
             string delim = ";";
-            Tags = file.Properties.System.Keywords.Value.ToList().Aggregate((i, j) => i + delim + j);
+
+            if (file.Properties.System.Keywords.Value != null)
+            {
+                Tags = file.Properties.System.Keywords.Value.ToList().Aggregate((i, j) => i + delim + j);
+            }
+            else
+            {
+                Tags = String.Empty;
+            }
         }
 
         public Dictionary<String, Binding> GenerateBindings()
         {
             var d = new Dictionary<String, Binding>();
 
+            d.Add(String.Empty, new Binding("isChecked"));
             d.Add("File Name", new Binding("FileName"));
             d.Add("Title", new Binding("Title"));
             d.Add("Subject", new Binding("Subject"));
