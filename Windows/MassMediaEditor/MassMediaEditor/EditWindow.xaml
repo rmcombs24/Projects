@@ -13,5 +13,6 @@
         <TextBox x:Name="txtFieldData" HorizontalAlignment="Left" Height="48" Margin="277,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471"/>
         <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="117,35,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.043,-0.209" Height="23" Click="BtnSave_Click"/>
         <Button x:Name="btnClose" Content="Close" Click="btnClose_Click" HorizontalAlignment="Left" Margin="197,35,0,0" VerticalAlignment="Top" Width="75" Height="23"/>
+        <Label x:Name="lblUpdate" Content="Changes saved." HorizontalAlignment="Left" Margin="11,32,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.158,0.423" Width="102" Foreground="Red"/>
     </Grid>
 </Window>

@@ -26,7 +26,7 @@ namespace MassMediaEditor
     public partial class MainWindow : Window
     {
 
-        List<object> selectedItems = new List<object>();
+        public List<object> selectedItems = new List<object>();
 
         public MainWindow()
         {
@@ -72,12 +72,14 @@ namespace MassMediaEditor
             Dictionary <String, Binding>  headers =  p.GenerateBindings();
             DataTemplate dt = (DataTemplate)lv.FindResource("tmplCheckbox");
             DependencyObject depObj = dt.LoadContent();
+            CheckBox chkAll = new CheckBox() { Name = "chkSelectAll" };
+            chkAll.Checked += checkBox_Checking;
+            chkAll.Unchecked += checkBox_Checking;
+            
+           ((CheckBox)depObj).SetBinding(ToggleButton.IsCheckedProperty, headers.Values.ElementAt(0));
 
-            ((CheckBox)depObj).SetBinding(ToggleButton.IsCheckedProperty, headers.Values.ElementAt(0));
-
-            gv.Columns.Add(
-                new GridViewColumn { Header = String.Empty, CellTemplate = dt });
-
+            gv.Columns.Add(new GridViewColumn { Header = chkAll, CellTemplate = dt });
+            
             for (int index = 1; index < headers.Count; index++)
             {
                 GridViewColumn newCol = new GridViewColumn();
@@ -92,7 +94,6 @@ namespace MassMediaEditor
             lv.IsEnabled = true;
         }
 
-
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
             System.Environment.Exit(0);
@@ -100,18 +101,27 @@ namespace MassMediaEditor
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            this.IsEnabled = false;
             EditWindow editWindow = new EditWindow();
 
-            editWindow.Show();
+            editWindow.ShowDialog();
+            lvInfoBox.Items.Refresh();
         }
 
         private void checkBox_Checking(object sender, RoutedEventArgs e)
         {
             var chkBox = (CheckBox) e.OriginalSource;
-            var dataSource = (Picture) chkBox.DataContext;
+            var dataSource = (object) chkBox.DataContext; //Mutable
 
-            if (chkBox.IsChecked == true && !selectedItems.Contains(dataSource))
+            if (chkBox.Name == "chkSelectAll" && chkBox.IsChecked == true)
+            {
+                foreach (object item in lvInfoBox.Items)
+                {
+
+                    ((Media)item).isChecked = true;
+                    lvInfoBox.Items.Refresh();
+                }
+            }
+            else if (chkBox.IsChecked == true && !selectedItems.Contains(dataSource))
             {
                 selectedItems.Add(dataSource);
             }
@@ -121,7 +131,17 @@ namespace MassMediaEditor
             }
 
             //If no files are selected turn off the edit button, otherwise keep it on.
-            btnEdit.IsEnabled = selectedItems.Count > 0 ? btnEdit.IsEnabled = true : btnEdit.IsEnabled = false;            
+            btnEdit.IsEnabled = selectedItems.Count > 0 ? btnEdit.IsEnabled = true : btnEdit.IsEnabled = false;
+        }
+
+        private void BtnCommit_Click(object sender, RoutedEventArgs e)
+        {
+            Media mFile = new Media();
+
+            foreach (object item in selectedItems)
+            {
+                mFile.WriteToShellFile(item);
+            }
         }
     }
 }

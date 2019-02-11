@@ -30,8 +30,31 @@ namespace MassMediaEditor
         public bool isChecked { get; set; }
 
         //ToDo: Add a method that smartly detects the subclass based off of the extension of the filetype.
-    }
+        public void WriteToShellFile(object mediaFile)
+        {
+            ShellFile shellFile = ShellFile.FromFilePath(((Media)mediaFile).FilePath);
 
+            //shellFile.Properties.System.FileName.Value      = ((Media)mediaFile).FileName; //ToDo: Add FileName Editing later, as it might be better for the Append/Prepend program.
+            shellFile.Properties.System.Title.Value         = ((Media)mediaFile).Title;
+            shellFile.Properties.System.Subject.Value       = ((Media)mediaFile).Subject;
+            shellFile.Properties.System.Comment.Value       = ((Media)mediaFile).Comments;
+            shellFile.Properties.System.Rating.Value        = ((Media)mediaFile).Rating;
+
+            if (mediaFile is Picture)
+            {
+
+                //shellFile.Properties.System.Author.Value = ((Picture)mediaFile).Author;
+                //shellFile.Properties.System.ApplicationName.Value = ((Picture)mediaFile).ApplicationName;
+                //shellFile.Properties.System.Copyright.Value = ((Picture)mediaFile).Copyright;
+                //shellFile.Properties.System.DateAcquired.Value = ((Media)mediaFile).DateAquired;
+
+            }
+            else if (mediaFile is Audio) { }
+            else if (mediaFile is Video) { }
+            
+        }
+    }
+    
     class Picture : Media
     {
         /* Editable Extened properties for Images (This does not include Camera/Photo settings)
@@ -58,6 +81,8 @@ namespace MassMediaEditor
             Comments    = file.Properties.System.Comment.Value;
             ProgramName = file.Properties.System.ApplicationName.Value;
             Copyright   = file.Properties.System.Copyright.Value;
+
+
             DateAquired = file.Properties.System.DateAcquired.Value;
             Rating      = file.Properties.System.Rating.Value;
 
@@ -109,4 +134,5 @@ namespace MassMediaEditor
     {
 
     }
+
 }
