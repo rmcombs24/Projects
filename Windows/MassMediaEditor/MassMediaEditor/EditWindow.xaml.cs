@@ -29,18 +29,20 @@ namespace MassMediaEditor
             InitializeComponent();
             lblUpdate.Visibility = Visibility.Hidden;
 
-            GridView gv = (GridView)((MainWindow)Application.Current.MainWindow).lvInfoBox.View;
+            //GridView gv = (GridView)((MainWindow)Application.Current.MainWindow).lvInfoBox.View;
+            DataGrid dg = ((MainWindow)Application.Current.MainWindow).dgInfoBox;
+
 
             List<String> properties = new List<string>();
 
             //We're starting at base 2 for now because we're skipping the checkbox, and fileNames.
             //Filenames may be added under the prepend/appender program at a later date.
-            for (int index = 2; index < gv.Columns.Count(); index++) 
+            for (int index = 2; index < dg.Columns.Count(); index++) 
             {
-                if (((GridViewColumn)gv.Columns[index]).Header.ToString().Length > 0)
+                if ((dg.Columns[index]).Header.ToString().Length > 0)
                 {
-                    properties.Add(((GridViewColumn)gv.Columns[index]).Header.ToString());
-                    lstFieldValuePair.Add(new KeyValuePair<string, string>(((GridViewColumn)gv.Columns[index]).Header.ToString(), String.Empty));
+                    properties.Add((dg.Columns[index]).Header.ToString());
+                    lstFieldValuePair.Add(new KeyValuePair<string, string>((dg.Columns[index]).Header.ToString(), String.Empty));
                 }
             }
 

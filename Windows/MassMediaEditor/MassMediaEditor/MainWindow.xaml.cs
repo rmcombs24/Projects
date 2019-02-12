@@ -59,39 +59,54 @@ namespace MassMediaEditor
                     pictures.Add(p);
                 }
 
-                GenerateGridView(lvInfoBox, pictures);
+                GenerateGridView(dgInfoBox, pictures);
             }
         }
 
 
         //ToDo: This needs to either be mutable for multiple types, or have one for each.
-        private  void GenerateGridView(ListView lv, List<Picture> pictures)
+        private static void GenerateGridView(DataGrid dg, List<Picture> pictures)
         {
             Picture p = new Picture();
-            GridView gv = new GridView();
             Dictionary <String, Binding>  headers =  p.GenerateBindings();
-            DataTemplate dt = (DataTemplate)lv.FindResource("tmplCheckbox");
-            DependencyObject depObj = dt.LoadContent();
-            CheckBox chkAll = new CheckBox() { Name = "chkSelectAll" };
-            chkAll.Checked += checkBox_Checking;
-            chkAll.Unchecked += checkBox_Checking;
             
-           ((CheckBox)depObj).SetBinding(ToggleButton.IsCheckedProperty, headers.Values.ElementAt(0));
-
-            gv.Columns.Add(new GridViewColumn { Header = chkAll, CellTemplate = dt });
-            
-            for (int index = 1; index < headers.Count; index++)
+            for (int index = 0; index < headers.Count; index++)
             {
-                GridViewColumn newCol = new GridViewColumn();
-                newCol.Header = headers.Keys.ElementAt(index).ToString();
-                newCol.Width = double.NaN; //Auto-size the width of the columns
-                newCol.DisplayMemberBinding = headers.Values.ElementAt(index);
-                gv.Columns.Add(newCol);
+                if (index == 0)
+                {
+                    CheckBox chkAll = new CheckBox()
+                    {
+                        Name = "chkSelectAll"
+                    };
+
+                    chkAll.Checked += ChkAll_Checked;
+
+                    DataGridCheckBoxColumn dgChk = new DataGridCheckBoxColumn
+                    {
+                        Header = chkAll
+                    };
+
+                    dgChk.IsReadOnly = false;
+                    dgChk.Binding = headers.Values.ElementAt(index);
+                    dg.Columns.Add(dgChk);
+                }
+                else
+                {
+                    DataGridTextColumn dgCol = new DataGridTextColumn();
+                    dgCol.IsReadOnly = true;
+                    dgCol.Header = headers.Keys.ElementAt(index).ToString();
+                    dgCol.Binding = headers.Values.ElementAt(index);
+                    dg.Columns.Add(dgCol);
+                }
             }
 
-            lv.View = gv;
-            lv.ItemsSource = pictures;
-            lv.IsEnabled = true;
+            dg.ItemsSource = pictures;
+            dg.IsEnabled = true;
+        }
+
+        private static void ChkAll_Checked(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
@@ -104,7 +119,7 @@ namespace MassMediaEditor
             EditWindow editWindow = new EditWindow();
 
             editWindow.ShowDialog();
-            lvInfoBox.Items.Refresh();
+            dgInfoBox.Items.Refresh();
         }
 
         private void checkBox_Checking(object sender, RoutedEventArgs e)
@@ -114,11 +129,11 @@ namespace MassMediaEditor
 
             if (chkBox.Name == "chkSelectAll" && chkBox.IsChecked == true)
             {
-                foreach (object item in lvInfoBox.Items)
+                foreach (object item in dgInfoBox.Items)
                 {
 
                     ((Media)item).isChecked = true;
-                    lvInfoBox.Items.Refresh();
+                    dgInfoBox.Items.Refresh();
                 }
             }
             else if (chkBox.IsChecked == true && !selectedItems.Contains(dataSource))
@@ -141,6 +156,17 @@ namespace MassMediaEditor
             foreach (object item in selectedItems)
             {
                 mFile.WriteToShellFile(item);
+            }
+        }
+
+        private void DataGrid_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // Lookup for the source to be DataGridCell
+            if (e.OriginalSource.GetType() == typeof(DataGridCell))
+            {
+                // Starts the Edit on the row;
+                DataGrid grd = (DataGrid)sender;
+                grd.BeginEdit(e);
             }
         }
     }

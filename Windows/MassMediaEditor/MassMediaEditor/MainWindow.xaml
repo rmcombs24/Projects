@@ -13,18 +13,19 @@
         <Button x:Name="btnEdit" Content="Edit" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="BtnEdit_Click" IsEnabled="false" />
         <Button x:Name="btnCommit" Content="Commit" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="75" Click="BtnCommit_Click"/>
 
-        <ListView x:Name="lvInfoBox" HorizontalAlignment="Left" Height="399" Margin="90,10,0,0" VerticalAlignment="Top" Width="692" RenderTransformOrigin="1.521,0.671" Background="#FF9C9C9C">
+        <DataGrid x:Name="dgInfoBox" Height="400" Width="690" Margin="102,9,0,12" Background="#FF9C9C9C"
+                  GridLinesVisibility="None" 
+                  IsReadOnly="False" 
+                  AutoGenerateColumns="False"  
+                  CanUserAddRows="False" RenderTransformOrigin="0.498,0.365"/>
+        
+      <!--  <ListView x:Name="lvInfoBox" HorizontalAlignment="Left" Height="399" Margin="90,10,0,0" VerticalAlignment="Top" Width="692" RenderTransformOrigin="1.521,0.671" Background="#FF9C9C9C"                
             <ListView.Resources>
                 <DataTemplate x:Key="tmplCheckbox" DataType="{x:Type GridViewColumn}">
-                    <CheckBox x:Name="chkSelect" Checked="checkBox_Checking" Unchecked="checkBox_Checking" IsChecked="False"  />
+                    <CheckBox x:Name="chkSelect" IsChecked="False"  />
                 </DataTemplate>
             </ListView.Resources>
-            
-            <ListView.View>
-                <GridView>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        </ListView> -->
 
         <RadioButton x:Name="rdoPictures" Content="Pictures" HorizontalAlignment="Left" Margin="10,329,0,0" VerticalAlignment="Top" IsChecked="True" Foreground="White" />
         <RadioButton x:Name="rdoAudio" Content="Audio" HorizontalAlignment="Left" Margin="10,349,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.035,3.6" Foreground="White" />
