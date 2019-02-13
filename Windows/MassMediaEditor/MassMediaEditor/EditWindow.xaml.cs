@@ -27,12 +27,8 @@ namespace MassMediaEditor
         public EditWindow()
         {
             InitializeComponent();
-            lblUpdate.Visibility = Visibility.Hidden;
-
-            //GridView gv = (GridView)((MainWindow)Application.Current.MainWindow).lvInfoBox.View;
-            DataGrid dg = ((MainWindow)Application.Current.MainWindow).dgInfoBox;
-
-
+            
+            DataGrid dg = ((MainWindow)Application.Current.MainWindow).dgInfoBox;            
             List<String> properties = new List<string>();
 
             //We're starting at base 2 for now because we're skipping the checkbox, and fileNames.
@@ -46,6 +42,7 @@ namespace MassMediaEditor
                 }
             }
 
+            lblUpdate.Visibility = Visibility.Hidden;
             ddlFields.ItemsSource = properties;
         }
 
@@ -83,54 +80,57 @@ namespace MassMediaEditor
                 }
             }
             
-            foreach (object oItem in ((MainWindow)Application.Current.MainWindow).selectedItems)
+            foreach (object oItem in ((MainWindow)Application.Current.MainWindow).dgInfoBox.Items)
             {
-                foreach (KeyValuePair<string, string> kvp in updatedFields)
+                if(((Media)oItem).isChecked == true)
                 {
-                    //Since we're dealing with a mutable type of objects.
-                    //If the object has a valid property field then we can update the file
-                    //To have the new properties that were used in the edit window.
-
-                    switch (kvp.Key)
+                    foreach (KeyValuePair<string, string> kvp in updatedFields)
                     {
-                        case "Title":
-                            ((Media)oItem).Title = kvp.Value;
-                            break;
+                        //Since we're dealing with a mutable type of objects.
+                        //If the object has a valid property field then we can update the file
+                        //To have the new properties that were used in the edit window.
 
-                        case "Subject":
-                            ((Media)oItem).Subject = kvp.Value;
-                            break;
-
-                        case "Comment":
-                            ((Media)oItem).Comments = kvp.Value;
-                            break;
-
-                        case "Rating":
-                            ((Media)oItem).Rating = uint.Parse(kvp.Value);
-                            break;
-
-                        default:
-                            break;
-                    }
-
-                    if (oItem is Picture)
-                    {
                         switch (kvp.Key)
                         {
-                            case "Author":
+                            case "Title":
+                                ((Media)oItem).Title = kvp.Value;
                                 break;
-                            case "ApplicationName":
+
+                            case "Subject":
+                                ((Media)oItem).Subject = kvp.Value;
                                 break;
-                            case "Copyright":
+
+                            case "Comments":
+                                ((Media)oItem).Comments = kvp.Value;
                                 break;
-                            case "DateAcquired":
+
+                            case "Rating":
+                                ((Media)oItem).Rating = uint.Parse(kvp.Value);
                                 break;
+
                             default:
                                 break;
                         }
+
+                        if (oItem is Picture)
+                        {
+                            switch (kvp.Key)
+                            {
+                                case "Author":
+                                    break;
+                                case "ApplicationName":
+                                    break;
+                                case "Copyright":
+                                    break;
+                                case "DateAcquired":
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        else if (oItem is Audio) { }
+                        else if (oItem is Video) { }
                     }
-                    else if (oItem is Audio) { }
-                    else if (oItem is Video) { }
                 }
             }
         }

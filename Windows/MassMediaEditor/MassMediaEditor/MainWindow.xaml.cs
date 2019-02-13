@@ -32,40 +32,9 @@ namespace MassMediaEditor
         {
             InitializeComponent();
         }
-
-        private void BtnBrowse_Click(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            
-            if (rdoPictures.IsChecked == true)
-            {
-                dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
-            }
-            else if (rdoAudio.IsChecked == true) { }
-            else if (rdoVideo.IsChecked == true) { }
-
-            dlg.Multiselect = true;
-            
-            // Display OpenFileDialog by calling ShowDialog method 
-            Nullable<bool> result = dlg.ShowDialog();
-
-            if (result == true)
-            {
-                List<Picture> pictures = new List<Picture>();
-
-                foreach (string fp in dlg.FileNames)
-                {                    
-                    Picture p = new Picture(fp);
-                    pictures.Add(p);
-                }
-
-                GenerateGridView(dgInfoBox, pictures);
-            }
-        }
-
-
+  
         //ToDo: This needs to either be mutable for multiple types, or have one for each.
-        private static void GenerateGridView(DataGrid dg, List<Picture> pictures)
+        private void GenerateGridView(DataGrid dg, List<Picture> pictures)
         {
             Picture p = new Picture();
             Dictionary <String, Binding>  headers =  p.GenerateBindings();
@@ -74,28 +43,29 @@ namespace MassMediaEditor
             {
                 if (index == 0)
                 {
-                    CheckBox chkAll = new CheckBox()
-                    {
-                        Name = "chkSelectAll"
-                    };
-
+                    CheckBox chkAll = new CheckBox() { Name = "chkSelectAll" , IsChecked = false};
                     chkAll.Checked += ChkAll_Checked;
+                    chkAll.Unchecked += ChkAll_Checked;
 
                     DataGridCheckBoxColumn dgChk = new DataGridCheckBoxColumn
                     {
-                        Header = chkAll
+                        Header = chkAll,
+                        IsReadOnly = false,
+                        Binding = headers.Values.ElementAt(index)
                     };
 
-                    dgChk.IsReadOnly = false;
-                    dgChk.Binding = headers.Values.ElementAt(index);
                     dg.Columns.Add(dgChk);
+
                 }
                 else
                 {
-                    DataGridTextColumn dgCol = new DataGridTextColumn();
-                    dgCol.IsReadOnly = true;
-                    dgCol.Header = headers.Keys.ElementAt(index).ToString();
-                    dgCol.Binding = headers.Values.ElementAt(index);
+                    DataGridTextColumn dgCol = new DataGridTextColumn()
+                    {
+                        IsReadOnly = true,
+                        Header = headers.Keys.ElementAt(index).ToString(),
+                        Binding = headers.Values.ElementAt(index)
+                    };
+
                     dg.Columns.Add(dgCol);
                 }
             }
@@ -104,9 +74,65 @@ namespace MassMediaEditor
             dg.IsEnabled = true;
         }
 
-        private static void ChkAll_Checked(object sender, RoutedEventArgs e)
+        #region Events
+
+        private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            if (rdoPictures.IsChecked == true)
+            {
+                dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+            }
+            else if (rdoAudio.IsChecked == true) { }
+            else if (rdoVideo.IsChecked == true) { }
+
+            dlg.Multiselect = true;
+
+            // Display OpenFileDialog by calling ShowDialog method 
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                List<Picture> pictures = new List<Picture>();
+
+                foreach (string fp in dlg.FileNames)
+                {
+                    Picture p = new Picture(fp);
+                    pictures.Add(p);
+                }
+
+                GenerateGridView(dgInfoBox, pictures);
+
+                btnClear.IsEnabled = true;
+                btnCommit.IsEnabled = true;
+                btnEdit.IsEnabled = true;
+            }
+        }
+
+        private void ChkAll_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+
+            if (cb.IsChecked == true)
+            {
+                foreach (Media item in dgInfoBox.Items)
+                {
+                    item.isChecked = true;
+                }
+            }
+            else
+            {
+                foreach (Media item in dgInfoBox.Items)
+                {
+                    item.isChecked = false;
+                }
+            }
+
+            //Why do you have to commit twice?? That's so stupid. SO never lies though.
+            dgInfoBox.CommitEdit();
+            dgInfoBox.CommitEdit();
+            dgInfoBox.Items.Refresh();
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
@@ -118,56 +144,42 @@ namespace MassMediaEditor
         {
             EditWindow editWindow = new EditWindow();
 
-            editWindow.ShowDialog();
-            dgInfoBox.Items.Refresh();
-        }
-
-        private void checkBox_Checking(object sender, RoutedEventArgs e)
-        {
-            var chkBox = (CheckBox) e.OriginalSource;
-            var dataSource = (object) chkBox.DataContext; //Mutable
-
-            if (chkBox.Name == "chkSelectAll" && chkBox.IsChecked == true)
+            //I had this setup as enabled/disabled with a listview, but a datagrid wants to be a pain, so this will work for now.
+            if (dgInfoBox.ItemsSource.Cast<Media>().Where(x => x.isChecked == true).ToList().Count > 0)
             {
-                foreach (object item in dgInfoBox.Items)
-                {
-
-                    ((Media)item).isChecked = true;
-                    dgInfoBox.Items.Refresh();
-                }
+                editWindow.ShowDialog();
+                dgInfoBox.Items.Refresh();
             }
-            else if (chkBox.IsChecked == true && !selectedItems.Contains(dataSource))
-            {
-                selectedItems.Add(dataSource);
-            }
-            else if ((chkBox.IsChecked == false && selectedItems.Contains(dataSource)))
-            {
-                selectedItems.Remove(dataSource);
-            }
-
-            //If no files are selected turn off the edit button, otherwise keep it on.
-            btnEdit.IsEnabled = selectedItems.Count > 0 ? btnEdit.IsEnabled = true : btnEdit.IsEnabled = false;
+            else { new MessageBoxMgr().ItemsRequiredMessage(); }
         }
 
         private void BtnCommit_Click(object sender, RoutedEventArgs e)
         {
-            Media mFile = new Media();
+            MessageBoxMgr mbMgr = new MessageBoxMgr(); 
 
-            foreach (object item in selectedItems)
+            if (dgInfoBox.ItemsSource.Cast<Media>().Where(x => x.isChecked == true).ToList().Count > 0)
             {
-                mFile.WriteToShellFile(item);
+                MessageBoxResult messageBoxCommit = mbMgr.CreateNewResult("Are you sure you want to commit these changes? This cannot be undone.", "Edit Confirmation", MessageBoxButton.YesNo);
+
+                if (messageBoxCommit == MessageBoxResult.Yes)
+                {
+                    Media mFile = new Media();
+
+                    foreach (Media item in dgInfoBox.Items)
+                    {
+                        if (item.isChecked)
+                        {
+                            mFile.WriteToShellFile(item);
+                        }
+                    }
+
+                    mbMgr.CompleteMessage("Commit");
+                }
+                else { /*Do nothing*/ }
             }
+            else { mbMgr.ItemsRequiredMessage(); } 
         }
 
-        private void DataGrid_GotFocus(object sender, RoutedEventArgs e)
-        {
-            // Lookup for the source to be DataGridCell
-            if (e.OriginalSource.GetType() == typeof(DataGridCell))
-            {
-                // Starts the Edit on the row;
-                DataGrid grd = (DataGrid)sender;
-                grd.BeginEdit(e);
-            }
-        }
+        #endregion
     }
 }
