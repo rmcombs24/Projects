@@ -17,7 +17,8 @@ namespace MassMediaEditor
 
         public MessageBoxResult CompleteMessage (string completedOperation)
         {
-            return MessageBox.Show(String.Format("{0} Complete.", completedOperation), String.Format( "{0) Completed", completedOperation), MessageBoxButton.OK);
+            string tmp1 = string.Format("{0} Complete.", completedOperation);
+            return MessageBox.Show(tmp1, tmp1, MessageBoxButton.OK);
         }
 
         public MessageBoxResult CreateNewResult(string message, string title, MessageBoxButton buttonLayout)

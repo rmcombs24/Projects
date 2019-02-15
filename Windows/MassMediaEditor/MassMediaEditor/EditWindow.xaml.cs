@@ -57,10 +57,26 @@ namespace MassMediaEditor
         {
             foreach (KeyValuePair<string, string> kvp in lstFieldValuePair)
             {
-                if (kvp.Key == ddlFields.SelectedValue.ToString())
+                if (kvp.Key == ddlFields.SelectedValue.ToString() && !ddlFields.SelectedValue.ToString().Contains("Date"))
                 {
                     CurrentValuePair = kvp;
+                    txtFieldData.IsEnabled = true;
+                    txtFieldData.Visibility = Visibility.Visible;
+                    dpMediaEditor.IsEnabled = false;
+                    dpMediaEditor.Visibility = Visibility.Hidden;
+
                     txtFieldData.Text = kvp.Value.ToString();
+                    break;
+                }
+                else if (kvp.Key == ddlFields.SelectedValue.ToString() && ddlFields.SelectedValue.ToString().Contains("Date"))
+                {
+                    CurrentValuePair = kvp;
+                    txtFieldData.IsEnabled = false;
+                    txtFieldData.Visibility = Visibility.Hidden;
+                    dpMediaEditor.IsEnabled = true;
+                    dpMediaEditor.Visibility = Visibility.Visible;
+
+                    dpMediaEditor.Text = kvp.Value.ToString();
                     break;
                 }
             }
@@ -117,12 +133,18 @@ namespace MassMediaEditor
                             switch (kvp.Key)
                             {
                                 case "Author":
+                                   ((Picture)oItem).Authors = kvp.Value;
                                     break;
-                                case "ApplicationName":
+                                case "Program Name":
+                                    ((Picture)oItem).ProgramName = kvp.Value;
                                     break;
                                 case "Copyright":
+                                    ((Picture)oItem).Copyright= kvp.Value;
                                     break;
                                 case "DateAcquired":
+                                    //((Picture)oItem).DateAquired= kvp.Value;
+                                    break;
+                                case "DateTaken":
                                     break;
                                 default:
                                     break;

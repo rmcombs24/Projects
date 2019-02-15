@@ -55,7 +55,6 @@ namespace MassMediaEditor
                     };
 
                     dg.Columns.Add(dgChk);
-
                 }
                 else
                 {

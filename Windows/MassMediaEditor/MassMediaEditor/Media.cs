@@ -29,8 +29,7 @@ namespace MassMediaEditor
         public uint? Rating { get; set; }
         public String Tags { get; set; }
         public bool isChecked { get; set; }
-
-        //ToDo: Add a method that smartly detects the subclass based off of the extension of the filetype.
+        
         public void WriteToShellFile(object mediaFile)
         {
             ShellFile shellFile = ShellFile.FromFilePath(((Media)mediaFile).FilePath);
@@ -44,11 +43,25 @@ namespace MassMediaEditor
             if (mediaFile is Picture)
             {
 
-                //shellFile.Properties.System.Author.Value = ((Picture)mediaFile).Author;
-                //shellFile.Properties.System.ApplicationName.Value = ((Picture)mediaFile).ApplicationName;
-                //shellFile.Properties.System.Copyright.Value = ((Picture)mediaFile).Copyright;
-                //shellFile.Properties.System.DateAcquired.Value = ((Media)mediaFile).DateAquired;
+                /*
+                String[] authorArray = ((Picture)mediaFile).Authors.Split(',');
+                
+                if (authorArray.Length> 1)
+                {
+                    for (int index = 0; index < authorArray.Length; index++)
+                    {
+                        if (index < shellFile.Properties.System.Author.Value.Length)
+                        {
+                            shellFile.Properties.System.Author.Value[index] = authorArray[index];
+                        }
+                    }
+                }
+                */
 
+                shellFile.Properties.System.ApplicationName.Value = ((Picture)mediaFile).ProgramName;
+                shellFile.Properties.System.Copyright.Value = ((Picture)mediaFile).Copyright;
+                shellFile.Properties.System.DateAcquired.Value = ((Picture)mediaFile).DateAquired;
+                shellFile.Properties.System.DateAccessed.Value = ((Picture)mediaFile).DateTaken;
             }
             else if (mediaFile is Audio) { }
             else if (mediaFile is Video) { }
@@ -74,8 +87,8 @@ namespace MassMediaEditor
             ShellFile file = ShellFile.FromFilePath(filePath);
 
             FilePath    = filePath;
-            Authors     = file.Properties.System.Author.Value;
-
+            Authors     = (file.Properties.System.Author.Value != null) ? String.Join(",", file.Properties.System.Author.Value) : String.Empty;
+            
             FileName    = file.Properties.System.FileName.Value;
             Title       = file.Properties.System.Title.Value;
             Subject     = file.Properties.System.Subject.Value;
@@ -87,18 +100,8 @@ namespace MassMediaEditor
             DateAquired = file.Properties.System.DateAcquired.Value;
             Rating      = file.Properties.System.Rating.Value;
 
-            //DateTaken   = file.Properties.System.DateAccessed.Value;
-
-            string delim = ";";
-
-            if (file.Properties.System.Keywords.Value != null)
-            {
-                Tags = file.Properties.System.Keywords.Value.ToList().Aggregate((i, j) => i + delim + j);
-            }
-            else
-            {
-                Tags = String.Empty;
-            }
+            DateTaken   = file.Properties.System.DateAccessed.Value;
+            Tags        = (file.Properties.System.Keywords.Value != null) ? String.Join(",", file.Properties.System.Keywords.Value) : String.Empty;
         }
 
         public Dictionary<String, Binding> GenerateBindings()
@@ -111,18 +114,20 @@ namespace MassMediaEditor
             d.Add("Subject", new Binding("Subject"));
             d.Add("Rating", new Binding("Rating"));
             d.Add("Comments", new Binding("Comments"));
-            d.Add("Author", new Binding("Author"));
+            d.Add("Author", new Binding("Authors"));
+            d.Add("Program Name", new Binding("ProgramName"));
+            d.Add("Date Taken", new Binding("DateTaken"));
             d.Add("Date Aquired", new Binding("DateAquired"));
             d.Add("Copyright", new Binding("Copyright"));
             d.Add("Tags", new Binding("Tags"));
 
             return d;
         }
-        
-        public string[] Authors { get; set; }
+
+        public string Authors { get; set; }
         public String ProgramName { get; set; }
         public DateTime? DateAquired { get; set; }
-        public DateTime DateTaken { get; set; }
+        public DateTime? DateTaken { get; set; }
         public String Copyright { get; set; }
     }
 
@@ -135,5 +140,4 @@ namespace MassMediaEditor
     {
 
     }
-
 }
