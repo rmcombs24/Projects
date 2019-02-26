@@ -41,31 +41,28 @@ namespace MassMediaEditor
             shellFile.Properties.System.Rating.Value        = ((Media)mediaFile).Rating;
 
             if (mediaFile is Picture)
-            {
+            { 
+                String[] authorArray = ((Picture)mediaFile).Authors.Split(',').ToArray();
+                SanitizeArray(authorArray);
 
-                /*
-                String[] authorArray = ((Picture)mediaFile).Authors.Split(',');
-                
-                if (authorArray.Length> 1)
-                {
-                    for (int index = 0; index < authorArray.Length; index++)
-                    {
-                        if (index < shellFile.Properties.System.Author.Value.Length)
-                        {
-                            shellFile.Properties.System.Author.Value[index] = authorArray[index];
-                        }
-                    }
-                }
-                */
-
+                shellFile.Properties.System.Author.Value = authorArray;
                 shellFile.Properties.System.ApplicationName.Value = ((Picture)mediaFile).ProgramName;
                 shellFile.Properties.System.Copyright.Value = ((Picture)mediaFile).Copyright;
                 shellFile.Properties.System.DateAcquired.Value = ((Picture)mediaFile).DateAquired;
-                shellFile.Properties.System.DateAccessed.Value = ((Picture)mediaFile).DateTaken;
             }
+
+     //shellFile.Properties.System.DateAccessed.Value = ((Picture)mediaFile).DateTaken;
+
             else if (mediaFile is Audio) { }
             else if (mediaFile is Video) { }
             
+        }
+        private void SanitizeArray(String[] itemArray)
+        {
+            for (int index = 0; index < itemArray.Length; index++)
+            {
+                itemArray[index] = itemArray[index].Trim();
+            }
         }
     }
     
@@ -140,4 +137,6 @@ namespace MassMediaEditor
     {
 
     }
+
+
 }
