@@ -44,7 +44,7 @@ namespace MassMediaEditor
             { 
                 String[] authorArray = ((Picture)mediaFile).Authors.Split(',').ToArray();
                 SanitizeArray(authorArray);
-
+            
                 shellFile.Properties.System.Author.Value = authorArray;
                 shellFile.Properties.System.ApplicationName.Value = ((Picture)mediaFile).ProgramName;
                 shellFile.Properties.System.Copyright.Value = ((Picture)mediaFile).Copyright;
