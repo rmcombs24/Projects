@@ -50,3 +50,8 @@ X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEdi
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.pdb
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\EditWindow.g.cs
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\EditWindow.baml
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\bin\Debug\Newtonsoft.Json.dll
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\bin\Debug\EntityFramework.dll
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\bin\Debug\EntityFramework.SqlServer.dll
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\bin\Debug\EntityFramework.xml
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\bin\Debug\EntityFramework.SqlServer.xml

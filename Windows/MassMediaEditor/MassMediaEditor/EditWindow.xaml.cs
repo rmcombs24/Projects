@@ -76,9 +76,16 @@ namespace MassMediaEditor
                     dpMediaEditor.IsEnabled = true;
                     dpMediaEditor.Visibility = Visibility.Visible;
 
-                    dpMediaEditor.Text = kvp.Value.ToString();
+                    dpMediaEditor.SelectedDate = (String.IsNullOrEmpty(kvp.Value.ToString())) ? DateTime.Today : DateTime.Parse(kvp.Value.ToString());
+
                     break;
                 }
+
+                //else if () 
+                //{
+                //    IDEA: how fuckin cool would it be if you had a repeater for string array props that spits out a new field each time you press a button. 
+                //    That way the user never has to worry about what is the seperator, and the developer can just do author.value = array. No splits or messes 
+                //}
             }
 
             lblUpdate.Visibility = Visibility.Hidden;
@@ -111,17 +118,17 @@ namespace MassMediaEditor
                             case "Title":
                                 ((Media)oItem).Title = kvp.Value;
                                 break;
-
                             case "Subject":
                                 ((Media)oItem).Subject = kvp.Value;
                                 break;
-
                             case "Comments":
                                 ((Media)oItem).Comments = kvp.Value;
                                 break;
-
                             case "Rating":
                                 ((Media)oItem).Rating = uint.Parse(kvp.Value);
+                                break;
+                            case "Tags":
+                                ((Media)oItem).Tags= kvp.Value;
                                 break;
 
                             default:
@@ -139,13 +146,15 @@ namespace MassMediaEditor
                                     ((Picture)oItem).ProgramName = kvp.Value;
                                     break;
                                 case "Copyright":
-                                    ((Picture)oItem).Copyright= kvp.Value;
+                                    ((Picture)oItem).Copyright = kvp.Value;
                                     break;
-                                case "DateAcquired":
-                                    //((Picture)oItem).DateAquired= kvp.Value;
+                                case "Date Acquired":
+                                    ((Picture)oItem).DateAcquired = DateTime.Parse(kvp.Value);
                                     break;
-                                case "DateTaken":
+                                case "Date Taken":
+                                    ((Picture)oItem).DateTaken = DateTime.Parse(kvp.Value);
                                     break;
+
                                 default:
                                     break;
                             }
@@ -159,7 +168,8 @@ namespace MassMediaEditor
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            CurrentValuePair = new KeyValuePair<String, String>(CurrentValuePair.Key, txtFieldData.Text);
+            CurrentValuePair = (ddlFields.SelectedValue.ToString().Contains("Date")) ? 
+                new KeyValuePair<String, String>(CurrentValuePair.Key, dpMediaEditor.ToString()) : new KeyValuePair<String, String>(CurrentValuePair.Key, txtFieldData.Text);
             lstFieldValuePair[lstFieldValuePair.FindIndex(x => x.Key == CurrentValuePair.Key)] = CurrentValuePair;
 
             lblUpdate.Visibility = Visibility.Visible;

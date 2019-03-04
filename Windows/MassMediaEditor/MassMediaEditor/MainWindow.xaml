@@ -20,9 +20,10 @@
                   AutoGenerateColumns="False"  
                   CanUserAddRows="False" RenderTransformOrigin="0.498,0.365"/>
 
-        <RadioButton x:Name="rdoPictures" Content="Pictures" HorizontalAlignment="Left" Margin="10,329,0,0" VerticalAlignment="Top" IsChecked="True" Foreground="White" />
-        <RadioButton x:Name="rdoAudio" Content="Audio" HorizontalAlignment="Left" Margin="10,349,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.035,3.6" Foreground="White" />
+        <RadioButton x:Name="rdoPictures" Content="Pictures" HorizontalAlignment="Left" Margin="10,329,0,0" VerticalAlignment="Top" IsChecked="False" Foreground="White" />
+        <RadioButton x:Name="rdoAudio" Content="Audio" HorizontalAlignment="Left" Margin="10,349,0,0" VerticalAlignment="Top" IsChecked="True"  RenderTransformOrigin="-0.035,3.6" Foreground="White" />
         <RadioButton x:Name="rdoVideo" Content="Video" HorizontalAlignment="Left" Margin="10,369,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.329,-1.8" Foreground="White" />
+        
         <Button x:Name="btnExit" Content="Exit" HorizontalAlignment="Left" Margin="10,389,0,0" VerticalAlignment="Top" Width="75" Click="BtnExit_Click"/>
         <Button x:Name="btnSettings" Content="Settings" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False"/>

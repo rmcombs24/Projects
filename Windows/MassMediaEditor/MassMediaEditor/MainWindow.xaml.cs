@@ -3,6 +3,7 @@ using System.Data;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,7 +17,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
-using System.Windows.Controls.Primitives;
 
 namespace MassMediaEditor
 {
@@ -25,25 +25,36 @@ namespace MassMediaEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+        const string filePath = "C:\\Users\\Bob\\Desktop\\config.json";
 
         public List<object> selectedItems = new List<object>();
 
         public MainWindow()
         {
             InitializeComponent();
+            LoadStartupConfig();
         }
-  
+
         //ToDo: This needs to either be mutable for multiple types, or have one for each.
-        private void GenerateGridView(DataGrid dg, List<Picture> pictures)
+        private void GenerateGridView<T>(DataGrid dg, List<T> MediaObjects)
         {
-            Picture p = new Picture();
-            Dictionary <String, Binding>  headers =  p.GenerateBindings();
-            
+
+            if (dg.HasItems)
+            {
+                dg.ItemsSource = null;
+                dg.Columns.Clear();
+            }
+
+            Type type = MediaObjects.GetType().GetGenericArguments()[0];
+
+            Media m = new Media();
+            Dictionary<String, Binding> headers = m.GenerateBindings(type);
+
             for (int index = 0; index < headers.Count; index++)
             {
                 if (index == 0)
                 {
-                    CheckBox chkAll = new CheckBox() { Name = "chkSelectAll" , IsChecked = false};
+                    CheckBox chkAll = new CheckBox() { Name = "chkSelectAll", IsChecked = false };
                     chkAll.Checked += ChkAll_Checked;
                     chkAll.Unchecked += ChkAll_Checked;
 
@@ -69,8 +80,23 @@ namespace MassMediaEditor
                 }
             }
 
-            dg.ItemsSource = pictures;
+            dg.ItemsSource = MediaObjects;
+            dg.Items.Refresh();
             dg.IsEnabled = true;
+        }
+
+        private void LoadStartupConfig()
+        {
+            Settings settings;
+
+            // deserialize JSON directly from a file
+            using (StreamReader file = File.OpenText(filePath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                 settings = (Settings)serializer.Deserialize(file, typeof(Settings));
+            }
+
+            ReadConfig(settings);
         }
 
         #region Events
@@ -79,12 +105,9 @@ namespace MassMediaEditor
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
-            if (rdoPictures.IsChecked == true)
-            {
-                dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
-            }
-            else if (rdoAudio.IsChecked == true) { }
-            else if (rdoVideo.IsChecked == true) { }
+            if (rdoPictures.IsChecked == true)      { dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png"; }
+            else if (rdoAudio.IsChecked == true)    { dlg.Filter = "Audio files (*.mp3, *.wma) | *.mp3; *.wma;"; }
+            else if (rdoVideo.IsChecked == true)    { dlg.Filter = "Audio files (*.mp3, *.wma) | *.mp3; *.wma;"; }
 
             dlg.Multiselect = true;
 
@@ -154,7 +177,7 @@ namespace MassMediaEditor
 
         private void BtnCommit_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxMgr mbMgr = new MessageBoxMgr(); 
+            MessageBoxMgr mbMgr = new MessageBoxMgr();
 
             if (dgInfoBox.ItemsSource.Cast<Media>().Where(x => x.isChecked == true).ToList().Count > 0)
             {
@@ -164,21 +187,32 @@ namespace MassMediaEditor
                 {
                     Media mFile = new Media();
 
-                    foreach (Media item in dgInfoBox.Items)
-                    {
-                        if (item.isChecked)
+                        foreach (Media item in dgInfoBox.Items)
                         {
-                            mFile.WriteToShellFile(item);
+                            if (item.isChecked)
+                            {
+                                mFile.WriteToShellFile(item);
+                            }
                         }
-                    }
 
                     mbMgr.CompleteMessage("Commit");
                 }
                 else { /*Do nothing*/ }
             }
-            else { mbMgr.ItemsRequiredMessage(); } 
+            else { mbMgr.ItemsRequiredMessage(); }
         }
 
         #endregion
+
+        public struct Settings
+        {
+            public string Media_Type;
+            public string Theme;
+        }
+
+        private void ReadConfig(Settings config)
+        {
+            //Gotta find a way to instantiate this config easily.
+        }
     }
 }
