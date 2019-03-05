@@ -10,10 +10,14 @@
     <Grid Background="#FF5D5A5A">
         <ComboBox x:Name="ddlFields" HorizontalAlignment="Left" Margin="117,10,0,0" VerticalAlignment="Top" Width="155" RenderTransformOrigin="0.51,0.21" Height="20" SelectionChanged="ddlFields_SelectionChanged"/>
         <Label x:Name="lblFields" Content="Media Properties:" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.499,-0.111" Background="{x:Null}" Foreground="White"/>
-        <TextBox x:Name="txtFieldData" HorizontalAlignment="Left" Height="48" Margin="277,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" Visibility="Visible"/>
+        <TextBox x:Name="txtFieldData" HorizontalAlignment="Left" Height="48" Margin="277,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" Visibility="Hidden"/>
         <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="117,35,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.043,-0.209" Height="23" Click="BtnSave_Click"/>
         <Button x:Name="btnClose" Content="Close" Click="btnClose_Click" HorizontalAlignment="Left" Margin="197,35,0,0" VerticalAlignment="Top" Width="75" Height="23"/>
         <Label x:Name="lblUpdate" Content="Changes saved." HorizontalAlignment="Left" Margin="11,32,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.158,0.423" Width="102" Foreground="Red"/>
         <DatePicker x:Name="dpMediaEditor" HorizontalAlignment="Left" Margin="277,18,0,0" VerticalAlignment="Top" IsEnabled="False" SelectedDateFormat="Short" Visibility="Hidden" Height="40" Width="320" BorderThickness="1"/>
+        <StackPanel VerticalAlignment="Center" Visibility="Hidden" Name="spSlider">
+            <Slider x:Name="sldEditor"  Minimum="0" Maximum="100" Margin="285,0,223,0" RenderTransformOrigin="0,0" AutoToolTipPlacement="BottomRight" ValueChanged="SldEditor_ValueChanged"/>
+        </StackPanel>
+        <Label x:Name="lblSliderVal" Margin="545,0,0,0" Height="25"/>
     </Grid>
 </Window>

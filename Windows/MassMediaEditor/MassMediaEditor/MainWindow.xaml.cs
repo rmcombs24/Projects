@@ -48,7 +48,7 @@ namespace MassMediaEditor
             Type type = MediaObjects.GetType().GetGenericArguments()[0];
 
             Media m = new Media();
-            Dictionary<String, Binding> headers = m.GenerateBindings(type);
+            Dictionary<String, Binding> headers = m.GenerateBindings<T>(type);
 
             for (int index = 0; index < headers.Count; index++)
             {
@@ -85,20 +85,6 @@ namespace MassMediaEditor
             dg.IsEnabled = true;
         }
 
-        private void LoadStartupConfig()
-        {
-            Settings settings;
-
-            // deserialize JSON directly from a file
-            using (StreamReader file = File.OpenText(filePath))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                 settings = (Settings)serializer.Deserialize(file, typeof(Settings));
-            }
-
-            ReadConfig(settings);
-        }
-
         #region Events
 
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
@@ -116,15 +102,33 @@ namespace MassMediaEditor
 
             if (result == true)
             {
-                List<Picture> pictures = new List<Picture>();
-
-                foreach (string fp in dlg.FileNames)
+                //This feels wrong. I SHOULD be able to only call GenerateGridView once. 
+                //I am completely forgetting something about the mutable types. 
+                if (rdoAudio.IsChecked == true)
                 {
-                    Picture p = new Picture(fp);
-                    pictures.Add(p);
-                }
+                    List<Audio> audio = new List<Audio>();
 
-                GenerateGridView(dgInfoBox, pictures);
+                    foreach (string fp in dlg.FileNames)
+                    {
+                        Audio a = new Audio(fp);
+                        audio.Add(a);
+                    }
+
+                    GenerateGridView(dgInfoBox, audio);
+                }
+                else if (rdoPictures.IsChecked == true)
+                {
+                    List<Picture> pictures = new List<Picture>();
+
+                    foreach (string fp in dlg.FileNames)
+                    {
+                        Picture p = new Picture(fp);
+                        pictures.Add(p);
+                    }
+
+                    GenerateGridView(dgInfoBox, pictures);
+                }
+                else if (rdoVideo.IsChecked == true) { }
 
                 btnClear.IsEnabled = true;
                 btnCommit.IsEnabled = true;
@@ -204,15 +208,33 @@ namespace MassMediaEditor
 
         #endregion
 
+        #region Settings
+
         public struct Settings
         {
             public string Media_Type;
             public string Theme;
         }
 
+        private void LoadStartupConfig()
+        {
+            Settings settings;
+
+            // deserialize JSON directly from a file
+            using (StreamReader file = File.OpenText(filePath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                settings = (Settings)serializer.Deserialize(file, typeof(Settings));
+            }
+
+            ReadConfig(settings);
+        }
+
         private void ReadConfig(Settings config)
         {
             //Gotta find a way to instantiate this config easily.
         }
+
+        #endregion
     }
 }

@@ -28,7 +28,7 @@ namespace MassMediaEditor
         {
             InitializeComponent();
             
-            DataGrid dg = ((MainWindow)Application.Current.MainWindow).dgInfoBox;            
+            DataGrid dg = ((MainWindow)Application.Current.MainWindow).dgInfoBox; 
             List<String> properties = new List<string>();
 
             //We're starting at base 2 for now because we're skipping the checkbox, and fileNames.
@@ -57,12 +57,16 @@ namespace MassMediaEditor
         {
             foreach (KeyValuePair<string, string> kvp in lstFieldValuePair)
             {
-                if (kvp.Key == ddlFields.SelectedValue.ToString() && !ddlFields.SelectedValue.ToString().Contains("Date"))
+                if (kvp.Key == ddlFields.SelectedValue.ToString() && !(ddlFields.SelectedValue.ToString().Contains("Date") || ddlFields.SelectedValue.ToString().Contains("Rating")))
                 {
                     CurrentValuePair = kvp;
                     txtFieldData.IsEnabled = true;
-                    txtFieldData.Visibility = Visibility.Visible;
                     dpMediaEditor.IsEnabled = false;
+                    sldEditor.IsEnabled = false;
+
+                    txtFieldData.Visibility = Visibility.Visible;
+                    lblSliderVal.Visibility = Visibility.Hidden;
+                    spSlider.Visibility = Visibility.Hidden;
                     dpMediaEditor.Visibility = Visibility.Hidden;
 
                     txtFieldData.Text = kvp.Value.ToString();
@@ -72,11 +76,37 @@ namespace MassMediaEditor
                 {
                     CurrentValuePair = kvp;
                     txtFieldData.IsEnabled = false;
-                    txtFieldData.Visibility = Visibility.Hidden;
+                    sldEditor.IsEnabled = false;
                     dpMediaEditor.IsEnabled = true;
+
+                    spSlider.Visibility = Visibility.Hidden;
+                    lblSliderVal.Visibility = Visibility.Hidden;
+                    txtFieldData.Visibility = Visibility.Hidden;
                     dpMediaEditor.Visibility = Visibility.Visible;
 
                     dpMediaEditor.SelectedDate = (String.IsNullOrEmpty(kvp.Value.ToString())) ? DateTime.Today : DateTime.Parse(kvp.Value.ToString());
+                    break;
+                }
+                else if (kvp.Key == ddlFields.SelectedValue.ToString() && ddlFields.SelectedValue.ToString().Contains("Rating"))
+                {
+                    CurrentValuePair = kvp;
+
+                    double sliderVal = 0;
+
+                    txtFieldData.IsEnabled = false;
+                    dpMediaEditor.IsEnabled = false;
+                    sldEditor.IsEnabled = true;
+
+                    spSlider.Visibility = Visibility.Visible;
+                    lblSliderVal.Visibility = Visibility.Visible;
+                    txtFieldData.Visibility = Visibility.Hidden;
+                    dpMediaEditor.Visibility = Visibility.Hidden;
+
+                    if (double.TryParse(kvp.Value, out sliderVal))
+                    {
+                        sldEditor.Value = sliderVal;
+                        lblSliderVal.Content = "No Rating.";
+                    }
 
                     break;
                 }
@@ -86,6 +116,7 @@ namespace MassMediaEditor
                 //    IDEA: how fuckin cool would it be if you had a repeater for string array props that spits out a new field each time you press a button. 
                 //    That way the user never has to worry about what is the seperator, and the developer can just do author.value = array. No splits or messes 
                 //}
+
             }
 
             lblUpdate.Visibility = Visibility.Hidden;
@@ -125,7 +156,7 @@ namespace MassMediaEditor
                                 ((Media)oItem).Comments = kvp.Value;
                                 break;
                             case "Rating":
-                                ((Media)oItem).Rating = uint.Parse(kvp.Value);
+                                ((Media)oItem).Rating = (uint) Math.Round(double.Parse(kvp.Value));
                                 break;
                             case "Tags":
                                 ((Media)oItem).Tags= kvp.Value;
@@ -140,7 +171,7 @@ namespace MassMediaEditor
                             switch (kvp.Key)
                             {
                                 case "Author":
-                                   ((Picture)oItem).Authors = kvp.Value;
+                                    ((Picture)oItem).Authors = kvp.Value;
                                     break;
                                 case "Program Name":
                                     ((Picture)oItem).ProgramName = kvp.Value;
@@ -159,7 +190,47 @@ namespace MassMediaEditor
                                     break;
                             }
                         }
-                        else if (oItem is Audio) { }
+                        else if (oItem is Audio)
+                        {
+                            /* public String Creator */
+
+                            switch (kvp.Key)
+                            {
+                                case "Album":
+                                    ((Audio)oItem).Album = kvp.Value;
+                                    break;
+                                case "Album Artist":
+                                    ((Audio)oItem).AlbumArtist = kvp.Value;
+                                    break;
+                                case "BPM":
+                                    ((Audio)oItem).BPM = kvp.Value;
+                                    break;
+                                case "Contributing Artists":
+                                    ((Audio)oItem).ContributingArtists = kvp.Value;
+                                    break;
+                                case "Copyright":
+                                    ((Audio)oItem).Copyright = kvp.Value;
+                                    break;
+                                case "Composers":
+                                    ((Audio)oItem).Composers = kvp.Value;
+                                    break;
+                                case "Genre":
+                                    ((Audio)oItem).Genre = kvp.Value;
+                                    break;
+                                case "Publisher":
+                                    ((Audio)oItem).Publisher = kvp.Value;
+                                    break;
+                                case "Subtitle":
+                                    ((Audio)oItem).Subtitle = kvp.Value;
+                                    break;
+                                case "Track Number":
+                                    ((Audio)oItem).TrackNumber = uint.Parse(kvp.Value);
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        }
                         else if (oItem is Video) { }
                     }
                 }
@@ -167,17 +238,32 @@ namespace MassMediaEditor
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
-        {
-            CurrentValuePair = (ddlFields.SelectedValue.ToString().Contains("Date")) ? 
-                new KeyValuePair<String, String>(CurrentValuePair.Key, dpMediaEditor.ToString()) : new KeyValuePair<String, String>(CurrentValuePair.Key, txtFieldData.Text);
-            lstFieldValuePair[lstFieldValuePair.FindIndex(x => x.Key == CurrentValuePair.Key)] = CurrentValuePair;
+        { 
+            if (ddlFields.SelectedValue.ToString().Contains("Date"))
+            {
+                CurrentValuePair = new KeyValuePair<String, String>(CurrentValuePair.Key, dpMediaEditor.ToString());
+            }
+            else if (ddlFields.SelectedValue.ToString().Contains("Rating"))
+            {
+                CurrentValuePair = new KeyValuePair<String, String>(CurrentValuePair.Key, sldEditor.Value.ToString());
+            }
+            else
+            {
+                CurrentValuePair = new KeyValuePair<String, String>(CurrentValuePair.Key, txtFieldData.Text);
+            }
 
+            lstFieldValuePair[lstFieldValuePair.FindIndex(x => x.Key == CurrentValuePair.Key)] = CurrentValuePair;
             lblUpdate.Visibility = Visibility.Visible;
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void SldEditor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            lblSliderVal.Content = Math.Round(sldEditor.Value).ToString();
         }
     }
 }
