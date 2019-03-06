@@ -79,7 +79,12 @@ namespace MassMediaEditor
             d.Add(String.Empty, new Binding("isChecked"));
             d.Add("File Name",  new Binding("FileName"));
             d.Add("Title",      new Binding("Title"));
-            d.Add("Copyright",  new Binding("Copyright"));
+
+            if (false) //Overwrite readonly setting
+            {
+                d.Add("Copyright", new Binding("Copyright"));
+            }
+
             d.Add("Tags",       new Binding("Tags"));
             d.Add("Rating",     new Binding("Rating"));
             d.Add("Comments",   new Binding("Comments"));
@@ -104,11 +109,21 @@ namespace MassMediaEditor
                 d.Add("BPM",                    new Binding("BPM"));
                 d.Add("Publisher",              new Binding("Publisher"));
             }
-            /*
-            else if (Media is Video)
+            else if (MediaType.Name == "Video")
             {
 
-            } */
+                d.Add("Subtitle",               new Binding("Subtitle"));
+                d.Add("Contributing Artists",   new Binding("ContributingArtists"));
+                d.Add("Publisher",              new Binding("Publisher"));
+                d.Add("Directors",              new Binding("Directors"));
+                d.Add("Writers",                new Binding("Writers"));
+                d.Add("Genre",                  new Binding("Genre"));
+                d.Add("Media Created",          new Binding("MediaCreated"));
+                d.Add("Year",                   new Binding("Year"));
+                d.Add("Producers",              new Binding("Producers"));
+                d.Add("Author URL",             new Binding("AuthorURL"));
+                d.Add("Promotional URL",        new Binding("PromoURL"));
+            }
 
             return d;
         }
@@ -235,7 +250,73 @@ namespace MassMediaEditor
 
     class Video : Media
     {
+        /* Editable Extened properties for Audio Files
+            -----
+            Media
+            -----
+            Contributing Artists
+            Year
+            Genre
 
+            ------
+            Origin
+            ------
+            Directors
+            Producers
+            Writers
+            Publisher
+            Content Provider
+            Media Created
+            Author URL
+            Promotion URL
+         */
+
+        public String ContributingArtists { get; set; }
+        public uint? Year { get; set; }
+        public String Genre { get; set; }
+        public String Directors { get; set; }
+        public String Writers { get; set; }
+        public String Publisher { get; set; }
+        public DateTime? MediaCreated { get; set; }
+        public String Producers { get; set; }
+        public String AuthorURL { get; set; } 
+        public String PromoURL { get; set; }
+
+
+        public String Copyright { get; set; }
+
+        public Video (string filePath)
+        {
+            ShellFile file = ShellFile.FromFilePath(filePath);
+
+            FilePath = filePath;
+            FileName = file.Properties.System.FileName.Value;
+
+            ContributingArtists =   (file.Properties.System.Music.Artist.Value != null)     ? String.Join(",", file.Properties.System.Music.Artist.Value)   : String.Empty;
+            Directors =             (file.Properties.System.Video.Director.Value != null)   ? String.Join(",", file.Properties.System.Video.Director.Value) : String.Empty;
+            Producers =             (file.Properties.System.Media.Producer.Value != null)   ? String.Join(",", file.Properties.System.Media.Producer.Value) : String.Empty;
+            Writers =               (file.Properties.System.Media.Writer.Value != null)     ? String.Join(",", file.Properties.System.Media.Writer.Value)   : String.Empty;
+            Genre =                 (file.Properties.System.Music.Genre.Value != null)      ? String.Join(",", file.Properties.System.Music.Genre.Value)    : String.Empty;
+            Tags =                  (file.Properties.System.Keywords.Value != null)         ? String.Join(",", file.Properties.System.Keywords.Value)       : String.Empty;
+
+            MediaCreated = file.Properties.System.DateCreated.Value;
+
+            Comments = file.Properties.System.Comment.Value;
+            Copyright = file.Properties.System.Copyright.Value;
+            Rating = file.Properties.System.Rating.Value;
+            Title = file.Properties.System.Title.Value;
+
+            AuthorURL = file.Properties.System.Media.AuthorUrl.Value;
+            PromoURL = file.Properties.System.Media.PromotionUrl.Value;
+
+            Publisher = file.Properties.System.Media.Publisher.Value;
+            Year = file.Properties.System.Media.Year.Value;
+            Publisher = file.Properties.System.Media.Publisher.Value;
+            Subtitle = file.Properties.System.Media.Subtitle.Value;
+            //Creator                 = file.Properties.System.Media.Creator.Value; WTF WHERE DID THIS GO?!
+        }
+
+        public Video () {/*Default Constructor*/}
     }
 
 }

@@ -91,9 +91,9 @@ namespace MassMediaEditor
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
-            if (rdoPictures.IsChecked == true)      { dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png"; }
+            if (rdoPictures.IsChecked == true)      { dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png;"; }
             else if (rdoAudio.IsChecked == true)    { dlg.Filter = "Audio files (*.mp3, *.wma) | *.mp3; *.wma;"; }
-            else if (rdoVideo.IsChecked == true)    { dlg.Filter = "Audio files (*.mp3, *.wma) | *.mp3; *.wma;"; }
+            else if (rdoVideo.IsChecked == true)    { dlg.Filter = "Video files (*.mkv, *.mpg, *.mpeg, *.mp4, *.wmv ) | *.mkv; *.mpg; *.mpeg; *.mp4; *.wmv;"; }
 
             dlg.Multiselect = true;
 
@@ -128,7 +128,18 @@ namespace MassMediaEditor
 
                     GenerateGridView(dgInfoBox, pictures);
                 }
-                else if (rdoVideo.IsChecked == true) { }
+                else if (rdoVideo.IsChecked == true)
+                {
+                    List<Video> videos = new List<Video>();
+
+                    foreach (string fp in dlg.FileNames)
+                    {
+                        Video v = new Video(fp);
+                        videos.Add(v);
+                    }
+
+                    GenerateGridView(dgInfoBox, videos);
+                }
 
                 btnClear.IsEnabled = true;
                 btnCommit.IsEnabled = true;

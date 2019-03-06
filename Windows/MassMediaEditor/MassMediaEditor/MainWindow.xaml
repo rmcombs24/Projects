@@ -5,28 +5,59 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
-        Title="Mass Media Editor v0.0.5" Height="452" Width="800"
-        ResizeMode="CanMinimize" >
+        Title="Mass Media Editor v0.0.5" MinHeight="500" MinWidth="800" 
+        SizeToContent="WidthAndHeight">
 
-    <Grid Background="#FF5D5A5A">
-
-        <Button x:Name="btnBrowse" Content="Browse" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="BtnBrowse_Click"/>
-        <Button x:Name="btnEdit" Content="Edit" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="BtnEdit_Click" IsEnabled="False" />
-        <Button x:Name="btnCommit" Content="Commit" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="75" Click="BtnCommit_Click" IsEnabled="False"/>
-
-        <DataGrid x:Name="dgInfoBox" Height="400" Width="690" Margin="102,9,0,12" Background="#FF9C9C9C"
-                  GridLinesVisibility="None" 
-                  IsReadOnly="False" 
-                  AutoGenerateColumns="False"  
-                  CanUserAddRows="False" RenderTransformOrigin="0.498,0.365"/>
-
-        <RadioButton x:Name="rdoPictures" Content="Pictures" HorizontalAlignment="Left" Margin="10,329,0,0" VerticalAlignment="Top" IsChecked="False" Foreground="White" />
-        <RadioButton x:Name="rdoAudio" Content="Audio" HorizontalAlignment="Left" Margin="10,349,0,0" VerticalAlignment="Top" IsChecked="True"  RenderTransformOrigin="-0.035,3.6" Foreground="White" />
-        <RadioButton x:Name="rdoVideo" Content="Video" HorizontalAlignment="Left" Margin="10,369,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.329,-1.8" Foreground="White" />
+    <DockPanel Background="#FF323232">
         
-        <Button x:Name="btnExit" Content="Exit" HorizontalAlignment="Left" Margin="10,389,0,0" VerticalAlignment="Top" Width="75" Click="BtnExit_Click"/>
-        <Button x:Name="btnSettings" Content="Settings" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False"/>
+        <!-- MENU START -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Browse" />
+                <Separator />
+                <MenuItem Header="_Exit" />
+            </MenuItem>
+            <MenuItem Header="_Settings">
+                <MenuItem Header="_Edit Settings" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" />
+            </MenuItem>
+        </Menu>
+        <!--END MENU -->
+        
+        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Background="#FF323232">
 
-    </Grid>
+            <StackPanel Margin="0,10,0,0">
+                <Button x:Name="btnBrowse" Content="Browse" Width="75" Click="BtnBrowse_Click"/>
+                <Button x:Name="btnEdit" Content="Edit"  Width="75" Click="BtnEdit_Click" IsEnabled="False" />
+                <Button x:Name="btnCommit" Content="Commit" Width="75" Click="BtnCommit_Click" IsEnabled="False"/>
+                <Button x:Name="btnClear" Content="Clear" Width="75" IsEnabled="False"/>
+            </StackPanel>
+
+            <GroupBox x:Name="groupBox" Header="Media Type" Height="75" Width="90" Margin="5,10,5,0" Foreground="White">
+                <Grid>
+                    <StackPanel Orientation="Vertical">
+                        <RadioButton x:Name="rdoAudio"  Content="Audio" IsChecked="False"  Foreground="White"/>
+                        <RadioButton x:Name="rdoVideo"  Content="Video" IsChecked="True" Foreground="White"/>
+                        <RadioButton x:Name="rdoPictures" Content="Pictures"  IsChecked="False"  Foreground="White" Margin="0,0,0,0" />
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+
+        </StackPanel>
+
+        <StackPanel Background="#FF4B4B4B">
+
+            <DataGrid x:Name="dgInfoBox" Background="#BF646464"
+                              GridLinesVisibility="None" 
+                              IsReadOnly="False" 
+                              AutoGenerateColumns="False"  
+                              CanUserResizeRows="False"
+                              CanUserAddRows="False"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch"/>
+
+        </StackPanel>
+    </DockPanel>
 </Window>
