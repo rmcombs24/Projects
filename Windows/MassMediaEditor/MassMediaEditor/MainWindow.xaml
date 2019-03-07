@@ -11,7 +11,7 @@
     <DockPanel Background="#FF323232">
         
         <!-- MENU START -->
-        <Menu DockPanel.Dock="Top">
+        <Menu x:Name="mnuTitlebar" DockPanel.Dock="Top" Visibility="Hidden" KeyDown="Menu_KeyDown" >
             <MenuItem Header="_File">
                 <MenuItem Header="_Browse" />
                 <Separator />
@@ -32,7 +32,7 @@
                 <Button x:Name="btnBrowse" Content="Browse" Width="75" Click="BtnBrowse_Click"/>
                 <Button x:Name="btnEdit" Content="Edit"  Width="75" Click="BtnEdit_Click" IsEnabled="False" />
                 <Button x:Name="btnCommit" Content="Commit" Width="75" Click="BtnCommit_Click" IsEnabled="False"/>
-                <Button x:Name="btnClear" Content="Clear" Width="75" IsEnabled="False"/>
+                <Button x:Name="btnClear" Content="Clear" Width="75" IsEnabled="False" Click="BtnClear_Click"/>
             </StackPanel>
 
             <GroupBox x:Name="groupBox" Header="Media Type" Height="75" Width="90" Margin="5,10,5,0" Foreground="White">

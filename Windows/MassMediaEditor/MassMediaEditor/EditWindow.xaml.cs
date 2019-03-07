@@ -190,48 +190,101 @@ namespace MassMediaEditor
                                     break;
                             }
                         }
-                        else if (oItem is Audio)
+                        else if (oItem is Audio || oItem is Video)
                         {
                             /* public String Creator */
 
                             switch (kvp.Key)
                             {
-                                case "Album":
-                                    ((Audio)oItem).Album = kvp.Value;
-                                    break;
-                                case "Album Artist":
-                                    ((Audio)oItem).AlbumArtist = kvp.Value;
-                                    break;
-                                case "BPM":
-                                    ((Audio)oItem).BPM = kvp.Value;
-                                    break;
-                                case "Contributing Artists":
-                                    ((Audio)oItem).ContributingArtists = kvp.Value;
-                                    break;
-                                case "Copyright":
-                                    ((Audio)oItem).Copyright = kvp.Value;
-                                    break;
-                                case "Composers":
-                                    ((Audio)oItem).Composers = kvp.Value;
-                                    break;
-                                case "Genre":
-                                    ((Audio)oItem).Genre = kvp.Value;
-                                    break;
-                                case "Publisher":
-                                    ((Audio)oItem).Publisher = kvp.Value;
-                                    break;
-                                case "Subtitle":
-                                    ((Audio)oItem).Subtitle = kvp.Value;
-                                    break;
-                                case "Track Number":
-                                    ((Audio)oItem).TrackNumber = uint.Parse(kvp.Value);
-                                    break;
 
                                 default:
                                     break;
                             }
+
+                            if (oItem is Audio)
+                            {
+                                switch (kvp.Key)
+                                {
+                                    case "Album":
+                                        ((Audio)oItem).Album = kvp.Value;
+                                        break;
+                                    case "Album Artist":
+                                        ((Audio)oItem).AlbumArtist = kvp.Value;
+                                        break;
+                                    case "BPM":
+                                        ((Audio)oItem).BPM = kvp.Value;
+                                        break;
+                                    case "Composers":
+                                        ((Audio)oItem).Composers = kvp.Value;
+                                        break;
+                                    case "Genre":
+                                        ((Audio)oItem).Genre = kvp.Value;
+                                        break;
+                                    case "Track Number":
+                                        ((Audio)oItem).TrackNumber = uint.Parse(kvp.Value);
+                                        break;
+                                    case "Contributing Artists":
+                                        ((Audio)oItem).ContributingArtists = kvp.Value;
+                                        break;
+                                    case "Copyright":
+                                        ((Audio)oItem).Copyright = kvp.Value;
+                                        break;
+                                    case "Subtitle":
+                                        ((Audio)oItem).Subtitle = kvp.Value;
+                                        break;
+                                    case "Publisher":
+                                        ((Audio)oItem).Publisher = kvp.Value;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                switch (kvp.Key)
+                                {
+                                    case "Author URL":
+                                        ((Video)oItem).AuthorURL= kvp.Value;
+                                        break;
+                                    case "Promotional URL":
+                                        ((Video)oItem).PromoURL= kvp.Value;
+                                        break;
+                                    case "Year":
+                                        ((Video)oItem).Year = uint.Parse(kvp.Value);
+                                        break;
+                                    case "Directors":
+                                        ((Video)oItem).Directors = kvp.Value;
+                                        break;
+                                    case "Writers":
+                                        ((Video)oItem).Writers = kvp.Value;
+                                        break;
+                                    case "Producers":
+                                        ((Video)oItem).Producers = kvp.Value;
+                                        break;
+                                    case "Contributing Artists":
+                                        ((Video)oItem).ContributingArtists = kvp.Value;
+                                        break;
+                                    case "Copyright":
+                                        ((Video)oItem).Copyright = kvp.Value;
+                                        break;
+                                    case "Genre":
+                                        ((Video)oItem).Genre = kvp.Value;
+                                        break;
+                                    case "Subtitle":
+                                        ((Video)oItem).Subtitle = kvp.Value;
+                                        break;
+                                    case "Publisher":
+                                        ((Video)oItem).Publisher = kvp.Value;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
                         }
-                        else if (oItem is Video) { }
+                        else if (oItem is Video)
+                        {
+
+                        }
                     }
                 }
             }

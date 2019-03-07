@@ -15,10 +15,20 @@ namespace MassMediaEditor
             return MessageBox.Show("At least one item must be selected to edit.", "Items Required", MessageBoxButton.OK);
         }
 
-        public MessageBoxResult CompleteMessage (string completedOperation)
+        public MessageBoxResult CompleteMessage (bool completedOperation)
         {
-            string tmp1 = string.Format("{0} Complete.", completedOperation);
-            return MessageBox.Show(tmp1, tmp1, MessageBoxButton.OK);
+
+            if (!completedOperation)
+            {
+                return MessageBox.Show("Operation completed but with errors. Please check the log for more details.", "Operation Complete", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                string tmp1 = string.Format("Commit Complete.", completedOperation);
+
+                return MessageBox.Show(tmp1, tmp1, MessageBoxButton.OK);
+            }
+
         }
 
         public MessageBoxResult CreateNewResult(string message, string title, MessageBoxButton buttonLayout)

@@ -196,21 +196,29 @@ namespace MassMediaEditor
 
             if (dgInfoBox.ItemsSource.Cast<Media>().Where(x => x.isChecked == true).ToList().Count > 0)
             {
-                MessageBoxResult messageBoxCommit = mbMgr.CreateNewResult("Are you sure you want to commit these changes? This cannot be undone.", "Edit Confirmation", MessageBoxButton.YesNo);
+                MessageBoxResult messageBoxCommit = mbMgr.CreateNewResult("Are you sure you want to save these changes? This cannot be undone.", "Edit Confirmation", MessageBoxButton.YesNo);
 
                 if (messageBoxCommit == MessageBoxResult.Yes)
                 {
                     Media mFile = new Media();
+                    bool completedWithoutErrors = true;
+                    List<bool> listCompletion = new List<bool>();
 
                         foreach (Media item in dgInfoBox.Items)
                         {
                             if (item.isChecked)
                             {
-                                mFile.WriteToShellFile(item);
+
+                                completedWithoutErrors = mFile.WriteToShellFile(item);
+                                listCompletion.Add(completedWithoutErrors);
                             }
                         }
 
-                    mbMgr.CompleteMessage("Commit");
+                    if (listCompletion.Contains(false))
+                    { mbMgr.CompleteMessage(false); }
+                    else
+                    { mbMgr.CompleteMessage(true); }
+                        
                 }
                 else { /*Do nothing*/ }
             }
@@ -247,5 +255,26 @@ namespace MassMediaEditor
         }
 
         #endregion
+
+
+        //Idefk
+        private void Menu_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftAlt || e.Key == Key.RightAlt)
+                mnuTitlebar.Visibility = Visibility.Visible;
+        }
+
+        private void BtnClear_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgInfoBox.HasItems)
+            {
+                dgInfoBox.ItemsSource = null;
+                dgInfoBox.Columns.Clear();
+
+                btnClear.IsEnabled = false;
+                btnCommit.IsEnabled = false;
+                btnEdit.IsEnabled = false;
+            }
+        }
     }
 }
