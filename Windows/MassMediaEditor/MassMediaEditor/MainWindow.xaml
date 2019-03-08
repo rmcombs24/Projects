@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
         Title="Mass Media Editor v0.0.5" MinHeight="500" MinWidth="800" 
@@ -48,7 +49,6 @@
         </StackPanel>
 
         <StackPanel Background="#FF4B4B4B">
-
             <DataGrid x:Name="dgInfoBox" Background="#BF646464"
                               GridLinesVisibility="None" 
                               IsReadOnly="False" 
@@ -57,6 +57,7 @@
                               CanUserAddRows="False"
                               VerticalAlignment="Stretch"
                               HorizontalAlignment="Stretch"/>
+            <xctk:BusyIndicator x:Name="biIsWorking" IsBusy="false"  ></xctk:BusyIndicator>
 
         </StackPanel>
     </DockPanel>

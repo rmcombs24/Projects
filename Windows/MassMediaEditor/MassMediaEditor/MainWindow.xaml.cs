@@ -6,6 +6,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -204,18 +205,29 @@ namespace MassMediaEditor
                     bool completedWithoutErrors = true;
                     List<bool> listCompletion = new List<bool>();
 
-                        foreach (Media item in dgInfoBox.Items)
+                    BackgroundWorker worker = new BackgroundWorker();
+
+                    worker.DoWork += (o, ea) =>
+                    biIsWorking.IsBusy = true;
+
+                    foreach (Media item in dgInfoBox.Items)
                         {
                             if (item.isChecked)
                             {
 
                                 completedWithoutErrors = mFile.WriteToShellFile(item);
+
+                                biIsWorking.IsBusy = false;
+
                                 listCompletion.Add(completedWithoutErrors);
                             }
                         }
 
                     if (listCompletion.Contains(false))
-                    { mbMgr.CompleteMessage(false); }
+                    {
+                        biIsWorking.IsBusy = false;
+
+                        mbMgr.CompleteMessage(false); }
                     else
                     { mbMgr.CompleteMessage(true); }
                         
