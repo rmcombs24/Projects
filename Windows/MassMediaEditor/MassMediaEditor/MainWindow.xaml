@@ -12,17 +12,15 @@
     <DockPanel Background="#FF323232">
         
         <!-- MENU START -->
-        <Menu x:Name="mnuTitlebar" DockPanel.Dock="Top" Visibility="Hidden" KeyDown="Menu_KeyDown" >
+        <Menu x:Name="mnuTitlebar" DockPanel.Dock="Top" Visibility="Visible" KeyDown="Menu_KeyDown" >
             <MenuItem Header="_File">
-                <MenuItem Header="_Browse" />
-                <Separator />
-                <MenuItem Header="_Exit" />
+                <MenuItem Header="_Exit" Click="MenuItem_Click_1" />
             </MenuItem>
             <MenuItem Header="_Settings">
                 <MenuItem Header="_Edit Settings" />
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_About" />
+                <MenuItem Header="_About" Click="MenuItem_Click" />
             </MenuItem>
         </Menu>
         <!--END MENU -->
@@ -48,8 +46,9 @@
 
         </StackPanel>
 
-        <StackPanel Background="#FF4B4B4B">
-            <DataGrid x:Name="dgInfoBox" Background="#BF646464"
+        <xctk:BusyIndicator x:Name="biIsWorking" IsBusy="false"  >
+            <StackPanel Background="#FF4B4B4B">
+                <DataGrid x:Name="dgInfoBox" Background="#BF646464"
                               GridLinesVisibility="None" 
                               IsReadOnly="False" 
                               AutoGenerateColumns="False"  
@@ -57,8 +56,9 @@
                               CanUserAddRows="False"
                               VerticalAlignment="Stretch"
                               HorizontalAlignment="Stretch"/>
-            <xctk:BusyIndicator x:Name="biIsWorking" IsBusy="false"  ></xctk:BusyIndicator>
+
 
         </StackPanel>
+        </xctk:BusyIndicator>
     </DockPanel>
 </Window>

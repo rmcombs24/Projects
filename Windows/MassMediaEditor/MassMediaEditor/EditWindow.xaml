@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
         Closed="WndEdit_Closed"
-        Title="Edit" Height="103.121" Width="771">
+        Title="Edit" Height="100" Width="770"
+        ResizeMode="NoResize" 
+        WindowStartupLocation="CenterOwner">
+    
     <Grid Background="#FF5D5A5A">
         <ComboBox x:Name="ddlFields" HorizontalAlignment="Left" Margin="117,10,0,0" VerticalAlignment="Top" Width="155" RenderTransformOrigin="0.51,0.21" Height="20" SelectionChanged="ddlFields_SelectionChanged"/>
         <Label x:Name="lblFields" Content="Media Properties:" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.499,-0.111" Background="{x:Null}" Foreground="White"/>
@@ -20,4 +23,5 @@
         </StackPanel>
         <Label x:Name="lblSliderVal" Margin="545,0,0,0" Height="25"/>
     </Grid>
+    
 </Window>

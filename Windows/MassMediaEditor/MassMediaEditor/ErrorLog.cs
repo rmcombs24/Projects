@@ -9,7 +9,7 @@ namespace MassMediaEditor
     class ErrorLog
     {
 
-        public void WriteToLog(string message, string filePath)
+        public void WriteToLog(string message, string filePath = "")
         {            
             // Example #4: Append new text to an existing file.
             // The using statement automatically flushes AND CLOSES the stream and calls 

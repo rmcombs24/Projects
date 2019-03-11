@@ -45,13 +45,19 @@ namespace MassMediaEditor
                 shellFile.Properties.System.Title.Value     = ((Media)mediaFile).Title;
                 shellFile.Properties.System.Subject.Value   = ((Media)mediaFile).Subject;
                 shellFile.Properties.System.Comment.Value   = ((Media)mediaFile).Comments;
-                shellFile.Properties.System.Rating.Value    = ((Media)mediaFile).Rating;
                 shellFile.Properties.System.Media.Subtitle.Value = ((Media)mediaFile).Subtitle;
 
-                String[] tagsArray = ((Media)mediaFile).Tags.Split(',').ToArray();
-                SanitizeArray(tagsArray);
+                if (((Media)mediaFile).Rating == 0)
+                {
+                    shellFile.Properties.System.Rating.Value = null;
+                }
+                else if (((Media)mediaFile).Rating == 100)
+                {
+                    shellFile.Properties.System.Rating.Value = 99;
+                }
+                else { shellFile.Properties.System.Rating.Value = ((Media)mediaFile).Rating; }
 
-                shellFile.Properties.System.Keywords.Value = (String.IsNullOrEmpty(tagsArray[0])) ? null : tagsArray;
+                shellFile.Properties.System.Keywords.Value = (String.IsNullOrEmpty(((Media)mediaFile).Tags.Split(',').ToArray()[0])) ? null : SanitizeArray(((Media)mediaFile).Tags.Split(',').ToArray());
 
                 if (mediaFile is Picture)
                 {                   
@@ -69,7 +75,7 @@ namespace MassMediaEditor
                     shellFile.Properties.System.Music.Artist.Value          = (String.IsNullOrEmpty(((Audio)mediaFile).ContributingArtists.Split(',').ToArray()[0])) ?  null  : SanitizeArray(((Audio)mediaFile).ContributingArtists.Split(',').ToArray());
                     shellFile.Properties.System.Music.Genre.Value           = (String.IsNullOrEmpty(((Audio)mediaFile).Genre.Split(',').ToArray()[0]))               ?  null  : SanitizeArray(((Audio)mediaFile).Genre.Split(',').ToArray());
                     shellFile.Properties.System.Music.AlbumArtist.Value     = ((Audio)mediaFile).AlbumArtist;
-                    shellFile.Properties.System.Music.AlbumTitle.Value      = ((Audio)mediaFile).AlbumArtist;
+                    shellFile.Properties.System.Music.AlbumTitle.Value      = ((Audio)mediaFile).Album;
                     shellFile.Properties.System.Music.TrackNumber.Value     = ((Audio)mediaFile).TrackNumber;
                     shellFile.Properties.System.Music.BeatsPerMinute.Value  = ((Audio)mediaFile).BPM;
 

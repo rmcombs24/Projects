@@ -208,29 +208,41 @@ namespace MassMediaEditor
                     BackgroundWorker worker = new BackgroundWorker();
 
                     worker.DoWork += (o, ea) =>
-                    biIsWorking.IsBusy = true;
+                    {
 
-                    foreach (Media item in dgInfoBox.Items)
+
+                        foreach (Media item in dgInfoBox.Items)
                         {
                             if (item.isChecked)
                             {
 
                                 completedWithoutErrors = mFile.WriteToShellFile(item);
 
-                                biIsWorking.IsBusy = false;
-
                                 listCompletion.Add(completedWithoutErrors);
                             }
                         }
 
-                    if (listCompletion.Contains(false))
-                    {
-                        biIsWorking.IsBusy = false;
+                    };
 
-                        mbMgr.CompleteMessage(false); }
-                    else
-                    { mbMgr.CompleteMessage(true); }
-                        
+                    worker.RunWorkerCompleted += (o, ea) =>
+                    {
+                        //work has completed. you can now interact with the UI
+
+                        if (listCompletion.Contains(false))
+                        {
+
+                            mbMgr.CompleteMessage(false);
+
+                        }
+                        else
+                        { mbMgr.CompleteMessage(true); }
+
+                        biIsWorking.IsBusy = false;
+                    };
+
+                    biIsWorking.IsBusy = true;
+                    worker.RunWorkerAsync();
+
                 }
                 else { /*Do nothing*/ }
             }
@@ -287,6 +299,17 @@ namespace MassMediaEditor
                 btnCommit.IsEnabled = false;
                 btnEdit.IsEnabled = false;
             }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            AboutWindow aboutWindow = new AboutWindow();
+            aboutWindow.ShowDialog();
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            System.Environment.Exit(0);
         }
     }
 }

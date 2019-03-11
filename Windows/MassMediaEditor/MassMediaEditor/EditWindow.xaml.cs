@@ -125,188 +125,201 @@ namespace MassMediaEditor
         private void UpdateSelectedFiles()
         {
             List<KeyValuePair<String, String>> updatedFields = new List<KeyValuePair<string, string>>();
-
-            foreach (KeyValuePair<string, string> kvp in lstFieldValuePair)
+            try
             {
-                if (!String.IsNullOrEmpty(kvp.Value))
+                foreach (KeyValuePair<string, string> kvp in lstFieldValuePair)
                 {
-                    updatedFields.Add(kvp);
-                }
-            }
-            
-            foreach (object oItem in ((MainWindow)Application.Current.MainWindow).dgInfoBox.Items)
-            {
-                if(((Media)oItem).isChecked == true)
-                {
-                    foreach (KeyValuePair<string, string> kvp in updatedFields)
+                    if (!String.IsNullOrEmpty(kvp.Value))
                     {
-                        //Since we're dealing with a mutable type of objects.
-                        //If the object has a valid property field then we can update the file
-                        //To have the new properties that were used in the edit window.
+                        updatedFields.Add(kvp);
+                    }
+                }
 
-                        switch (kvp.Key)
+                foreach (object oItem in ((MainWindow)Application.Current.MainWindow).dgInfoBox.Items)
+                {
+                    if (((Media)oItem).isChecked == true)
+                    {
+                        foreach (KeyValuePair<string, string> kvp in updatedFields)
                         {
-                            case "Title":
-                                ((Media)oItem).Title = kvp.Value;
-                                break;
-                            case "Subject":
-                                ((Media)oItem).Subject = kvp.Value;
-                                break;
-                            case "Comments":
-                                ((Media)oItem).Comments = kvp.Value;
-                                break;
-                            case "Rating":
-                                ((Media)oItem).Rating = (uint) Math.Round(double.Parse(kvp.Value));
-                                break;
-                            case "Tags":
-                                ((Media)oItem).Tags= kvp.Value;
-                                break;
+                            //Since we're dealing with a mutable type of objects.
+                            //If the object has a valid property field then we can update the file
+                            //To have the new properties that were used in the edit window.
 
-                            default:
-                                break;
-                        }
-
-                        if (oItem is Picture)
-                        {
                             switch (kvp.Key)
                             {
-                                case "Author":
-                                    ((Picture)oItem).Authors = kvp.Value;
+                                case "Title":
+                                    ((Media)oItem).Title = kvp.Value;
                                     break;
-                                case "Program Name":
-                                    ((Picture)oItem).ProgramName = kvp.Value;
+                                case "Subject":
+                                    ((Media)oItem).Subject = kvp.Value;
                                     break;
-                                case "Copyright":
-                                    ((Picture)oItem).Copyright = kvp.Value;
+                                case "Comments":
+                                    ((Media)oItem).Comments = kvp.Value;
                                     break;
-                                case "Date Acquired":
-                                    ((Picture)oItem).DateAcquired = DateTime.Parse(kvp.Value);
+                                case "Rating":
+                                    ((Media)oItem).Rating = (uint)Math.Round(double.Parse(kvp.Value));
                                     break;
-                                case "Date Taken":
-                                    ((Picture)oItem).DateTaken = DateTime.Parse(kvp.Value);
+                                case "Tags":
+                                    ((Media)oItem).Tags = kvp.Value;
                                     break;
 
                                 default:
                                     break;
                             }
-                        }
-                        else if (oItem is Audio || oItem is Video)
-                        {
-                            /* public String Creator */
 
-                            switch (kvp.Key)
-                            {
-
-                                default:
-                                    break;
-                            }
-
-                            if (oItem is Audio)
+                            if (oItem is Picture)
                             {
                                 switch (kvp.Key)
                                 {
-                                    case "Album":
-                                        ((Audio)oItem).Album = kvp.Value;
+                                    case "Author":
+                                        ((Picture)oItem).Authors = kvp.Value;
                                         break;
-                                    case "Album Artist":
-                                        ((Audio)oItem).AlbumArtist = kvp.Value;
-                                        break;
-                                    case "BPM":
-                                        ((Audio)oItem).BPM = kvp.Value;
-                                        break;
-                                    case "Composers":
-                                        ((Audio)oItem).Composers = kvp.Value;
-                                        break;
-                                    case "Genre":
-                                        ((Audio)oItem).Genre = kvp.Value;
-                                        break;
-                                    case "Track Number":
-                                        ((Audio)oItem).TrackNumber = uint.Parse(kvp.Value);
-                                        break;
-                                    case "Contributing Artists":
-                                        ((Audio)oItem).ContributingArtists = kvp.Value;
+                                    case "Program Name":
+                                        ((Picture)oItem).ProgramName = kvp.Value;
                                         break;
                                     case "Copyright":
-                                        ((Audio)oItem).Copyright = kvp.Value;
+                                        ((Picture)oItem).Copyright = kvp.Value;
                                         break;
-                                    case "Subtitle":
-                                        ((Audio)oItem).Subtitle = kvp.Value;
+                                    case "Date Acquired":
+                                        ((Picture)oItem).DateAcquired = DateTime.Parse(kvp.Value);
                                         break;
-                                    case "Publisher":
-                                        ((Audio)oItem).Publisher = kvp.Value;
+                                    case "Date Taken":
+                                        ((Picture)oItem).DateTaken = DateTime.Parse(kvp.Value);
                                         break;
+
                                     default:
                                         break;
                                 }
                             }
-                            else
+                            else if (oItem is Audio || oItem is Video)
                             {
+                                /* public String Creator */
+
                                 switch (kvp.Key)
                                 {
-                                    case "Author URL":
-                                        ((Video)oItem).AuthorURL= kvp.Value;
-                                        break;
-                                    case "Promotional URL":
-                                        ((Video)oItem).PromoURL= kvp.Value;
-                                        break;
-                                    case "Year":
-                                        ((Video)oItem).Year = uint.Parse(kvp.Value);
-                                        break;
-                                    case "Directors":
-                                        ((Video)oItem).Directors = kvp.Value;
-                                        break;
-                                    case "Writers":
-                                        ((Video)oItem).Writers = kvp.Value;
-                                        break;
-                                    case "Producers":
-                                        ((Video)oItem).Producers = kvp.Value;
-                                        break;
-                                    case "Contributing Artists":
-                                        ((Video)oItem).ContributingArtists = kvp.Value;
-                                        break;
-                                    case "Copyright":
-                                        ((Video)oItem).Copyright = kvp.Value;
-                                        break;
-                                    case "Genre":
-                                        ((Video)oItem).Genre = kvp.Value;
-                                        break;
-                                    case "Subtitle":
-                                        ((Video)oItem).Subtitle = kvp.Value;
-                                        break;
-                                    case "Publisher":
-                                        ((Video)oItem).Publisher = kvp.Value;
-                                        break;
+
                                     default:
                                         break;
                                 }
-                            }
-                        }
-                        else if (oItem is Video)
-                        {
 
+                                if (oItem is Audio)
+                                {
+                                    switch (kvp.Key)
+                                    {
+                                        case "Album":
+                                            ((Audio)oItem).Album = kvp.Value;
+                                            break;
+                                        case "Album Artist":
+                                            ((Audio)oItem).AlbumArtist = kvp.Value;
+                                            break;
+                                        case "BPM":
+                                            ((Audio)oItem).BPM = kvp.Value;
+                                            break;
+                                        case "Composers":
+                                            ((Audio)oItem).Composers = kvp.Value;
+                                            break;
+                                        case "Genre":
+                                            ((Audio)oItem).Genre = kvp.Value;
+                                            break;
+                                        case "Track Number":
+                                            ((Audio)oItem).TrackNumber = uint.Parse(kvp.Value);
+                                            break;
+                                        case "Contributing Artists":
+                                            ((Audio)oItem).ContributingArtists = kvp.Value;
+                                            break;
+                                        case "Copyright":
+                                            ((Audio)oItem).Copyright = kvp.Value;
+                                            break;
+                                        case "Subtitle":
+                                            ((Audio)oItem).Subtitle = kvp.Value;
+                                            break;
+                                        case "Publisher":
+                                            ((Audio)oItem).Publisher = kvp.Value;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    switch (kvp.Key)
+                                    {
+                                        case "Author URL":
+                                            ((Video)oItem).AuthorURL = kvp.Value;
+                                            break;
+                                        case "Promotional URL":
+                                            ((Video)oItem).PromoURL = kvp.Value;
+                                            break;
+                                        case "Year":
+                                            ((Video)oItem).Year = uint.Parse(kvp.Value);
+                                            break;
+                                        case "Directors":
+                                            ((Video)oItem).Directors = kvp.Value;
+                                            break;
+                                        case "Writers":
+                                            ((Video)oItem).Writers = kvp.Value;
+                                            break;
+                                        case "Producers":
+                                            ((Video)oItem).Producers = kvp.Value;
+                                            break;
+                                        case "Contributing Artists":
+                                            ((Video)oItem).ContributingArtists = kvp.Value;
+                                            break;
+                                        case "Copyright":
+                                            ((Video)oItem).Copyright = kvp.Value;
+                                            break;
+                                        case "Genre":
+                                            ((Video)oItem).Genre = kvp.Value;
+                                            break;
+                                        case "Subtitle":
+                                            ((Video)oItem).Subtitle = kvp.Value;
+                                            break;
+                                        case "Publisher":
+                                            ((Video)oItem).Publisher = kvp.Value;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+                            else if (oItem is Video)
+                            {
+
+                            }
                         }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                new ErrorLog().WriteToLog(e.Message);
+            }
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
-        { 
-            if (ddlFields.SelectedValue.ToString().Contains("Date"))
+        {
+            try
             {
-                CurrentValuePair = new KeyValuePair<String, String>(CurrentValuePair.Key, dpMediaEditor.ToString());
-            }
-            else if (ddlFields.SelectedValue.ToString().Contains("Rating"))
-            {
-                CurrentValuePair = new KeyValuePair<String, String>(CurrentValuePair.Key, sldEditor.Value.ToString());
-            }
-            else
-            {
-                CurrentValuePair = new KeyValuePair<String, String>(CurrentValuePair.Key, txtFieldData.Text);
-            }
+                if (ddlFields.SelectedValue.ToString().Contains("Date"))
+                {
+                    CurrentValuePair = new KeyValuePair<String, String>(CurrentValuePair.Key, dpMediaEditor.ToString());
+                }
+                else if (ddlFields.SelectedValue.ToString().Contains("Rating"))
+                {
+                    CurrentValuePair = new KeyValuePair<String, String>(CurrentValuePair.Key, sldEditor.Value.ToString());
+                }
+                else
+                {
+                    CurrentValuePair = new KeyValuePair<String, String>(CurrentValuePair.Key, txtFieldData.Text);
+                }
 
-            lstFieldValuePair[lstFieldValuePair.FindIndex(x => x.Key == CurrentValuePair.Key)] = CurrentValuePair;
-            lblUpdate.Visibility = Visibility.Visible;
+                lstFieldValuePair[lstFieldValuePair.FindIndex(x => x.Key == CurrentValuePair.Key)] = CurrentValuePair;
+                lblUpdate.Visibility = Visibility.Visible;
+            }
+            catch(Exception ex)
+            {
+                new ErrorLog().WriteToLog(ex.Message);
+            }
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
