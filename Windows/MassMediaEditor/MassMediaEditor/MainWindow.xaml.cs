@@ -21,6 +21,8 @@ using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace MassMediaEditor
 {
+
+    
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -87,6 +89,36 @@ namespace MassMediaEditor
         }
 
         #region Events
+
+        private void BtnClear_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgInfoBox.HasItems)
+            {
+                dgInfoBox.ItemsSource = null;
+                dgInfoBox.Columns.Clear();
+
+                btnClear.IsEnabled = false;
+                btnCommit.IsEnabled = false;
+                btnEdit.IsEnabled = false;
+            }
+        }
+
+        private void mnuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            AboutWindow aboutWindow = new AboutWindow();
+            aboutWindow.ShowDialog();
+        }
+
+        private void mnuExit_Click(object sender, RoutedEventArgs e)
+        {
+            System.Environment.Exit(0);
+        }
+
+        private void mnuSettings_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.ShowDialog();
+        }
 
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
@@ -279,37 +311,5 @@ namespace MassMediaEditor
         }
 
         #endregion
-
-
-        //Idefk
-        private void Menu_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.LeftAlt || e.Key == Key.RightAlt)
-                mnuTitlebar.Visibility = Visibility.Visible;
-        }
-
-        private void BtnClear_Click(object sender, RoutedEventArgs e)
-        {
-            if (dgInfoBox.HasItems)
-            {
-                dgInfoBox.ItemsSource = null;
-                dgInfoBox.Columns.Clear();
-
-                btnClear.IsEnabled = false;
-                btnCommit.IsEnabled = false;
-                btnEdit.IsEnabled = false;
-            }
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            AboutWindow aboutWindow = new AboutWindow();
-            aboutWindow.ShowDialog();
-        }
-
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
-        {
-            System.Environment.Exit(0);
-        }
     }
 }

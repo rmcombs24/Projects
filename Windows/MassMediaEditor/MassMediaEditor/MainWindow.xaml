@@ -12,15 +12,15 @@
     <DockPanel Background="#FF323232">
         
         <!-- MENU START -->
-        <Menu x:Name="mnuTitlebar" DockPanel.Dock="Top" Visibility="Visible" KeyDown="Menu_KeyDown" >
+        <Menu x:Name="mnuTitlebar" DockPanel.Dock="Top" Visibility="Visible">
             <MenuItem Header="_File">
-                <MenuItem Header="_Exit" Click="MenuItem_Click_1" />
+                <MenuItem Header="_Exit" Click="mnuExit_Click" />
             </MenuItem>
             <MenuItem Header="_Settings">
-                <MenuItem Header="_Edit Settings" />
+                <MenuItem Header="_Edit Settings" Click="mnuSettings_Click" />
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_About" Click="MenuItem_Click" />
+                <MenuItem Header="_About" Click="mnuAbout_Click" />
             </MenuItem>
         </Menu>
         <!--END MENU -->
@@ -49,6 +49,7 @@
         <xctk:BusyIndicator x:Name="biIsWorking" IsBusy="false"  >
             <StackPanel Background="#FF4B4B4B">
                 <DataGrid x:Name="dgInfoBox" Background="#BF646464"
+                            Visibility="Hidden"
                               GridLinesVisibility="None" 
                               IsReadOnly="False" 
                               AutoGenerateColumns="False"  
@@ -56,9 +57,10 @@
                               CanUserAddRows="False"
                               VerticalAlignment="Stretch"
                               HorizontalAlignment="Stretch"/>
-
-
-        </StackPanel>
+            </StackPanel>
         </xctk:BusyIndicator>
+        
+
+        
     </DockPanel>
 </Window>

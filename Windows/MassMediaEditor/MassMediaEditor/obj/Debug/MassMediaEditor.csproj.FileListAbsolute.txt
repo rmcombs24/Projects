@@ -72,3 +72,5 @@ X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEdi
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\AboutWindow.g.cs
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\AboutWindow.baml
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\SettingsWinfow.g.cs
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\SettingsWinfow.baml
