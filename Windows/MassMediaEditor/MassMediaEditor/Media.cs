@@ -33,7 +33,7 @@ namespace MassMediaEditor
 
         //Thought about using a generic here... but if you're checking types in your generics code, then generics probably aren't the correct solution to your problem -SO
         //Possible Refactor later. I don't like these object declarations
-        public bool WriteToShellFile(Media mediaFile)
+        public bool WriteToShellFile(Media mediaFile, bool sort)
         {
             bool hasErrors = false;
 
@@ -57,11 +57,11 @@ namespace MassMediaEditor
                 }
                 else { shellFile.Properties.System.Rating.Value = ((Media)mediaFile).Rating; }
 
-                shellFile.Properties.System.Keywords.Value = (String.IsNullOrEmpty(((Media)mediaFile).Tags.Split(',').ToArray()[0])) ? null : SanitizeArray(((Media)mediaFile).Tags.Split(',').ToArray());
+                shellFile.Properties.System.Keywords.Value = (String.IsNullOrEmpty(((Media)mediaFile).Tags.Split(',').ToArray()[0])) ? null : SanitizeArray(((Media)mediaFile).Tags.Split(',').ToArray(), sort);
 
                 if (mediaFile is Picture)
                 {                   
-                    shellFile.Properties.System.Author.Value = (String.IsNullOrEmpty(((Picture)mediaFile).Authors.Split(',').ToArray()[0])) ? null : SanitizeArray(((Picture)mediaFile).Authors.Split(',').ToArray()); ;
+                    shellFile.Properties.System.Author.Value = (String.IsNullOrEmpty(((Picture)mediaFile).Authors.Split(',').ToArray()[0])) ? null : SanitizeArray(((Picture)mediaFile).Authors.Split(',').ToArray(), sort); ;
                     shellFile.Properties.System.ApplicationName.Value = ((Picture)mediaFile).ProgramName;
                     shellFile.Properties.System.Copyright.Value = ((Picture)mediaFile).Copyright;
                     shellFile.Properties.System.DateAcquired.Value = ((Picture)mediaFile).DateAcquired;
@@ -71,9 +71,9 @@ namespace MassMediaEditor
                 {
                     //shellFile.Properties.System.Copyright.Value             = ((Audio)mediaFile).Copyright;
 
-                    shellFile.Properties.System.Music.Composer.Value        = (String.IsNullOrEmpty(((Audio)mediaFile).Composers.Split(',').ToArray()[0]))           ?  null  : SanitizeArray(((Audio)mediaFile).Composers.Split(',').ToArray());
-                    shellFile.Properties.System.Music.Artist.Value          = (String.IsNullOrEmpty(((Audio)mediaFile).ContributingArtists.Split(',').ToArray()[0])) ?  null  : SanitizeArray(((Audio)mediaFile).ContributingArtists.Split(',').ToArray());
-                    shellFile.Properties.System.Music.Genre.Value           = (String.IsNullOrEmpty(((Audio)mediaFile).Genre.Split(',').ToArray()[0]))               ?  null  : SanitizeArray(((Audio)mediaFile).Genre.Split(',').ToArray());
+                    shellFile.Properties.System.Music.Composer.Value        = (String.IsNullOrEmpty(((Audio)mediaFile).Composers.Split(',').ToArray()[0]))           ?  null  : SanitizeArray(((Audio)mediaFile).Composers.Split(',').ToArray(), sort);
+                    shellFile.Properties.System.Music.Artist.Value          = (String.IsNullOrEmpty(((Audio)mediaFile).ContributingArtists.Split(',').ToArray()[0])) ?  null  : SanitizeArray(((Audio)mediaFile).ContributingArtists.Split(',').ToArray(), sort);
+                    shellFile.Properties.System.Music.Genre.Value           = (String.IsNullOrEmpty(((Audio)mediaFile).Genre.Split(',').ToArray()[0]))               ?  null  : SanitizeArray(((Audio)mediaFile).Genre.Split(',').ToArray(), sort);
                     shellFile.Properties.System.Music.AlbumArtist.Value     = ((Audio)mediaFile).AlbumArtist;
                     shellFile.Properties.System.Music.AlbumTitle.Value      = ((Audio)mediaFile).Album;
                     shellFile.Properties.System.Music.TrackNumber.Value     = ((Audio)mediaFile).TrackNumber;
@@ -85,12 +85,12 @@ namespace MassMediaEditor
                 {
                     //shellFile.Properties.System.Copyright.Value = String.IsNullOrEmpty(((Video)mediaFile).Copyright) ? ((Video)mediaFile).Copyright : String.Empty;
                     
-                    shellFile.Properties.System.Music.Artist.Value =    (String.IsNullOrEmpty(((Video)mediaFile).ContributingArtists.Split(',').ToArray()[0])   ?  null : SanitizeArray(((Video)mediaFile).ContributingArtists.Split(',').ToArray()));
-                    shellFile.Properties.System.Music.Genre.Value =     (String.IsNullOrEmpty(((Video)mediaFile).Genre.Split(',').ToArray()[0])                 ?  null : SanitizeArray(((Video)mediaFile).Genre.Split(',').ToArray()));
+                    shellFile.Properties.System.Music.Artist.Value =    (String.IsNullOrEmpty(((Video)mediaFile).ContributingArtists.Split(',').ToArray()[0])   ?  null : SanitizeArray(((Video)mediaFile).ContributingArtists.Split(',').ToArray(), sort));
+                    shellFile.Properties.System.Music.Genre.Value =     (String.IsNullOrEmpty(((Video)mediaFile).Genre.Split(',').ToArray()[0])                 ?  null : SanitizeArray(((Video)mediaFile).Genre.Split(',').ToArray(), sort));
 
-                    shellFile.Properties.System.Media.Writer.Value =    (String.IsNullOrEmpty(((Video)mediaFile).Writers.Split(',').ToArray()[0])               ?  null : SanitizeArray(((Video)mediaFile).Writers.Split(',').ToArray()));
-                    shellFile.Properties.System.Media.Producer.Value =  (String.IsNullOrEmpty(((Video)mediaFile).Producers.Split(',').ToArray()[0])             ?  null : SanitizeArray(((Video)mediaFile).Producers.Split(',').ToArray()));
-                    shellFile.Properties.System.Video.Director.Value =  (String.IsNullOrEmpty(((Video)mediaFile).Directors.Split(',').ToArray()[0])             ?  null : SanitizeArray(((Video)mediaFile).Directors.Split(',').ToArray()));
+                    shellFile.Properties.System.Media.Writer.Value =    (String.IsNullOrEmpty(((Video)mediaFile).Writers.Split(',').ToArray()[0])               ?  null : SanitizeArray(((Video)mediaFile).Writers.Split(',').ToArray(), sort));
+                    shellFile.Properties.System.Media.Producer.Value =  (String.IsNullOrEmpty(((Video)mediaFile).Producers.Split(',').ToArray()[0])             ?  null : SanitizeArray(((Video)mediaFile).Producers.Split(',').ToArray(), sort));
+                    shellFile.Properties.System.Video.Director.Value =  (String.IsNullOrEmpty(((Video)mediaFile).Directors.Split(',').ToArray()[0])             ?  null : SanitizeArray(((Video)mediaFile).Directors.Split(',').ToArray(), sort));
 
                     shellFile.Properties.System.Media.Publisher.Value       = ((Video)mediaFile).Publisher;
                     shellFile.Properties.System.Media.AuthorUrl.Value       = ((Video)mediaFile).AuthorURL;
@@ -108,11 +108,17 @@ namespace MassMediaEditor
             return !hasErrors;
         }
 
-        private string[] SanitizeArray(String[] itemArray)
+        private string[] SanitizeArray(String[] itemArray, bool sort)
         {
             for (int index = 0; index < itemArray.Length; index++)
             {
                 itemArray[index] = itemArray[index].Trim();
+            }
+
+            //Check the config to see if sorting is enabled.
+            if (sort)
+            {
+                Array.Sort(itemArray, StringComparer.InvariantCulture);
             }
 
             return itemArray;
@@ -367,4 +373,10 @@ namespace MassMediaEditor
         public Video () {/*Default Constructor*/}
     }
 
+    public enum MediaType
+    {
+        Audio,
+        Video,
+        Pictures
+    }
 }

@@ -28,16 +28,17 @@ namespace MassMediaEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        const string filePath = "C:\\Users\\Bob\\Desktop\\config.json";
-
+        public Settings settings = new Settings();
+        
         public List<object> selectedItems = new List<object>();
 
         public MainWindow()
         {
             InitializeComponent();
-            LoadStartupConfig();
+            settings.LoadStartupConfig();
+            LoadSettings();
         }
-
+        
         //ToDo: This needs to either be mutable for multiple types, or have one for each.
         private void GenerateGridView<T>(DataGrid dg, List<T> MediaObjects)
         {
@@ -86,6 +87,23 @@ namespace MassMediaEditor
             dg.ItemsSource = MediaObjects;
             dg.Items.Refresh();
             dg.IsEnabled = true;
+            dg.Visibility = Visibility = Visibility.Visible;
+        }
+
+        private void LoadSettings()
+        {
+            if (settings.MediaType == (int)MediaType.Audio)
+            {
+                rdoAudio.IsChecked = true;
+            }
+            else if (settings.MediaType == (int)MediaType.Video)
+            {
+                rdoVideo.IsChecked = true;
+            }
+            else if (settings.MediaType == (int)MediaType.Pictures)
+            {
+                rdoPictures.IsChecked = true;
+            }
         }
 
         #region Events
@@ -96,10 +114,14 @@ namespace MassMediaEditor
             {
                 dgInfoBox.ItemsSource = null;
                 dgInfoBox.Columns.Clear();
+                dgInfoBox.Visibility = Visibility = Visibility.Visible;
+                dgInfoBox.IsEnabled = false;
 
                 btnClear.IsEnabled = false;
                 btnCommit.IsEnabled = false;
                 btnEdit.IsEnabled = false;
+
+
             }
         }
 
@@ -248,7 +270,7 @@ namespace MassMediaEditor
                             if (item.isChecked)
                             {
 
-                                completedWithoutErrors = mFile.WriteToShellFile(item);
+                                completedWithoutErrors = mFile.WriteToShellFile(item, settings.AutoSort);
 
                                 listCompletion.Add(completedWithoutErrors);
                             }
@@ -283,33 +305,5 @@ namespace MassMediaEditor
 
         #endregion
 
-        #region Settings
-
-        public struct Settings
-        {
-            public string Media_Type;
-            public string Theme;
-        }
-
-        private void LoadStartupConfig()
-        {
-            Settings settings;
-
-            // deserialize JSON directly from a file
-            using (StreamReader file = File.OpenText(filePath))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                settings = (Settings)serializer.Deserialize(file, typeof(Settings));
-            }
-
-            ReadConfig(settings);
-        }
-
-        private void ReadConfig(Settings config)
-        {
-            //Gotta find a way to instantiate this config easily.
-        }
-
-        #endregion
     }
 }

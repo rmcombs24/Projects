@@ -1,0 +1,26 @@
+﻿<Window x:Class="MassMediaEditor.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MassMediaEditor"
+        mc:Ignorable="d"
+        Title="Settings" Height="170" Width="400"
+        ResizeMode="NoResize">
+
+    <Grid Background="#FF323232">
+        <ComboBox x:Name="ddlMediaType" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBoxItem>Audio</ComboBoxItem>
+            <ComboBoxItem>Video</ComboBoxItem>
+            <ComboBoxItem>Pictures</ComboBoxItem>
+        </ComboBox>
+        <Label x:Name="lblMediaType" HorizontalAlignment="Left" Margin="135,17,0,0" VerticalAlignment="Top" Foreground="White" FontSize="14" Content="Default media type"></Label>
+        <RadioButton x:Name="rdoSortYes" Content="Yes" HorizontalAlignment="Left" Margin="28,60,0,0" VerticalAlignment="Top" Foreground="White" FontSize="14" Checked="rdoSort_Checked"/>
+        <RadioButton x:Name="rdoSortNo" Content="No" HorizontalAlignment="Left" Margin="77,60,0,0" VerticalAlignment="Top" Foreground="White" FontSize="14" Checked="rdoSort_Checked" RenderTransformOrigin="0.139,0.455"/>
+        <Label x:Name="lblAutoSort" HorizontalAlignment="Left" Margin="135,54,0,0" VerticalAlignment="Top" Foreground="White" FontSize="14" Content="Automatically sort multi-value fields?"></Label>
+        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="298,99,0,0" VerticalAlignment="Top" Width="75" Click="btnSave_Click"/>
+        <Button x:Name="btnCancel" IsCancel="True" Content="Cancel" HorizontalAlignment="Left" Margin="218,99,0,0" VerticalAlignment="Top" Width="75"/>
+    </Grid>
+
+
+</Window>
