@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MassMediaEditor
 {
@@ -10,12 +6,11 @@ namespace MassMediaEditor
     {
 
         public void WriteToLog(string message, string filePath = "")
-        {            
-            // Example #4: Append new text to an existing file.
-            // The using statement automatically flushes AND CLOSES the stream and calls 
-            // IDisposable.Dispose on the stream object.
+        {
+            string userPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MassMediaEditor\\error.log";
+
             using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter(@"C:\Users\Bob\Desktop\\error.log", true))
+                new System.IO.StreamWriter(userPath, true))
             {
                 file.WriteLine(String.Format("({0}) {1}: {2}", DateTime.Now, filePath, message));
             }

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Windows;
 
 namespace MassMediaEditor
 {
@@ -16,14 +11,20 @@ namespace MassMediaEditor
         public int MediaType { get; set; }
         public string Theme { get; set; }
         public bool AutoSort { get; set; }
-
-        const string filePath = @"C:\Users\Bob\Desktop\Media\config.json";
+        
+        string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MassMediaEditor";
 
         public void LoadStartupConfig()
         {
 
+            if (!File.Exists(filePath + "\\config.json"))
+            {
+                Directory.CreateDirectory(filePath);
+                File.AppendText(filePath + "\\config.json");
+            }
+
             // deserialize JSON directly from a file
-            using (StreamReader file = File.OpenText(filePath))
+            using (StreamReader file = File.OpenText(filePath + "\\config.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 Settings s = (Settings)serializer.Deserialize(file, typeof(Settings));

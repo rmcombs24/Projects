@@ -1,28 +1,14 @@
 ﻿using System;
 using System.Data;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.WindowsAPICodePack.Shell;
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace MassMediaEditor
 {
-
-    
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -38,8 +24,7 @@ namespace MassMediaEditor
             settings.LoadStartupConfig();
             LoadSettings();
         }
-        
-        //ToDo: This needs to either be mutable for multiple types, or have one for each.
+
         private void GenerateGridView<T>(DataGrid dg, List<T> MediaObjects)
         {
 
@@ -159,6 +144,7 @@ namespace MassMediaEditor
             {
                 //This feels wrong. I SHOULD be able to only call GenerateGridView once. 
                 //I am completely forgetting something about the mutable types. 
+
                 if (rdoAudio.IsChecked == true)
                 {
                     List<Audio> audio = new List<Audio>();
@@ -263,8 +249,6 @@ namespace MassMediaEditor
 
                     worker.DoWork += (o, ea) =>
                     {
-
-
                         foreach (Media item in dgInfoBox.Items)
                         {
                             if (item.isChecked)
@@ -275,7 +259,6 @@ namespace MassMediaEditor
                                 listCompletion.Add(completedWithoutErrors);
                             }
                         }
-
                     };
 
                     worker.RunWorkerCompleted += (o, ea) =>

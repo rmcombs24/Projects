@@ -1,18 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MassMediaEditor
 {
@@ -57,7 +47,7 @@ namespace MassMediaEditor
         {
             foreach (KeyValuePair<string, string> kvp in lstFieldValuePair)
             {
-                if (kvp.Key == ddlFields.SelectedValue.ToString() && !(ddlFields.SelectedValue.ToString().Contains("Date") || ddlFields.SelectedValue.ToString().Contains("Rating")))
+                if (kvp.Key == ddlFields.SelectedValue.ToString() && !(ddlFields.SelectedValue.ToString().Contains("Created") || ddlFields.SelectedValue.ToString().Contains("Date") || ddlFields.SelectedValue.ToString().Contains("Year") || ddlFields.SelectedValue.ToString().Contains("Rating")))
                 {
                     CurrentValuePair = kvp;
                     txtFieldData.IsEnabled = true;
@@ -72,7 +62,7 @@ namespace MassMediaEditor
                     txtFieldData.Text = kvp.Value.ToString();
                     break;
                 }
-                else if (kvp.Key == ddlFields.SelectedValue.ToString() && ddlFields.SelectedValue.ToString().Contains("Date"))
+                else if (kvp.Key == ddlFields.SelectedValue.ToString() && (ddlFields.SelectedValue.ToString().Contains("Date") || ddlFields.SelectedValue.ToString().Contains("Created")))
                 {
                     CurrentValuePair = kvp;
                     txtFieldData.IsEnabled = false;
@@ -87,7 +77,7 @@ namespace MassMediaEditor
                     dpMediaEditor.SelectedDate = (String.IsNullOrEmpty(kvp.Value.ToString())) ? DateTime.Today : DateTime.Parse(kvp.Value.ToString());
                     break;
                 }
-                else if (kvp.Key == ddlFields.SelectedValue.ToString() && ddlFields.SelectedValue.ToString().Contains("Rating"))
+                else if (kvp.Key == ddlFields.SelectedValue.ToString() && (ddlFields.SelectedValue.ToString().Contains("Rating") || ddlFields.SelectedValue.ToString().Contains("Year")) )
                 {
                     CurrentValuePair = kvp;
 
@@ -101,6 +91,17 @@ namespace MassMediaEditor
                     lblSliderVal.Visibility = Visibility.Visible;
                     txtFieldData.Visibility = Visibility.Hidden;
                     dpMediaEditor.Visibility = Visibility.Hidden;
+
+                    if (ddlFields.SelectedValue.ToString().Contains("Year"))
+                    {
+                        sldEditor.Minimum = 1900;
+                        sldEditor.Maximum = DateTime.Now.Year;
+                    }
+                    else
+                    {
+                        sldEditor.Minimum = 0;
+                        sldEditor.Maximum = 99;
+                    }
 
                     if (double.TryParse(kvp.Value, out sliderVal))
                     {
