@@ -7,7 +7,7 @@ namespace MassMediaEditor
 
         public void WriteToLog(string message, string filePath = "")
         {
-            string userPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MassMediaEditor\\error.log";
+            string userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MassMediaEditor\\error.log";
 
             using (System.IO.StreamWriter file =
                 new System.IO.StreamWriter(userPath, true))

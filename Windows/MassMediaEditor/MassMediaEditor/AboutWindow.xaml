@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
         Title="About" Height="200" Width="250"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
 
     <Grid>
         <Label x:Name="lblAuthor" Content="Written By: Robert C" HorizontalAlignment="Left" Margin="0,27,0,0" VerticalAlignment="Top" Width="492"/>

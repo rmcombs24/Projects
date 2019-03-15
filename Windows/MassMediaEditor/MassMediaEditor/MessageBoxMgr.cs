@@ -24,9 +24,9 @@ namespace MassMediaEditor
             }
             else
             {
-                string tmp1 = string.Format("Commit Complete.", completedOperation);
+                string commitMsg = string.Format("Commit Complete.", completedOperation);
 
-                return MessageBox.Show(tmp1, tmp1, MessageBoxButton.OK);
+                return MessageBox.Show(commitMsg, commitMsg, MessageBoxButton.OK);
             }
 
         }
