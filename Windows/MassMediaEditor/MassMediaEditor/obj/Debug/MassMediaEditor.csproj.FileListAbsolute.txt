@@ -74,3 +74,7 @@ X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEdi
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.exe
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.pdb
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.csprojAssemblyReference.cache
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\bin\Debug\MassMediaEditor.exe.manifest
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\bin\Debug\MassMediaEditor.application
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.exe.manifest
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.application
