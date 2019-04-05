@@ -78,3 +78,5 @@ X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEdi
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\bin\Debug\MassMediaEditor.application
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.exe.manifest
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\MassMediaEditor.application
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\data.g.cs
+X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\obj\Debug\data.baml
