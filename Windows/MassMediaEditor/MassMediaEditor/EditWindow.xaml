@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
-        Closed="WndEdit_Closed"
+        Closed="wndEdit_Closed"
         Title="Edit" Height="550" Width="640"
         ResizeMode="NoResize" 
         WindowStartupLocation="CenterOwner" Background="#FF363636">
@@ -14,23 +14,18 @@
         <DataTemplate x:Key="cellTemplate">
             <StackPanel  Grid.Column="3" Orientation="Horizontal">
                 <StackPanel HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="80" >
-                    <Button x:Name="btnAddTag" Content="Add" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Height="19" Click="BtnAddItem_Click" />
-                    <Button x:Name="btnDelTag" Content="Remove" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75"  Height="19" Visibility="Hidden" Click="BtnRemoveItem_Click" IsEnabled="False" />
+                    <Button x:Name="btnAddItem" Content="Add" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Height="19" Click="btnAddItem_Click" />
+                    <Button x:Name="btnDelItem" Content="Remove" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75"  Height="19" Visibility="Hidden" Click="btnRemoveItem_Click" IsEnabled="False" />
                 </StackPanel>
                 <ListBox Grid.Column="2" x:Name="lstbxTags" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="125" Visibility="Hidden" IsEnabled="False"/>
-            </StackPanel>
-        </DataTemplate>
-        <DataTemplate x:Key="tmplSlider">
-            <StackPanel>
-                <Slider Name="sldRating"  Minimum="0" Maximum="100"/>
             </StackPanel>
         </DataTemplate>
     </Window.Resources>
 
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom">
-            <Button  x:Name="btnSave" Content="Save"/>
-            <Button x:Name="btnCancel" Content="Cancel"/>
+            <Button x:Name="btnSave" Click="btnSave_Click" Content="Save"/>
+            <Button x:Name="btnCancel" Click="btnClose_Click" Content="Close"/>
         </StackPanel>
             <ScrollViewer >
             <Grid x:Name="grdEdit" Background="#FF5D5A5A" Margin="10,10,10,10">

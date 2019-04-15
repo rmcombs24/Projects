@@ -47,6 +47,7 @@
         </StackPanel>
 
         <xctk:BusyIndicator x:Name="biIsWorking" IsBusy="false"  >
+
             <StackPanel Background="#FF4B4B4B">
                 <DataGrid x:Name="dgInfoBox" Background="#BF646464"
                             Visibility="Hidden"
@@ -58,6 +59,7 @@
                               VerticalAlignment="Stretch"
                               HorizontalAlignment="Stretch"/>
             </StackPanel>
+            
         </xctk:BusyIndicator>
         
 
