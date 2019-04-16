@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Xceed.Wpf.AvalonDock.Layout;
+using System.Windows.Threading;
 
 namespace MassMediaEditor
 {
@@ -13,17 +13,18 @@ namespace MassMediaEditor
     /// </summary>
     public partial class EditWindow : Window
     {
-        List<string> lstArrayFields = new List<string> {"Author", "Tags", "Composers", "Artist", "Director", "Producer", "Writer", "Genre" };
+        List<string> lstArrayFields = new List<string> {"Author", "Tags", "Composers", "Contributing Artists", "Directors", "Producers", "Writers", "Genre" };
         List<string> lstDateNumericFields = new List<string> { "Date Acquired", "Date Taken", "Year", "Rating" };
 
         private Dictionary<string, string> dicCurrentValues = new Dictionary<string, string>();
         private List<KeyValuePair<string, string>> lstFieldValuePair = new List<KeyValuePair<string, string>>();
         private List<string> properties = new List<string>();
+        DispatcherTimer timer = new DispatcherTimer();
 
         public EditWindow()
         {
             InitializeComponent();
-
+  
             //We're starting at base 2 for now because we're skipping the checkbox, and fileNames.
             //Filenames may be added under the prepend/appender program at a later date.
             for (int index = 2; index < ((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns.Count(); index++)
@@ -37,112 +38,25 @@ namespace MassMediaEditor
             }
         }
 
-        private void wndEdit_Closed(object sender, EventArgs e)
-        {
-            UpdateSelectedFiles();
-        }
-
-        /*
-        private void ddlFields_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            foreach (KeyValuePair<string, string> kvp in lstFieldValuePair)
-            {
-                if (kvp.Key == ddlFields.SelectedValue.ToString() && !(ddlFields.SelectedValue.ToString().Contains("Created") || ddlFields.SelectedValue.ToString().Contains("Date") || ddlFields.SelectedValue.ToString().Contains("Year") || ddlFields.SelectedValue.ToString().Contains("Rating")))
-                {
-                    CurrentValuePair = kvp;
-                    txtFieldData.IsEnabled = true;
-                    dpMediaEditor.IsEnabled = false;
-                    sldEditor.IsEnabled = false;
-
-                    txtFieldData.Visibility = Visibility.Visible;
-                    lblSliderVal.Visibility = Visibility.Hidden;
-                    spSlider.Visibility = Visibility.Hidden;
-                    dpMediaEditor.Visibility = Visibility.Hidden;
-
-                    txtFieldData.Text = kvp.Value.ToString();
-                    break;
-                }
-                else if (kvp.Key == ddlFields.SelectedValue.ToString() && (ddlFields.SelectedValue.ToString().Contains("Date") || ddlFields.SelectedValue.ToString().Contains("Created")))
-                {
-                    CurrentValuePair = kvp;
-                    txtFieldData.IsEnabled = false;
-                    sldEditor.IsEnabled = false;
-                    dpMediaEditor.IsEnabled = true;
-
-                    spSlider.Visibility = Visibility.Hidden;
-                    lblSliderVal.Visibility = Visibility.Hidden;
-                    txtFieldData.Visibility = Visibility.Hidden;
-                    dpMediaEditor.Visibility = Visibility.Visible;
-
-                    dpMediaEditor.SelectedDate = (String.IsNullOrEmpty(kvp.Value.ToString())) ? DateTime.Today : DateTime.Parse(kvp.Value.ToString());
-                    break;
-                }
-                else if (kvp.Key == ddlFields.SelectedValue.ToString() && (ddlFields.SelectedValue.ToString().Contains("Rating") || ddlFields.SelectedValue.ToString().Contains("Year")) )
-                {
-                    CurrentValuePair = kvp;
-
-                    double sliderVal = 0;
-
-                    txtFieldData.IsEnabled = false;
-                    dpMediaEditor.IsEnabled = false;
-                    sldEditor.IsEnabled = true;
-
-                    spSlider.Visibility = Visibility.Visible;
-                    lblSliderVal.Visibility = Visibility.Visible;
-                    txtFieldData.Visibility = Visibility.Hidden;
-                    dpMediaEditor.Visibility = Visibility.Hidden;
-
-                    if (ddlFields.SelectedValue.ToString().Contains("Year"))
-                    {
-                        sldEditor.Minimum = 1900;
-                        sldEditor.Maximum = DateTime.Now.Year;
-                    }
-                    else
-                    {
-                        sldEditor.Minimum = 0;
-                        sldEditor.Maximum = 99;
-                    }
-
-                    if (double.TryParse(kvp.Value, out sliderVal))
-                    {
-                        sldEditor.Value = sliderVal;
-                        lblSliderVal.Content = "No Rating.";
-                    }
-
-                    break;
-                }
-
-                //else if () 
-                //{
-                //    IDEA: how fuckin cool would it be if you had a repeater for string array props that spits out a new field each time you press a button. 
-                //    That way the user never has to worry about what is the seperator, and the developer can just do author.value = array. No splits or messes 
-                //}
-
-            }
-
-            lblUpdate.Visibility = Visibility.Hidden;
-        }
-        */
-
         private void UpdateSelectedFiles()
         {
             try
             {
-               Dictionary<string, string>  updatedFields = new Dictionary<string, string>();
+                Dictionary<string, string> updatedFields = new Dictionary<string, string>();
 
-               foreach (KeyValuePair<string, string> entry in dicCurrentValues)
-               {
-                   if (!String.IsNullOrEmpty(entry.Value))
-                   {
+                foreach (KeyValuePair<string, string> entry in dicCurrentValues)
+                {
+                    if (!String.IsNullOrEmpty(entry.Value))
+                    {
                         updatedFields.Add(entry.Key, entry.Value);
-                   }
-               }
-   
-               foreach (object oItem in ((MainWindow)Application.Current.MainWindow).dgInfoBox.Items)
+                    }
+                }
+
+                foreach (object oItem in ((MainWindow)Application.Current.MainWindow).dgInfoBox.Items)
                 {
                     if (((Media)oItem).isChecked == true)
                     {
-                         foreach (KeyValuePair<string, string> kvp in updatedFields)
+                        foreach (KeyValuePair<string, string> kvp in updatedFields)
                         {
                             //Since we're dealing with a mutable type of objects.
                             //If the object has a valid property field then we can update the file
@@ -260,7 +174,7 @@ namespace MassMediaEditor
                                             break;
                                         case "Genre":
                                             ((Video)oItem).Genre = kvp.Value.Split(';');
-                                                break;
+                                            break;
                                         case "Subtitle":
                                             ((Video)oItem).Subtitle = kvp.Value;
                                             break;
@@ -276,7 +190,11 @@ namespace MassMediaEditor
                     }
                 }
             }
-            catch (Exception e) { new ErrorLog().WriteToLog(e.Message); }
+            catch (Exception ex)
+            {
+                new ErrorLog().WriteToLog(ex.Message);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+            }
         }
 
         private void GenerateDataRow(string currentField)
@@ -303,7 +221,9 @@ namespace MassMediaEditor
                     {
                         Name = String.Format("sldrRating_{0}", grdEdit.RowDefinitions.Count - 1),
                         Minimum = 0,
-                        Maximum = 100
+                        Maximum = 100,
+                        Width = 245,
+                        Height = 25
                     };
 
                     grdEdit.Children.Add(sldControl);
@@ -316,8 +236,9 @@ namespace MassMediaEditor
                     {
                         Name = String.Format("lblAutoGenerated_{0}", grdEdit.RowDefinitions.Count - 1),
                         Content = String.Empty,
-                        Foreground = Brushes.White
-                    };
+                        Foreground = Brushes.White,
+                        Margin = new Thickness(0, 5, 0, 0)
+                };
 
                     grdEdit.Children.Add(sliderValue);
                     Grid.SetRow(sliderValue, grdEdit.RowDefinitions.Count - 1);
@@ -326,12 +247,15 @@ namespace MassMediaEditor
                 else if (currentField == "Year")
                 {
                     ComboBox Years = new ComboBox();
+                    Years.Height = 25;
+                    Years.Width = 240;
+                    Years.Items.Add(String.Empty);
 
-                    for (int year = 1900; year <= DateTime.Now.Year; year++)
+                    for (int year = DateTime.Now.Year; year >= 1900 ; year--)
                     {
                         Years.Items.Add(year);
                     }
-
+                    
                     grdEdit.Children.Add(Years);
                     Grid.SetRow(Years, grdEdit.RowDefinitions.Count - 1);
                     Grid.SetColumn(Years, 1);
@@ -370,17 +294,16 @@ namespace MassMediaEditor
                 //In here we need to assign the name values of the ArrayValueTemplate so that we can differeniate based on the rows.
                 DataTemplate dt = (DataTemplate)grdEdit.FindResource("cellTemplate");
                 StackPanel outerSP = ((StackPanel)dt.LoadContent());
-                StackPanel innerSP = ((StackPanel)outerSP.Children[0]);
 
                 //Outer Stack Panel
                 outerSP.Name = String.Format("spParent_{0}", grdEdit.RowDefinitions.Count - 1);
 
                 //ListBox
-                ((ListBox)outerSP.Children[1]).Name = String.Format("lstbxValueContainer_{0}", grdEdit.RowDefinitions.Count - 1);
+                ((ListBox)outerSP.Children[2]).Name = String.Format("lstbxValueContainer_{0}", grdEdit.RowDefinitions.Count - 1);
 
                 //Buttons
-                ((Button)innerSP.Children[0]).Name = String.Format("btnAddValue_{0}", grdEdit.RowDefinitions.Count - 1);
-                ((Button)innerSP.Children[1]).Name = String.Format("btnRemoveValue_{0}", grdEdit.RowDefinitions.Count - 1);
+                ((Button)outerSP.Children[0]).Name = String.Format("btnAddValue_{0}", grdEdit.RowDefinitions.Count - 1);
+                ((Button)outerSP.Children[1]).Name = String.Format("btnRemoveValue_{0}", grdEdit.RowDefinitions.Count - 1);
 
                 //Add to the grid and set the row.
                 grdEdit.Children.Add(outerSP);
@@ -388,13 +311,6 @@ namespace MassMediaEditor
             }
         }
  
-        private void sldEditor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            UIElement lbl = grdEdit.Children.Cast<UIElement>().Where(x => Grid.GetRow(x) == Convert.ToInt32(((Slider)sender).Name.Split('_')[1]) && Grid.GetColumn(x) == 2).FirstOrDefault();
-
-            ((Label)lbl).Content = String.Format("{0}/100", Math.Round(((Slider)sender).Value).ToString());
-        }
-
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -402,14 +318,16 @@ namespace MassMediaEditor
                 string value = String.Empty;
 
                 // Hit Save -> Get all the fields -> keep a tally of the "New" values.
+                if (dicCurrentValues.Count > 0) { dicCurrentValues.Clear(); }
+
                 for (int row = 0; row < grdEdit.RowDefinitions.Count; row++)
                 {
-                    int column = (lstArrayFields.Contains(properties[row])) ? 3 : 1;
+                    int column = (lstArrayFields.Contains(properties[row])) ? 2 : 1;
                     var currentControl = grdEdit.Children.Cast<UIElement>().First(x => Grid.GetRow(x) == row && Grid.GetColumn(x) == column);
 
                     if (currentControl is ComboBox)
                     {
-                        value = ((ComboBox)currentControl).SelectedValue.ToString();
+                        value = (((ComboBox)currentControl).SelectedValue != null) ? ((ComboBox)currentControl).SelectedValue.ToString() : "1900" ;
                     }
                     else if (currentControl is Slider)
                     {
@@ -417,13 +335,13 @@ namespace MassMediaEditor
                     }
                     else if (currentControl is DatePicker)
                     {
-                        value = ((DatePicker)currentControl).SelectedDate.Value.Date.ToShortDateString();
+                        value = (((DatePicker)currentControl).SelectedDate.HasValue) ? ((DatePicker)currentControl).SelectedDate.Value.Date.ToShortDateString() : DateTime.MinValue.ToShortDateString();
                     }
                     else if (currentControl is StackPanel)
                     {
                         if (((StackPanel)currentControl).Children.Count > 0)
                         {
-                            value = String.Join(";", ((ListBox)((StackPanel)currentControl).Children[1]).Items.Cast<string>());
+                            value = (((ListBox)((StackPanel)currentControl).Children[2]).HasItems) ? String.Join(";", ((ListBox)((StackPanel)currentControl).Children[2]).Items.Cast<string>()) : String.Empty;
                         }
                     }
                     else
@@ -434,66 +352,70 @@ namespace MassMediaEditor
                     dicCurrentValues.Add(properties[row], value);
                 }
 
-                /* lblUpdate.Visibility = Visibility.Visible; */
+                lblUpdate.Visibility = Visibility.Visible;
+                timer.Interval = TimeSpan.FromSeconds(3);
+                timer.Tick += timer_Tick;
+                timer.Start();
+                
             }
             catch (Exception ex)
             {
                 new ErrorLog().WriteToLog(ex.Message);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
         }
 
-        private void btnAddItem_Click(object sender, RoutedEventArgs e)
+        private void btnAddRemoveItem_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = sender as Button;
             try
             {
+                Button btn = sender as Button;
+
                 if (btn != null)
                 {
                     //Fuckin ew
-                    ListBox lsbox = ((StackPanel)VisualTreeHelper.GetParent(((StackPanel)VisualTreeHelper.GetParent(btn)))).Children[1] as ListBox;
-                    UIElement tbox = grdEdit.Children.Cast<UIElement>().Where(x => Grid.GetRow(x) == Convert.ToInt32(btn.Name.Split('_')[1]) && Grid.GetColumn(x) == 1).FirstOrDefault();
-
-                    if (!String.IsNullOrEmpty(((TextBox)tbox).Text))
+                    ListBox lsbox = ((StackPanel)VisualTreeHelper.GetParent(btn)).Children[2] as ListBox;
+                    String[] strNameRow = btn.Name.Split('_');
+                    
+                    //Add
+                    if (strNameRow[0].Contains("Add"))
                     {
-                        lsbox.IsEnabled = true;
-                        lsbox.Visibility = Visibility.Visible;
-                        lsbox.Items.Add(((TextBox)tbox).Text);
+                        UIElement tbox = grdEdit.Children.Cast<UIElement>().Where(x => Grid.GetRow(x) == Convert.ToInt32(strNameRow[1]) && Grid.GetColumn(x) == 1).FirstOrDefault();
 
-                        ((TextBox)tbox).Text = String.Empty;
-                        ((StackPanel)VisualTreeHelper.GetParent(btn)).Children[1].IsEnabled = true;
-                        ((StackPanel)VisualTreeHelper.GetParent(btn)).Children[1].Visibility = Visibility.Visible;
+                        if (!String.IsNullOrEmpty(((TextBox)tbox).Text))
+                        {
+                            lsbox.IsEnabled = true;
+                            lsbox.Visibility = Visibility.Visible;
+                            lsbox.Items.Add(((TextBox)tbox).Text);
+
+                            ((TextBox)tbox).Text = String.Empty;
+                            ((StackPanel)VisualTreeHelper.GetParent(btn)).Children[1].IsEnabled = true;
+                            ((StackPanel)VisualTreeHelper.GetParent(btn)).Children[1].Visibility = Visibility.Visible;
+                        }
+                    }
+                    else
+                    {
+                        //Remove
+                        if (lsbox.SelectedIndex >= 0)
+                        {
+                            lsbox.Items.Remove(lsbox.Items[lsbox.SelectedIndex]);
+                            lsbox.Items.Refresh();
+                        }
+                        if (!lsbox.HasItems)
+                        {
+                            btn.IsEnabled = false;
+                            lsbox.IsEnabled = false;
+                        }
                     }
                 }
             }
-
             catch (Exception ex)
             {
                 new ErrorLog().WriteToLog(ex.Message);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
         }
-
-        private void btnRemoveItem_Click(object sender, RoutedEventArgs e)
-        {
-            Button btn = sender as Button;
-
-            if (btn != null)
-            {
-                //Fuckin ew
-                ListBox lsbox = ((StackPanel)VisualTreeHelper.GetParent(((StackPanel)VisualTreeHelper.GetParent(btn)))).Children[1] as ListBox;
-
-                if (lsbox.SelectedIndex >= 0)
-                {
-                    lsbox.Items.Remove(lsbox.Items[lsbox.SelectedIndex]);
-                    lsbox.Items.Refresh();
-                }
-                if (!lsbox.HasItems)
-                {
-                    btn.IsEnabled = false;
-                    lsbox.IsEnabled = false;
-                }
-            }
-        }
-
+        
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxMgr mbMgr = new MessageBoxMgr();
@@ -504,6 +426,24 @@ namespace MassMediaEditor
                 this.Close();
             }
 
+        }
+
+        private void sldEditor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            UIElement lbl = grdEdit.Children.Cast<UIElement>().Where(x => Grid.GetRow(x) == Convert.ToInt32(((Slider)sender).Name.Split('_')[1]) && Grid.GetColumn(x) == 2).FirstOrDefault();
+
+            ((Label)lbl).Content = String.Format("{0}/100", Math.Round(((Slider)sender).Value).ToString());
+        }
+
+        private void wndEdit_Closed(object sender, EventArgs e)
+        {
+            UpdateSelectedFiles();
+        }
+
+        void timer_Tick(object sender, EventArgs e)
+        {
+            lblUpdate.Visibility = Visibility.Hidden;
+            timer.Stop();
         }
     }
 }

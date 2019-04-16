@@ -23,7 +23,7 @@ namespace MassMediaEditor
         public String Comments  { get; set; }
         public uint? Rating     { get; set; }
         public String[] Tags    { get; set; }
-        public String _Tags     { get { return String.Join(";", Tags); } }
+        public String _Tags     { get { return (Tags == null)  ? String.Empty : String.Join(";", Tags); } }
         public bool isChecked   { get; set; }
 
         public bool WriteToShellFile(Media mediaFile, bool sort)
@@ -141,13 +141,11 @@ namespace MassMediaEditor
                 d.Add("Publisher",              new Binding("Publisher"));
                 d.Add("Genre",                  new Binding("_Genre"));
                 d.Add("Subtitle",               new Binding("Subtitle"));
-                d.Add("Publisher",              new Binding("Publisher"));
                 
                 if (MediaType.Name == "Video")
                 {
                     d.Add("Directors",          new Binding("_Directors"));
                     d.Add("Writers",            new Binding("_Writers"));
-                    d.Add("Genre",              new Binding("Genre"));
                     d.Add("Media Created",      new Binding("MediaCreated"));
                     d.Add("Year",               new Binding("Year"));
                     d.Add("Producers",          new Binding("_Producers"));
