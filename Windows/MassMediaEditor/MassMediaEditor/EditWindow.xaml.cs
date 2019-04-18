@@ -14,7 +14,7 @@ namespace MassMediaEditor
     public partial class EditWindow : Window
     {
         List<string> lstArrayFields = new List<string> {"Author", "Tags", "Composers", "Contributing Artists", "Directors", "Producers", "Writers", "Genre" };
-        List<string> lstDateNumericFields = new List<string> { "Date Acquired", "Date Taken", "Year", "Rating" };
+        List<string> lstDateNumericFields = new List<string> { "Date Acquired", "Date Taken", "Media Created", "Year", "Rating" };
 
         private Dictionary<string, string> dicCurrentValues = new Dictionary<string, string>();
         private List<KeyValuePair<string, string>> lstFieldValuePair = new List<KeyValuePair<string, string>>();
@@ -125,29 +125,11 @@ namespace MassMediaEditor
                                         case "Composers":
                                             ((Audio)oItem).Composers = kvp.Value.Split(';'); ;
                                             break;
-                                        case "Genre":
-                                            ((Audio)oItem).Genre = kvp.Value.Split(';'); ;
-                                            break;
-                                        case "Track Number":
-                                            ((Audio)oItem).TrackNumber = uint.Parse(kvp.Value);
-                                            break;
-                                        case "Contributing Artists":
-                                            ((Audio)oItem).ContributingArtists = kvp.Value.Split(';'); ;
-                                            break;
-                                        case "Copyright":
-                                            ((Audio)oItem).Copyright = kvp.Value;
-                                            break;
-                                        case "Subtitle":
-                                            ((Audio)oItem).Subtitle = kvp.Value;
-                                            break;
-                                        case "Publisher":
-                                            ((Audio)oItem).Publisher = kvp.Value;
-                                            break;
                                         default:
                                             break;
                                     }
                                 }
-                                else
+                                else if (oItem is Video)
                                 {
                                     switch (kvp.Key)
                                     {
@@ -169,17 +151,25 @@ namespace MassMediaEditor
                                         case "Producers":
                                             ((Video)oItem).Producers = kvp.Value.Split(';');
                                             break;
-                                        case "Contributing Artists":
-                                            ((Video)oItem).ContributingArtists = kvp.Value.Split(';');
+                                        default:
                                             break;
-                                        case "Genre":
-                                            ((Video)oItem).Genre = kvp.Value.Split(';');
-                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    switch (kvp.Key)
+                                    {
                                         case "Subtitle":
-                                            ((Video)oItem).Subtitle = kvp.Value;
+                                            ((Media)oItem).Subtitle = kvp.Value;
                                             break;
                                         case "Publisher":
-                                            ((Video)oItem).Publisher = kvp.Value;
+                                            ((Media)oItem).Publisher = kvp.Value;
+                                            break;
+                                        case "Genre":
+                                            ((Media)oItem).Genre = kvp.Value.Split(';'); ;
+                                            break;
+                                        case "Contributing Artists":
+                                            ((Media)oItem).ContributingArtists = kvp.Value.Split(';');
                                             break;
                                         default:
                                             break;
@@ -386,7 +376,7 @@ namespace MassMediaEditor
                         {
                             lsbox.IsEnabled = true;
                             lsbox.Visibility = Visibility.Visible;
-                            lsbox.Items.Add(((TextBox)tbox).Text);
+                            lsbox.Items.Add(((TextBox)tbox).Text.Trim());
 
                             ((TextBox)tbox).Text = String.Empty;
                             ((StackPanel)VisualTreeHelper.GetParent(btn)).Children[1].IsEnabled = true;
@@ -404,7 +394,9 @@ namespace MassMediaEditor
                         if (!lsbox.HasItems)
                         {
                             btn.IsEnabled = false;
+                            btn.Visibility = Visibility.Hidden;
                             lsbox.IsEnabled = false;
+                            lsbox.Visibility = Visibility.Hidden;
                         }
                     }
                 }
