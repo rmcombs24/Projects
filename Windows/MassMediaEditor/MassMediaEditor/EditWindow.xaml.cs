@@ -77,7 +77,7 @@ namespace MassMediaEditor
                                     ((Media)oItem).Rating = (uint)Math.Round(double.Parse(kvp.Value));
                                     break;
                                 case "Tags":
-                                    ((Media)oItem).Tags = kvp.Value.Split(';');
+                                    ((Media)oItem).Tags = ArraySort(kvp.Value);
                                     break;
                                 default:
                                     break;
@@ -88,7 +88,7 @@ namespace MassMediaEditor
                                 switch (kvp.Key)
                                 {
                                     case "Author":
-                                        ((Picture)oItem).Authors = kvp.Value.Split(';');
+                                        ((Picture)oItem).Authors = ArraySort(kvp.Value);
                                         break;
                                     case "Program Name":
                                         ((Picture)oItem).ProgramName = kvp.Value;
@@ -123,7 +123,7 @@ namespace MassMediaEditor
                                             ((Audio)oItem).BPM = kvp.Value;
                                             break;
                                         case "Composers":
-                                            ((Audio)oItem).Composers = kvp.Value.Split(';'); ;
+                                            ((Audio)oItem).Composers = ArraySort(kvp.Value);
                                             break;
                                         default:
                                             break;
@@ -143,38 +143,37 @@ namespace MassMediaEditor
                                             ((Video)oItem).Year = uint.Parse(kvp.Value);
                                             break;
                                         case "Directors":
-                                            ((Video)oItem).Directors = kvp.Value.Split(';');
+                                            ((Video)oItem).Directors = ArraySort(kvp.Value);
                                             break;
                                         case "Writers":
-                                            ((Video)oItem).Writers = kvp.Value.Split(';');
+                                            ((Video)oItem).Writers = ArraySort(kvp.Value);
                                             break;
                                         case "Producers":
-                                            ((Video)oItem).Producers = kvp.Value.Split(';');
+                                            ((Video)oItem).Producers = ArraySort(kvp.Value);
                                             break;
                                         default:
                                             break;
                                     }
                                 }
-                                else
+
+                                switch (kvp.Key)
                                 {
-                                    switch (kvp.Key)
-                                    {
-                                        case "Subtitle":
-                                            ((Media)oItem).Subtitle = kvp.Value;
-                                            break;
-                                        case "Publisher":
-                                            ((Media)oItem).Publisher = kvp.Value;
-                                            break;
-                                        case "Genre":
-                                            ((Media)oItem).Genre = kvp.Value.Split(';'); ;
-                                            break;
-                                        case "Contributing Artists":
-                                            ((Media)oItem).ContributingArtists = kvp.Value.Split(';');
-                                            break;
-                                        default:
-                                            break;
-                                    }
+                                    case "Subtitle":
+                                        ((Media)oItem).Subtitle = kvp.Value;
+                                        break;
+                                    case "Publisher":
+                                        ((Media)oItem).Publisher = kvp.Value;
+                                        break;
+                                    case "Genre":
+                                        ((Media)oItem).Genre = ArraySort(kvp.Value);
+                                        break;
+                                    case "Contributing Artists":
+                                        ((Media)oItem).ContributingArtists = ArraySort(kvp.Value);
+                                        break;
+                                    default:
+                                        break;
                                 }
+                                
                             }
                         }
                     }
@@ -185,6 +184,19 @@ namespace MassMediaEditor
                 new ErrorLog().WriteToLog(ex.Message);
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
+        }
+
+        private string[] ArraySort(String itemArray)
+        {
+            string[] splitArray = itemArray.Split(';');
+
+            //Check the config to see if sorting is enabled.
+            if (((MainWindow)Application.Current.MainWindow).settings.AutoSort)
+            {
+                Array.Sort(splitArray, StringComparer.InvariantCulture);
+            }
+
+            return splitArray;
         }
 
         private void GenerateDataRow(string currentField)

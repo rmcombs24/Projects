@@ -48,7 +48,7 @@ namespace MassMediaEditor
                 shellFile.Properties.System.Title.Value     = ((Media)mediaFile).Title;
                 shellFile.Properties.System.Subject.Value   = ((Media)mediaFile).Subject;
                 shellFile.Properties.System.Comment.Value   = ((Media)mediaFile).Comments;
-                shellFile.Properties.System.Keywords.Value  = (((Media)mediaFile).Tags.Length > 0) ? ArraySort(((Media)mediaFile).Tags) : Array.Empty<string>();
+                if (!(mediaFile is Audio)) { shellFile.Properties.System.Keywords.Value = (((Media)mediaFile).Tags.Length > 0) ? ((Media)mediaFile).Tags : Array.Empty<string>(); }
 
                 if (((Media)mediaFile).Subtitle != null) { shellFile.Properties.System.Media.Subtitle.Value = ((Media)mediaFile).Subtitle; }
 
@@ -68,9 +68,9 @@ namespace MassMediaEditor
                 {
                     if (mediaFile is Video)
                     {
-                        shellFile.Properties.System.Media.Writer.Value          = (((Video)mediaFile).Writers.Length > 0) ? ArraySort(((Video)mediaFile).Writers) : Array.Empty<string>();
-                        shellFile.Properties.System.Media.Producer.Value        = (((Video)mediaFile).Producers.Length > 0) ? ArraySort(((Video)mediaFile).Producers) : Array.Empty<string>();
-                        shellFile.Properties.System.Video.Director.Value        = (((Video)mediaFile).Directors.Length > 0) ? ArraySort(((Video)mediaFile).Directors) : Array.Empty<string>();                        
+                        shellFile.Properties.System.Media.Writer.Value          = (((Video)mediaFile).Writers.Length > 0) ? ((Video)mediaFile).Writers : Array.Empty<string>();
+                        shellFile.Properties.System.Media.Producer.Value        = (((Video)mediaFile).Producers.Length > 0) ? ((Video)mediaFile).Producers : Array.Empty<string>();
+                        shellFile.Properties.System.Video.Director.Value        = (((Video)mediaFile).Directors.Length > 0) ? ((Video)mediaFile).Directors : Array.Empty<string>();                        
                         shellFile.Properties.System.Media.PromotionUrl.Value    = ((Video)mediaFile).PromoURL;
                         shellFile.Properties.System.Media.Year.Value            = ((Video)mediaFile).Year;
                     }
@@ -80,11 +80,11 @@ namespace MassMediaEditor
                         shellFile.Properties.System.Music.AlbumTitle.Value      = ((Audio)mediaFile).Album;
                         shellFile.Properties.System.Music.TrackNumber.Value     = ((Audio)mediaFile).TrackNumber;
                         shellFile.Properties.System.Music.BeatsPerMinute.Value  = ((Audio)mediaFile).BPM;
-                        shellFile.Properties.System.Music.Composer.Value        = (((Audio)mediaFile).Composers.Length > 0) ? ArraySort(((Audio)mediaFile).Composers) : Array.Empty<string>();
+                        shellFile.Properties.System.Music.Composer.Value        = (((Audio)mediaFile).Composers.Length > 0) ? ((Audio)mediaFile).Composers : Array.Empty<string>();
                     }
 
                     shellFile.Properties.System.Media.AuthorUrl.Value       = ((Media)mediaFile).AuthorURL;
-                    shellFile.Properties.System.Music.Artist.Value          = (((Media)mediaFile).ContributingArtists.Length > 0) ? ArraySort(((Media)mediaFile).ContributingArtists) : Array.Empty<string>();
+                    shellFile.Properties.System.Music.Artist.Value          = (((Media)mediaFile).ContributingArtists.Length > 0) ? ((Media)mediaFile).ContributingArtists : Array.Empty<string>();
                     shellFile.Properties.System.Music.Genre.Value           = (((Media)mediaFile).Genre.Length > 0) ? ((Media)mediaFile).Genre : Array.Empty<string>();
                     shellFile.Properties.System.Media.Publisher.Value       = ((Media)mediaFile).Publisher;
                 }
@@ -97,18 +97,7 @@ namespace MassMediaEditor
 
             return !hasErrors;
         }
-
-        private string[] ArraySort(String[] itemArray)
-        {            
-            //Check the config to see if sorting is enabled.
-            if (((MainWindow) Application.Current.MainWindow).settings.AutoSort)
-            {
-                Array.Sort(itemArray, StringComparer.InvariantCulture);
-            }
-
-            return itemArray;
-        }
-
+        
         public Dictionary<String, Binding> GenerateBindings <T> (Type MediaType)
         {
             var d = new Dictionary<String, Binding>();
