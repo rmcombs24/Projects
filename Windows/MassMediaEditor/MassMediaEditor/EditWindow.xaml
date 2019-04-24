@@ -11,7 +11,7 @@
         WindowStartupLocation="CenterOwner" Background="#FF363636">
 
     <Window.Resources>
-        <DataTemplate x:Key="cellTemplate">
+        <DataTemplate x:Key="tmplArray">
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Button Width="25" Height="25" Click="btnAddRemoveItem_Click" FontSize="14" FontWeight="Bold" Content="+" />
                 <Button Width="25" Height="25" Click="btnAddRemoveItem_Click" FontSize="14" FontWeight="Bold" Content="&#xd7;" Visibility="Hidden" IsEnabled="False" />

@@ -42,21 +42,11 @@ namespace MassMediaEditor
         {
             try
             {
-                Dictionary<string, string> updatedFields = new Dictionary<string, string>();
-
-                foreach (KeyValuePair<string, string> entry in dicCurrentValues)
-                {
-                    if (!String.IsNullOrEmpty(entry.Value))
-                    {
-                        updatedFields.Add(entry.Key, entry.Value);
-                    }
-                }
-
                 foreach (object oItem in ((MainWindow)Application.Current.MainWindow).dgInfoBox.Items)
                 {
                     if (((Media)oItem).isChecked == true)
                     {
-                        foreach (KeyValuePair<string, string> kvp in updatedFields)
+                        foreach (KeyValuePair<string, string> kvp in dicCurrentValues)
                         {
                             //Since we're dealing with a mutable type of objects.
                             //If the object has a valid property field then we can update the file
@@ -74,10 +64,10 @@ namespace MassMediaEditor
                                     ((Media)oItem).Comments = kvp.Value;
                                     break;
                                 case "Rating":
-                                    ((Media)oItem).Rating = (uint)Math.Round(double.Parse(kvp.Value));
+                                    ((Media)oItem).Rating = (Math.Round(double.Parse(kvp.Value)) == 0 ) ?  null : (uint?) Math.Round(double.Parse(kvp.Value));
                                     break;
                                 case "Tags":
-                                    ((Media)oItem).Tags = ArraySort(kvp.Value);
+                                    ((Media)oItem).Tags = ParseArray(kvp.Value);
                                     break;
                                 default:
                                     break;
@@ -88,7 +78,7 @@ namespace MassMediaEditor
                                 switch (kvp.Key)
                                 {
                                     case "Author":
-                                        ((Picture)oItem).Authors = ArraySort(kvp.Value);
+                                        ((Picture)oItem).Authors = ParseArray(kvp.Value);
                                         break;
                                     case "Program Name":
                                         ((Picture)oItem).ProgramName = kvp.Value;
@@ -97,12 +87,11 @@ namespace MassMediaEditor
                                         ((Picture)oItem).Copyright = kvp.Value;
                                         break;
                                     case "Date Acquired":
-                                        ((Picture)oItem).DateAcquired = DateTime.Parse(kvp.Value);
+                                        ((Picture)oItem).DateAcquired = ParseDate(kvp.Value);
                                         break;
                                     case "Date Taken":
-                                        ((Picture)oItem).DateTaken = DateTime.Parse(kvp.Value);
-                                        break;
-
+                                         ((Picture)oItem).DateTaken = ParseDate(kvp.Value);
+                                       break;
                                     default:
                                         break;
                                 }
@@ -123,7 +112,7 @@ namespace MassMediaEditor
                                             ((Audio)oItem).BPM = kvp.Value;
                                             break;
                                         case "Composers":
-                                            ((Audio)oItem).Composers = ArraySort(kvp.Value);
+                                            ((Audio)oItem).Composers = ParseArray(kvp.Value);
                                             break;
                                         default:
                                             break;
@@ -133,23 +122,23 @@ namespace MassMediaEditor
                                 {
                                     switch (kvp.Key)
                                     {
-                                        case "Author URL":
-                                            ((Video)oItem).AuthorURL = kvp.Value;
-                                            break;
+                                        //case "Media Created":
+                                          //  ((Video)oItem).MediaCreated = ParseDate(kvp.Value);
+                                            // break;
                                         case "Promotional URL":
                                             ((Video)oItem).PromoURL = kvp.Value;
                                             break;
                                         case "Year":
-                                            ((Video)oItem).Year = uint.Parse(kvp.Value);
+                                            ((Video)oItem).Year = (String.IsNullOrEmpty(kvp.Value)) ? (uint?) null : uint.Parse(kvp.Value);
                                             break;
                                         case "Directors":
-                                            ((Video)oItem).Directors = ArraySort(kvp.Value);
+                                            ((Video)oItem).Directors = ParseArray(kvp.Value);
                                             break;
                                         case "Writers":
-                                            ((Video)oItem).Writers = ArraySort(kvp.Value);
+                                            ((Video)oItem).Writers = ParseArray(kvp.Value);
                                             break;
                                         case "Producers":
-                                            ((Video)oItem).Producers = ArraySort(kvp.Value);
+                                            ((Video)oItem).Producers = ParseArray(kvp.Value);
                                             break;
                                         default:
                                             break;
@@ -165,10 +154,13 @@ namespace MassMediaEditor
                                         ((Media)oItem).Publisher = kvp.Value;
                                         break;
                                     case "Genre":
-                                        ((Media)oItem).Genre = ArraySort(kvp.Value);
+                                        ((Media)oItem).Genre = ParseArray(kvp.Value);
+                                        break;
+                                    case "Author URL":
+                                        ((Media)oItem).AuthorURL = kvp.Value;
                                         break;
                                     case "Contributing Artists":
-                                        ((Media)oItem).ContributingArtists = ArraySort(kvp.Value);
+                                        ((Media)oItem).ContributingArtists = ParseArray(kvp.Value);
                                         break;
                                     default:
                                         break;
@@ -184,19 +176,6 @@ namespace MassMediaEditor
                 new ErrorLog().WriteToLog(ex.Message);
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
-        }
-
-        private string[] ArraySort(String itemArray)
-        {
-            string[] splitArray = itemArray.Split(';');
-
-            //Check the config to see if sorting is enabled.
-            if (((MainWindow)Application.Current.MainWindow).settings.AutoSort)
-            {
-                Array.Sort(splitArray, StringComparer.InvariantCulture);
-            }
-
-            return splitArray;
         }
 
         private void GenerateDataRow(string currentField)
@@ -215,6 +194,7 @@ namespace MassMediaEditor
             grdEdit.Children.Add(autoLabel);
             Grid.SetRow(autoLabel, grdEdit.RowDefinitions.Count - 1);
 
+            //Column 1
             if (lstDateNumericFields.Contains(currentField))
             {
                 if (currentField == "Rating")
@@ -289,12 +269,13 @@ namespace MassMediaEditor
                 Grid.SetRow(autoTextBox, grdEdit.RowDefinitions.Count - 1);
             }
 
+            //Column 2
             if (lstArrayFields.Contains(currentField))
             {
                 //Stack Panel. List Box, Stack Panel, Button Button
 
                 //In here we need to assign the name values of the ArrayValueTemplate so that we can differeniate based on the rows.
-                DataTemplate dt = (DataTemplate)grdEdit.FindResource("cellTemplate");
+                DataTemplate dt = (DataTemplate)grdEdit.FindResource("tmplArray");
                 StackPanel outerSP = ((StackPanel)dt.LoadContent());
 
                 //Outer Stack Panel
@@ -329,7 +310,7 @@ namespace MassMediaEditor
 
                     if (currentControl is ComboBox)
                     {
-                        value = (((ComboBox)currentControl).SelectedValue != null) ? ((ComboBox)currentControl).SelectedValue.ToString() : "1900" ;
+                        value = (((ComboBox)currentControl).SelectedValue != null) ? ((ComboBox)currentControl).SelectedValue.ToString() : null;
                     }
                     else if (currentControl is Slider)
                     {
@@ -337,11 +318,11 @@ namespace MassMediaEditor
                     }
                     else if (currentControl is DatePicker)
                     {
-                        value = (((DatePicker)currentControl).SelectedDate.HasValue) ? ((DatePicker)currentControl).SelectedDate.Value.Date.ToShortDateString() : DateTime.MinValue.ToShortDateString();
+                        value = (((DatePicker)currentControl).SelectedDate.HasValue) ? ((DatePicker)currentControl).SelectedDate.Value.Date.ToShortDateString() : null;
                     }
                     else if (currentControl is StackPanel)
                     {
-                        if (((StackPanel)currentControl).Children.Count > 0)
+                        if (((StackPanel)currentControl).Children.Count > 2)
                         {
                             value = (((ListBox)((StackPanel)currentControl).Children[2]).HasItems) ? String.Join(";", ((ListBox)((StackPanel)currentControl).Children[2]).Items.Cast<string>()) : String.Empty;
                         }
@@ -358,7 +339,6 @@ namespace MassMediaEditor
                 timer.Interval = TimeSpan.FromSeconds(3);
                 timer.Tick += timer_Tick;
                 timer.Start();
-                
             }
             catch (Exception ex)
             {
@@ -448,6 +428,33 @@ namespace MassMediaEditor
         {
             lblUpdate.Visibility = Visibility.Hidden;
             timer.Stop();
+        }
+
+        private string[] ParseArray(String itemArray)
+        {
+            string[] splitArray = (String.IsNullOrEmpty(itemArray)) ? Array.Empty<string>() : itemArray.Split(';');
+
+            //Check the config to see if sorting is enabled.
+            if (((MainWindow)Application.Current.MainWindow).settings.AutoSort)
+            {
+                Array.Sort(splitArray, StringComparer.InvariantCulture);
+            }
+
+            return splitArray;
+        }
+
+        private DateTime? ParseDate(string kvp)
+        {
+            DateTime dateTimeOut = DateTime.MinValue;
+
+            if (DateTime.TryParse(kvp, out dateTimeOut))
+            {
+                return dateTimeOut;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
