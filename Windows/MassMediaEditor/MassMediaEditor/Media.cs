@@ -3,94 +3,90 @@ using System.Collections.Generic;
 using System.Windows.Data;
 using System.Linq;
 using Microsoft.WindowsAPICodePack.Shell;
+using System.Windows;
 
 namespace MassMediaEditor
 {
     class Media
     {
-        /* These are shared by all media types
-        **** Description
-        * Title 
-        * Subject
-        * Rating
-        * Tags
-        * Comments
+
+        /* Editable extened properties for Media
+
+            ----- Description -----
+            Title, Subject, Rating, Tags, Comments
         */
 
-        public string FileName  { get; set; }
-        public string FilePath  { get; set; }
-        public String Title     { get; set; }
-        public String Subtitle  { get; set; }
-        public String Subject   { get; set; }
-        public String Comments  { get; set; }
-        public uint? Rating     { get; set; }
-        public String Tags      { get; set; }
-        public bool isChecked   { get; set; }
+        //I gotta refactor this whole thing. Nested classes based on sections of attributes and all that, but this will work for now
+        #region Media Properties
+        public bool isChecked { get; set; }
+        public string FileName { get; set; }
+        public string FilePath { get; set; }
+        public String Title { get; set; }
+        public String Subtitle { get; set; }
+        public String Subject { get; set; }
+        public String Comments { get; set; }
+        public uint? Rating { get; set; }
+        public String[] Tags { get; set; }
+        public String _Tags { get { return (Tags == null) ? String.Empty : String.Join(";", Tags); } }
+        public String[] ContributingArtists { get; set; }
+        public String _ContributingArtists { get { return (ContributingArtists == null) ? String.Empty : String.Join(";", ContributingArtists); } }
+        public String[] Genre { get; set; }
+        public String _Genre { get { return (Genre == null) ? String.Empty : String.Join(";", Genre); } }
+        public String AuthorURL { get; set; }
+        public String Publisher { get; set; }
+        #endregion
 
         public bool WriteToShellFile(Media mediaFile, bool sort)
         {
             bool hasErrors = false;
-            char[] seperators = { ',', ';', '|', '/', '\\', ':' };
 
-            ShellFile shellFile = ShellFile.FromFilePath(((Media)mediaFile).FilePath);
+            ShellFile shellFile = ShellFile.FromFilePath(mediaFile.FilePath);
 
             try
             {
-                //shellFile.Properties.System.FileName.Value      = ((Media)mediaFile).FileName; //ToDo: Add FileName Editing later, as it might be better for the Append/Prepend program.
-                shellFile.Properties.System.Title.Value     = ((Media)mediaFile).Title;
-                shellFile.Properties.System.Subject.Value   = ((Media)mediaFile).Subject;
-                shellFile.Properties.System.Comment.Value   = ((Media)mediaFile).Comments;
-                shellFile.Properties.System.Media.Subtitle.Value = ((Media)mediaFile).Subtitle;
+                //shellFile.Properties.System.FileName.Value  = mediaFile.FileName; //ToDo: Add FileName Editing later, as it might be better for the Append/Prepend program.
+                shellFile.Properties.System.Title.Value     = mediaFile.Title;
+                shellFile.Properties.System.Subject.Value   = mediaFile.Subject;
+                shellFile.Properties.System.Comment.Value   = mediaFile.Comments;
+                if (!(mediaFile is Audio)) { shellFile.Properties.System.Keywords.Value = mediaFile.Tags ?? Array.Empty<string>(); }
 
-                if (((Media)mediaFile).Rating == 0)
-                {
-                    shellFile.Properties.System.Rating.Value = null;
-                }
-                else if (((Media)mediaFile).Rating == 100)
-                {
-                    shellFile.Properties.System.Rating.Value = 99;
-                }
-                else { shellFile.Properties.System.Rating.Value = ((Media)mediaFile).Rating; }
-                
-                shellFile.Properties.System.Keywords.Value = (String.IsNullOrEmpty(((Media)mediaFile).Tags.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray()[0])) ? null : SanitizeArray(((Media)mediaFile).Tags.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray(), sort);
+                if (mediaFile.Subtitle != null) { shellFile.Properties.System.Media.Subtitle.Value = mediaFile.Subtitle; }
 
+                if (mediaFile.Rating == 0) { shellFile.Properties.System.Rating.Value = null; }
+                else { shellFile.Properties.System.Rating.Value = mediaFile.Rating; }
+            
                 if (mediaFile is Picture)
-                {                   
-                    shellFile.Properties.System.Author.Value = (String.IsNullOrEmpty(((Picture)mediaFile).Authors.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray()[0])) ? null : SanitizeArray(((Picture)mediaFile).Authors.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray(), sort); ;
-                    shellFile.Properties.System.ApplicationName.Value = ((Picture)mediaFile).ProgramName;
-                    shellFile.Properties.System.Copyright.Value = ((Picture)mediaFile).Copyright;
-                    shellFile.Properties.System.DateAcquired.Value = ((Picture)mediaFile).DateAcquired;
-                    shellFile.Properties.System.Photo.DateTaken.Value = ((Picture)mediaFile).DateTaken;
-                }
-                else if (mediaFile is Audio)
                 {
-                    //shellFile.Properties.System.Copyright.Value             = ((Audio)mediaFile).Copyright;
-
-                    shellFile.Properties.System.Music.Composer.Value        = (String.IsNullOrEmpty(((Audio)mediaFile).Composers.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray()[0]))           ?  null  : SanitizeArray(((Audio)mediaFile).Composers.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray(), sort);
-                    shellFile.Properties.System.Music.Artist.Value          = (String.IsNullOrEmpty(((Audio)mediaFile).ContributingArtists.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray()[0])) ?  null  : SanitizeArray(((Audio)mediaFile).ContributingArtists.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray(), sort);
-                    shellFile.Properties.System.Music.Genre.Value           = (String.IsNullOrEmpty(((Audio)mediaFile).Genre.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray()[0]))               ?  null  : SanitizeArray(((Audio)mediaFile).Genre.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray(), sort);
-                    shellFile.Properties.System.Music.AlbumArtist.Value     = ((Audio)mediaFile).AlbumArtist;
-                    shellFile.Properties.System.Music.AlbumTitle.Value      = ((Audio)mediaFile).Album;
-                    shellFile.Properties.System.Music.TrackNumber.Value     = ((Audio)mediaFile).TrackNumber;
-                    shellFile.Properties.System.Music.BeatsPerMinute.Value  = ((Audio)mediaFile).BPM;
-
-                    shellFile.Properties.System.Media.Publisher.Value       = ((Audio)mediaFile).Publisher;
+                    //shellFile.Properties.System.Copyright.Value         = ((Picture)mediaFile).Copyright;
+                    shellFile.Properties.System.Author.Value            = ((Picture)mediaFile).Authors ?? Array.Empty<string>();
+                    shellFile.Properties.System.ApplicationName.Value   = ((Picture)mediaFile).ProgramName;
+                    shellFile.Properties.System.DateAcquired.Value      = (((Picture)mediaFile).DateAcquired == DateTime.MinValue) ? null : ((Picture)mediaFile).DateAcquired;
+                    shellFile.Properties.System.Photo.DateTaken.Value   = (((Picture)mediaFile).DateTaken == DateTime.MinValue) ? null : ((Picture)mediaFile).DateTaken;
                 }
-                else if (mediaFile is Video)
+                else if (mediaFile is Audio || mediaFile is Video)
                 {
-                    //shellFile.Properties.System.Copyright.Value = String.IsNullOrEmpty(((Video)mediaFile).Copyright) ? ((Video)mediaFile).Copyright : String.Empty;
-                    
-                    shellFile.Properties.System.Music.Artist.Value =    (String.IsNullOrEmpty(((Video)mediaFile).ContributingArtists.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray()[0])   ?  null : SanitizeArray(((Video)mediaFile).ContributingArtists.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray(), sort));
-                    shellFile.Properties.System.Music.Genre.Value =     (String.IsNullOrEmpty(((Video)mediaFile).Genre.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray()[0])                 ?  null : SanitizeArray(((Video)mediaFile).Genre.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray(), sort));
+                    if (mediaFile is Video)
+                    {
+                        //shellFile.Properties.System.DateCreated.Value           = (((Video)mediaFile).MediaCreated != DateTime.MinValue) ? ((Video)mediaFile).MediaCreated : null;
+                        shellFile.Properties.System.Media.Writer.Value          = ((Video)mediaFile).Writers ?? Array.Empty<string>();
+                        shellFile.Properties.System.Media.Producer.Value        = ((Video)mediaFile).Producers ?? Array.Empty<string>();
+                        shellFile.Properties.System.Video.Director.Value        = ((Video)mediaFile).Directors ?? Array.Empty<string>();
+                        shellFile.Properties.System.Media.PromotionUrl.Value    = ((Video)mediaFile).PromoURL;
+                        shellFile.Properties.System.Media.Year.Value            = ((Video)mediaFile).Year;
+                    }
+                    else if (mediaFile is Audio)
+                    {
+                        shellFile.Properties.System.Music.AlbumArtist.Value     = ((Audio)mediaFile).AlbumArtist;
+                        shellFile.Properties.System.Music.AlbumTitle.Value      = ((Audio)mediaFile).Album;
+                        shellFile.Properties.System.Music.TrackNumber.Value     = ((Audio)mediaFile).TrackNumber;
+                        shellFile.Properties.System.Music.BeatsPerMinute.Value  = ((Audio)mediaFile).BPM;
+                        shellFile.Properties.System.Music.Composer.Value        = ((Audio)mediaFile).Composers ?? Array.Empty<string>();
+                    }
 
-                    shellFile.Properties.System.Media.Writer.Value =    (String.IsNullOrEmpty(((Video)mediaFile).Writers.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray()[0])               ?  null : SanitizeArray(((Video)mediaFile).Writers.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray(), sort));
-                    shellFile.Properties.System.Media.Producer.Value =  (String.IsNullOrEmpty(((Video)mediaFile).Producers.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray()[0])             ?  null : SanitizeArray(((Video)mediaFile).Producers.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray(), sort));
-                    shellFile.Properties.System.Video.Director.Value =  (String.IsNullOrEmpty(((Video)mediaFile).Directors.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray()[0])             ?  null : SanitizeArray(((Video)mediaFile).Directors.Split(seperators, StringSplitOptions.RemoveEmptyEntries).ToArray(), sort));
-
-                    shellFile.Properties.System.Media.Publisher.Value       = ((Video)mediaFile).Publisher;
-                    shellFile.Properties.System.Media.AuthorUrl.Value       = ((Video)mediaFile).AuthorURL;
-                    shellFile.Properties.System.Media.PromotionUrl.Value    = ((Video)mediaFile).PromoURL;
-                    shellFile.Properties.System.Media.Year.Value            = ((Video)mediaFile).Year;
+                    shellFile.Properties.System.Media.AuthorUrl.Value       = mediaFile.AuthorURL;
+                    shellFile.Properties.System.Music.Artist.Value          = mediaFile.ContributingArtists ?? Array.Empty<string>();
+                    shellFile.Properties.System.Music.Genre.Value           = mediaFile.Genre ?? Array.Empty<string>();
+                    shellFile.Properties.System.Media.Publisher.Value       = mediaFile.Publisher;
                 }
             }
             catch (Exception e)
@@ -101,23 +97,7 @@ namespace MassMediaEditor
 
             return !hasErrors;
         }
-
-        private string[] SanitizeArray(String[] itemArray, bool sort)
-        {
-            for (int index = 0; index < itemArray.Length; index++)
-            {
-                itemArray[index] = itemArray[index].Trim();
-            }
-
-            //Check the config to see if sorting is enabled.
-            if (sort)
-            {
-                Array.Sort(itemArray, StringComparer.InvariantCulture);
-            }
-
-            return itemArray;
-        }
-
+        
         public Dictionary<String, Binding> GenerateBindings <T> (Type MediaType)
         {
             var d = new Dictionary<String, Binding>();
@@ -125,68 +105,68 @@ namespace MassMediaEditor
             d.Add(String.Empty, new Binding("isChecked"));
             d.Add("File Name",  new Binding("FileName"));
             d.Add("Title",      new Binding("Title"));
-
-            if (false) //Overwrite readonly setting
-            {
-                d.Add("Copyright", new Binding("Copyright"));
-            }
-
+            if (MediaType.Name != "Audio") { d.Add("Tags", new Binding("_Tags")); }
             d.Add("Rating",     new Binding("Rating"));
             d.Add("Comments",   new Binding("Comments"));
+
+            //d.Add("Copyright", new Binding("Copyright")); //Overwrite read-only setting NYI
 
             if (MediaType.Name == "Picture")
             {
                 d.Add("Subject",        new Binding("Subject"));
-                d.Add("Author",         new Binding("Authors"));
+                d.Add("Author",         new Binding("_Authors"));
                 d.Add("Program Name",   new Binding("ProgramName"));
                 d.Add("Date Taken",     new Binding("DateTaken"));
                 d.Add("Date Acquired",  new Binding("DateAcquired"));
-                d.Add("Tags",           new Binding("Tags"));
-
             }
-            else if (MediaType.Name == "Audio")
+            else if (MediaType.Name == "Audio" || MediaType.Name == "Video")
             {
-                d.Add("Subtitle",               new Binding("Subtitle"));
-                d.Add("Contributing Artists",   new Binding("ContributingArtists"));
-                d.Add("Album Artist",           new Binding("AlbumArtist"));
-                d.Add("Album",                  new Binding("Album"));
-                d.Add("Track Number",           new Binding("TrackNumber"));
-                d.Add("Genre",                  new Binding("Genre"));
-                d.Add("Composers",              new Binding("Composers"));
-                d.Add("BPM",                    new Binding("BPM"));
+                //When implemented this is where the "Music" video fields will be added.
+                d.Add("Contributing Artists",   new Binding("_ContributingArtists"));
                 d.Add("Author URL",             new Binding("AuthorURL"));
                 d.Add("Publisher",              new Binding("Publisher"));
-            }
-            else if (MediaType.Name == "Video")
-            {
-                d.Add("Tags",                   new Binding("Tags"));
+                d.Add("Genre",                  new Binding("_Genre"));
                 d.Add("Subtitle",               new Binding("Subtitle"));
-                d.Add("Contributing Artists",   new Binding("ContributingArtists"));
-                d.Add("Publisher",              new Binding("Publisher"));
-                d.Add("Directors",              new Binding("Directors"));
-                d.Add("Writers",                new Binding("Writers"));
-                d.Add("Genre",                  new Binding("Genre"));
-                d.Add("Media Created",          new Binding("MediaCreated"));
-                d.Add("Year",                   new Binding("Year"));
-                d.Add("Producers",              new Binding("Producers"));
-                d.Add("Author URL",             new Binding("AuthorURL"));
-                d.Add("Promotional URL",        new Binding("PromoURL"));
+                
+                if (MediaType.Name == "Video")
+                {
+                    d.Add("Directors",          new Binding("_Directors"));
+                    d.Add("Writers",            new Binding("_Writers"));
+                    //d.Add("Media Created",      new Binding("MediaCreated"));
+                    d.Add("Year",               new Binding("Year"));
+                    d.Add("Producers",          new Binding("_Producers"));
+                    d.Add("Promotional URL",    new Binding("PromoURL"));
+                }
+                else
+                {
+                    d.Add("Composers",      new Binding("_Composers"));
+                    d.Add("Album Artist",   new Binding("AlbumArtist"));
+                    d.Add("Album",          new Binding("Album"));
+                    
+                    //We're not implenting this one. Track numbers, much like names are unique and shouldn't be part of the mass editing process. 
+                    //However, if single column editing is added later... then maybe.
+                    //d.Add("Track Number",   new Binding("TrackNumber")); 
+                    //d.Add("BPM",            new Binding("BPM")); //Read above comment.
+                }
             }
-
             return d;
         }
     }
     
     class Picture : Media
     {
-        /* Editable Extened properties for Images (This does not include Camera/Photo settings)
-         **** Origin
-         * Authors
-         * Date Taken
-         * Program Name
-         * Date Aquired
-         * Copyright
-         */
+        /* Editable extened properties for Pictures
+
+        -----Media-----
+        Contributing Artists Album Artist, Album, Year, Genre, Track Number
+
+        ------ Origin ------
+         Authors, Date Taken, Program Name, Date Aquired
+
+        ------ Camera/Photo* ------
+        
+        * Not implemented
+        */
 
         public Picture(){/*Default Constructor*/}
 
@@ -195,8 +175,8 @@ namespace MassMediaEditor
             ShellFile file = ShellFile.FromFilePath(filePath);
 
             FilePath        = filePath;
-            Authors         = (file.Properties.System.Author.Value != null) ? String.Join(",", file.Properties.System.Author.Value) : String.Empty;
-            Tags            = (file.Properties.System.Keywords.Value != null) ? String.Join(",", file.Properties.System.Keywords.Value) : String.Empty;
+            Authors         = file.Properties.System.Author.Value;
+            Tags            = file.Properties.System.Keywords.Value;
 
             FileName        = file.Properties.System.FileName.Value;
             Title           = file.Properties.System.Title.Value;
@@ -210,10 +190,10 @@ namespace MassMediaEditor
             Rating          = file.Properties.System.Rating.Value;
 
             DateTaken       = file.Properties.System.Photo.DateTaken.Value;
-
         }
 
-        public String Authors           { get; set; }
+        public String[] Authors         { get; set; }
+        public String _Authors          { get { return (Authors == null) ? String.Empty : String.Join(";", Authors); }}
         public String ProgramName       { get; set; }
         public DateTime? DateAcquired   { get; set; }
         public DateTime? DateTaken      { get; set; }
@@ -222,28 +202,29 @@ namespace MassMediaEditor
 
     class Audio : Media
     {
-        /* Editable Extened properties for Audio Files
-         **** Contributing Artists
-         * Album Artist
-         * Album
-         * Track Number
-         * Genre
-         * Copyright
-         **** Content (There are a few, but I am not sure if I wish to add them)
-         * Composers
-         * BPM
-         */
+        /* Editable extened properties for Audio
 
-        public String ContributingArtists   { get; set; }
-        public String AlbumArtist           { get; set; }
-        public String Album                 { get; set; }
-        public uint? TrackNumber            { get; set; }
-        public String Copyright             { get; set; }
-        public String Creator               { get; set; }
-        public String Publisher             { get; set; }
-        public String Genre                 { get; set; }
-        public String Composers             { get; set; }
-        public String BPM                   { get; set; }
+        -----Media-----
+        Contributing Artists Album Artist, Album, Year, Genre, Track Number
+
+        ------ Origin ------
+        Publisher, Author URL
+
+        ------ Content* ------
+        Parental Rating, Composers, Conductors, Period
+        Part of Set, Inital Key, BPM, Mood, Group Desc.
+
+        * Not all of these are currently not implemented
+        */
+
+        public String[] Composers               { get; set; }
+        public String _Composers                { get { return (Composers == null) ? String.Empty : String.Join(";", Composers); } }
+        public String AlbumArtist               { get; set; }
+        public String Album                     { get; set; }
+        public uint? TrackNumber                { get; set; }
+        public String Copyright                 { get; set; }
+        public String Creator                   { get; set; }
+        public String BPM                       { get; set; }
 
         public Audio(string filePath)
         {
@@ -252,10 +233,10 @@ namespace MassMediaEditor
             FilePath = filePath;
             FileName                = file.Properties.System.FileName.Value;
 
-            Composers               = (file.Properties.System.Music.Composer.Value  != null) ? String.Join(",", file.Properties.System.Music.Composer.Value)    : String.Empty;
-            ContributingArtists     = (file.Properties.System.Music.Artist.Value    != null) ? String.Join(",", file.Properties.System.Music.Artist.Value)      : String.Empty;
-            Genre                   = (file.Properties.System.Music.Genre.Value     != null) ? String.Join(",", file.Properties.System.Music.Genre.Value)       : String.Empty;
-            Tags                    = (file.Properties.System.Keywords.Value        != null) ? String.Join(",", file.Properties.System.Keywords.Value)          : String.Empty;
+            Composers               = file.Properties.System.Music.Composer.Value;
+            ContributingArtists     = file.Properties.System.Music.Artist.Value;
+            Genre                   = file.Properties.System.Music.Genre.Value;
+            Tags                    = file.Properties.System.Keywords.Value;
 
             Comments                = file.Properties.System.Comment.Value;
             Copyright               = file.Properties.System.Copyright.Value;
@@ -269,69 +250,41 @@ namespace MassMediaEditor
             BPM                     = file.Properties.System.Music.BeatsPerMinute.Value;
 
             Publisher               = file.Properties.System.Media.Publisher.Value;
-            Subtitle                = file.Properties.System.Media.Subtitle.Value;
+            Subtitle                = (String.IsNullOrEmpty(file.Properties.System.Media.Subtitle.Value)) ? String.Empty : file.Properties.System.Media.Subtitle.Value;
             //Creator                 = file.Properties.System.Media.Creator.Value; WTF WHERE DID THIS GO?!
         }
 
         public Audio() {/*Default Constructor*/}
-
-        public Dictionary<String, Binding> GenerateBindings()
-        {
-            var d = new Dictionary<String, Binding>();
-
-            d.Add(String.Empty, new Binding("isChecked"));
-            d.Add("File Name", new Binding("FileName"));
-            d.Add("Title", new Binding("Title"));
-            d.Add("Subject", new Binding("Subject"));
-            d.Add("Rating", new Binding("Rating"));
-            d.Add("Comments", new Binding("Comments"));
-            d.Add("Author", new Binding("Authors"));
-            d.Add("Program Name", new Binding("ProgramName"));
-            d.Add("Copyright", new Binding("Copyright"));
-            d.Add("Tags", new Binding("Tags"));
-
-            d.Add("Date Taken", new Binding("DateTaken"));
-            d.Add("Date Acquired", new Binding("DateAcquired"));
-            return d;
-        }
     }
 
     class Video : Media
     {
-        /* Editable Extened properties for Audio Files
-            -----
-            Media
-            -----
-            Contributing Artists
-            Year
-            Genre
+        /* Editable extened properties for Videos
+            
+            -----Media-----
+            Contributing Artists, Year, Genre
 
-            ------
-            Origin
-            ------
-            Directors
-            Producers
-            Writers
-            Publisher
-            Content Provider
-            Media Created
-            Author URL
-            Promotion URL
+            ------ Origin ------
+            Directors, Producers, Writers, Publisher
+            Content Provider, Media Created
+            Author URL, Promotion URL
+
+            ------ Content* (These Values are set in "Music" Videos.) ------
+            Parental Rating, Composers, Conductors, Period, Part of Set, Inital Key, BPM
+
+            * These are currently not implemented
          */
 
-        public String ContributingArtists { get; set; }
-        public uint? Year { get; set; }
-        public String Genre { get; set; }
-        public String Directors { get; set; }
-        public String Writers { get; set; }
-        public String Publisher { get; set; }
-        public DateTime? MediaCreated { get; set; }
-        public String Producers { get; set; }
-        public String AuthorURL { get; set; } 
-        public String PromoURL { get; set; }
+        public uint? Year                   { get; set; }
+        public String[] Directors           { get; set; }
+        public String[] Writers             { get; set; }
+        public String[] Producers           { get; set; }
+        public String _Directors            { get { return (Directors == null) ? String.Empty : String.Join(";", Directors); }}
+        public String _Writers              { get { return (Writers == null) ? String.Empty : String.Join(";", Writers); }}
+        public String _Producers            { get { return (Producers == null) ? String.Empty : String.Join(";", Producers); }}
+        //public DateTime? MediaCreated       { get; set; }
+        public String PromoURL              { get; set; }
 
-
-        public String Copyright { get; set; }
 
         public Video (string filePath)
         {
@@ -340,27 +293,26 @@ namespace MassMediaEditor
             FilePath = filePath;
             FileName = file.Properties.System.FileName.Value;
 
-            ContributingArtists =   (file.Properties.System.Music.Artist.Value != null)     ? String.Join(",", file.Properties.System.Music.Artist.Value)   : String.Empty;
-            Directors =             (file.Properties.System.Video.Director.Value != null)   ? String.Join(",", file.Properties.System.Video.Director.Value) : String.Empty;
-            Producers =             (file.Properties.System.Media.Producer.Value != null)   ? String.Join(",", file.Properties.System.Media.Producer.Value) : String.Empty;
-            Writers =               (file.Properties.System.Media.Writer.Value != null)     ? String.Join(",", file.Properties.System.Media.Writer.Value)   : String.Empty;
-            Genre =                 (file.Properties.System.Music.Genre.Value != null)      ? String.Join(",", file.Properties.System.Music.Genre.Value)    : String.Empty;
-            Tags =                  (file.Properties.System.Keywords.Value != null)         ? String.Join(",", file.Properties.System.Keywords.Value)       : String.Empty;
+            ContributingArtists =   file.Properties.System.Music.Artist.Value;
+            Directors =             file.Properties.System.Video.Director.Value;
+            Producers =             file.Properties.System.Media.Producer.Value;
+            Writers =               file.Properties.System.Media.Writer.Value;
+            Genre =                 file.Properties.System.Music.Genre.Value;
+            Tags =                  file.Properties.System.Keywords.Value;
 
-            MediaCreated = file.Properties.System.DateCreated.Value;
+            //MediaCreated =          file.Properties.System.DateCreated.Value;
 
-            Comments = file.Properties.System.Comment.Value;
-            Copyright = file.Properties.System.Copyright.Value;
-            Rating = file.Properties.System.Rating.Value;
-            Title = file.Properties.System.Title.Value;
+            Comments =  file.Properties.System.Comment.Value;
+            Rating =    file.Properties.System.Rating.Value;
+            Title =     file.Properties.System.Title.Value;
 
             AuthorURL = file.Properties.System.Media.AuthorUrl.Value;
-            PromoURL = file.Properties.System.Media.PromotionUrl.Value;
+            PromoURL =  file.Properties.System.Media.PromotionUrl.Value;
 
             Publisher = file.Properties.System.Media.Publisher.Value;
-            Year = file.Properties.System.Media.Year.Value;
+            Year =      file.Properties.System.Media.Year.Value;
             Publisher = file.Properties.System.Media.Publisher.Value;
-            Subtitle = file.Properties.System.Media.Subtitle.Value;
+            Subtitle =  file.Properties.System.Media.Subtitle.Value;
             //Creator                 = file.Properties.System.Media.Creator.Value; WTF WHERE DID THIS GO?!
         }
 

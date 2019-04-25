@@ -5,23 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
-        Closed="WndEdit_Closed"
-        Title="Edit" Height="100" Width="770"
+        Closed="wndEdit_Closed"
+        Title="Edit" Height="550" Width="640"
         ResizeMode="NoResize" 
-        WindowStartupLocation="CenterOwner">
-    
-    <Grid Background="#FF5D5A5A">
-        <ComboBox x:Name="ddlFields" HorizontalAlignment="Left" Margin="117,10,0,0" VerticalAlignment="Top" Width="155" RenderTransformOrigin="0.51,0.21" Height="20" SelectionChanged="ddlFields_SelectionChanged"/>
-        <Label x:Name="lblFields" Content="Media Properties:" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.499,-0.111" Background="{x:Null}" Foreground="White"/>
-        <TextBox x:Name="txtFieldData" HorizontalAlignment="Left" Height="48" Margin="277,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="471" Visibility="Hidden"/>
-        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="117,35,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.043,-0.209" Height="23" Click="BtnSave_Click"/>
-        <Button x:Name="btnClose" Content="Close" Click="btnClose_Click" HorizontalAlignment="Left" Margin="197,35,0,0" VerticalAlignment="Top" Width="75" Height="23"/>
-        <Label x:Name="lblUpdate" Content="Changes saved." HorizontalAlignment="Left" Margin="11,32,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.158,0.423" Width="102" Foreground="Red"/>
-        <DatePicker x:Name="dpMediaEditor" HorizontalAlignment="Left" Margin="277,18,0,0" VerticalAlignment="Top" IsEnabled="False" SelectedDateFormat="Short" Visibility="Hidden" Height="40" Width="320" BorderThickness="1"/>
-        <StackPanel VerticalAlignment="Center" Visibility="Hidden" Name="spSlider">
-            <Slider x:Name="sldEditor"  Minimum="0" Maximum="100" Margin="285,0,223,0" RenderTransformOrigin="0,0" AutoToolTipPlacement="BottomRight" ValueChanged="SldEditor_ValueChanged"/>
+        WindowStartupLocation="CenterOwner" Background="#FF363636">
+
+    <Window.Resources>
+        <DataTemplate x:Key="tmplArray">
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button Width="25" Height="25" Click="btnAddRemoveItem_Click" FontSize="14" FontWeight="Bold" Content="+" />
+                <Button Width="25" Height="25" Click="btnAddRemoveItem_Click" FontSize="14" FontWeight="Bold" Content="&#xd7;" Visibility="Hidden" IsEnabled="False" />
+                <ListBox x:Name="lstbxTags" Width="125" Height="40" Margin="5,2,0,0" Visibility="Hidden" IsEnabled="False"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom">
+            <Button x:Name="btnSave" Click="btnSave_Click" Content="Save"/>
+            <Button x:Name="btnCancel" Click="btnClose_Click" Content="Close"/>
         </StackPanel>
-        <Label x:Name="lblSliderVal" Margin="545,0,0,0" Height="25"/>
-    </Grid>
-    
+        <ScrollViewer>
+            <DockPanel>
+                <Label x:Name="lblUpdate" Visibility="Hidden" Content="Changes Saved." Foreground="White" FontWeight="Bold" DockPanel.Dock="Bottom" FontSize="14"/>
+                <Grid x:Name="grdEdit" Background="#FF5D5A5A" Margin="10,10,10,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                    </Grid.RowDefinitions>
+                </Grid>
+            </DockPanel>
+        </ScrollViewer>
+    </DockPanel>
 </Window>
