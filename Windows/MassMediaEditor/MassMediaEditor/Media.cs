@@ -44,7 +44,7 @@ namespace MassMediaEditor
 
             try
             {
-                //shellFile.Properties.System.FileName.Value  = (mediaFile.FileName; //ToDo: Add FileName Editing later, as it might be better for the Append/Prepend program.
+                //shellFile.Properties.System.FileName.Value  = mediaFile.FileName; //ToDo: Add FileName Editing later, as it might be better for the Append/Prepend program.
                 shellFile.Properties.System.Title.Value     = mediaFile.Title;
                 shellFile.Properties.System.Subject.Value   = mediaFile.Subject;
                 shellFile.Properties.System.Comment.Value   = mediaFile.Comments;
@@ -53,7 +53,6 @@ namespace MassMediaEditor
                 if (mediaFile.Subtitle != null) { shellFile.Properties.System.Media.Subtitle.Value = mediaFile.Subtitle; }
 
                 if (mediaFile.Rating == 0) { shellFile.Properties.System.Rating.Value = null; }
-                else if (mediaFile.Rating == 100) { shellFile.Properties.System.Rating.Value = 99; }
                 else { shellFile.Properties.System.Rating.Value = mediaFile.Rating; }
             
                 if (mediaFile is Picture)

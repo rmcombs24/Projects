@@ -7,14 +7,14 @@
     <framework targetVersion="4.7.2" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="MassMediaEditor.exe.manifest" size="18280">
+    <dependentAssembly dependencyType="install" codebase="MassMediaEditor.exe.manifest" size="18278">
       <assemblyIdentity name="MassMediaEditor.exe" version="1.0.0.3" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>r4jVJgPuNqqhGiY6oqr/8ijsNT4lmyHbfz+OnDxejlo=</dsig:DigestValue>
+        <dsig:DigestValue>DFPIZ8VI1W0SCNoRtYOE5b+cX8QtHnBIzHapWNCO9SA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

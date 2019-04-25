@@ -203,7 +203,7 @@ namespace MassMediaEditor
                     {
                         Name = String.Format("sldrRating_{0}", grdEdit.RowDefinitions.Count - 1),
                         Minimum = 0,
-                        Maximum = 100,
+                        Maximum = 99,
                         Width = 245,
                         Height = 25
                     };
@@ -416,7 +416,7 @@ namespace MassMediaEditor
         {
             UIElement lbl = grdEdit.Children.Cast<UIElement>().Where(x => Grid.GetRow(x) == Convert.ToInt32(((Slider)sender).Name.Split('_')[1]) && Grid.GetColumn(x) == 2).FirstOrDefault();
 
-            ((Label)lbl).Content = String.Format("{0}/100", Math.Round(((Slider)sender).Value).ToString());
+            ((Label)lbl).Content = String.Format("{0}/99", Math.Round(((Slider)sender).Value).ToString());
         }
 
         private void wndEdit_Closed(object sender, EventArgs e)
@@ -443,11 +443,11 @@ namespace MassMediaEditor
             return splitArray;
         }
 
-        private DateTime? ParseDate(string kvp)
+        private DateTime? ParseDate(string dateString)
         {
             DateTime dateTimeOut = DateTime.MinValue;
 
-            if (DateTime.TryParse(kvp, out dateTimeOut))
+            if (DateTime.TryParse(dateString, out dateTimeOut))
             {
                 return dateTimeOut;
             }
