@@ -8,7 +8,6 @@ namespace MassMediaEditor
 {
     public class Settings
     {
-
         public int MediaType { get; set; }
         public string Theme { get; set; }
         public bool AutoSort { get; set; }
@@ -17,11 +16,9 @@ namespace MassMediaEditor
 
         public void LoadStartupConfig()
         {
-
             if (!File.Exists(filePath + "\\config.json"))
             {
-                Directory.CreateDirectory(filePath);
-
+               Directory.CreateDirectory(filePath);
 
                Settings newSettings = new Settings() 
                 {
@@ -36,7 +33,6 @@ namespace MassMediaEditor
                     //serialize object directly into file stream
                     serializer.Serialize(file, newSettings);
                 }
-
             }
             else
             {

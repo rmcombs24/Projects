@@ -132,8 +132,8 @@ namespace MassMediaEditor
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             if (rdoPictures.IsChecked == true)      { dlg.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png;"; }
-            else if (rdoAudio.IsChecked == true)    { dlg.Filter = "Audio files (*.mp3, *.wma) | *.mp3; *.wma;"; }
             else if (rdoVideo.IsChecked == true)    { dlg.Filter = "Video files (*.mkv, *.mpg, *.mpeg, *.mp4, *.wmv ) | *.mkv; *.mpg; *.mpeg; *.mp4; *.wmv;"; }
+            else if (rdoAudio.IsChecked == true)    { dlg.Filter = "Audio files (*.mp3, *.wma) | *.mp3; *.wma;"; }
 
             dlg.Multiselect = true;
 
