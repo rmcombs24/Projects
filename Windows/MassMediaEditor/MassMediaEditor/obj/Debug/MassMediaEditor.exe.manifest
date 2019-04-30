@@ -66,14 +66,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MassMediaEditor.exe" size="53144">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MassMediaEditor.exe" size="56216">
       <assemblyIdentity name="MassMediaEditor" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>5Wi+UPDw+RAridba7IdYsY5O1DMgXNS0T6fuFkZUoJ4=</dsig:DigestValue>
+        <dsig:DigestValue>70Pp4bSj4+PXCKr5CPKB6SfAtAz5LkJdOFIK45Ws/JA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

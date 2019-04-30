@@ -173,7 +173,7 @@ namespace MassMediaEditor
             }
             catch (Exception ex)
             {
-                new ErrorLog().WriteToLog(ex.Message);
+                new ErrorLog().WriteToLog(ex.Message, ex.StackTrace);
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
         }
@@ -342,7 +342,7 @@ namespace MassMediaEditor
             }
             catch (Exception ex)
             {
-                new ErrorLog().WriteToLog(ex.Message);
+                new ErrorLog().WriteToLog(ex.Message, ex.StackTrace);
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
         }
@@ -395,7 +395,7 @@ namespace MassMediaEditor
             }
             catch (Exception ex)
             {
-                new ErrorLog().WriteToLog(ex.Message);
+                new ErrorLog().WriteToLog(ex.Message, ex.StackTrace);
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
         }

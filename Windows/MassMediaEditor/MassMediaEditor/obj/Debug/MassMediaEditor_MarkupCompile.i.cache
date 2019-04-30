@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 X:\Source Control\GitHub\rmcombs24\Projects\Windows\MassMediaEditor\MassMediaEditor\App.xaml
-4-188588660
+51386176131
 
-161242667829
+141194394916
 25-346705294
-AboutWindow.xaml;EditWindow.xaml;MainWindow.xaml;SettingsWindow.xaml;
+AboutWindow.xaml;EditWindow.xaml;MainWindow.xaml;SettingsWindow.xaml;ErrorLogWindow.xaml;
 
-True
+False
 

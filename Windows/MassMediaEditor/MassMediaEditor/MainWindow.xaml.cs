@@ -126,6 +126,11 @@ namespace MassMediaEditor
             SettingsWindow settingsWindow = new SettingsWindow();
             settingsWindow.ShowDialog();
         }
+        private void mnuErrorLog_Click(object sender, RoutedEventArgs e)
+        {
+            ErrorLogWindow errorLogWindow = new ErrorLogWindow();
+            errorLogWindow.ShowDialog();
+        }
 
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
