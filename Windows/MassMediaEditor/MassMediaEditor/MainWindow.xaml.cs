@@ -61,9 +61,25 @@ namespace MassMediaEditor
                     DataGridTextColumn dgCol = new DataGridTextColumn()
                     {
                         IsReadOnly = true,
-                        Header = headers.Keys.ElementAt(index).ToString(),
                         Binding = headers.Values.ElementAt(index)
                     };
+
+                    //We need to be able select a field based on the editable fields. 1 is ALWAYS filename, which we aren't doing (Yet)
+                    if (index != 1)
+                    {
+                        CheckBox chkHeader = new CheckBox()
+                        {
+                            Content = headers.Keys.ElementAt(index).ToString(),
+                            Name = String.Format("chk{0}", headers.Values.ElementAt(index).Path.Path),
+                        };
+
+                        dgCol.Header = chkHeader;
+                    }
+                    else
+                    {
+                        dgCol.Header = headers.Keys.ElementAt(index).ToString();
+                    }
+
 
                     dg.Columns.Add(dgCol);
                 }
