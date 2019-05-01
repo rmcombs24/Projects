@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Closed="wndEdit_Closed"
         Title="Edit" Height="550" Width="640"
-        ResizeMode="NoResize" 
+        ResizeMode="NoResize"
+        SizeToContent="Height"
         WindowStartupLocation="CenterOwner" Background="#FF363636">
 
     <Window.Resources>
