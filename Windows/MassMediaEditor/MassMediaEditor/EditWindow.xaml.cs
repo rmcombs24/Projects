@@ -24,16 +24,35 @@ namespace MassMediaEditor
         public EditWindow()
         {
             InitializeComponent();
-  
+
             //We're starting at base 2 for now because we're skipping the checkbox, and fileNames.
             //Filenames may be added under the prepend/appender program at a later date.
-            for (int index = 2; index < ((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns.Count(); index++)
+
+            //Field Select -- we're editing the existing logic to start by looking at all the headers and see if ANY are checked, if yes, show ONLY those, otherwise show ALL
+            List<DataGridColumn> lstCheckedCols = ((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns.ToList().FindAll(
+                x => x is DataGridTextColumn).ToList().FindAll(
+                    y => y.Header is CheckBox).ToList().FindAll(
+                        z => ((CheckBox)z.Header).IsChecked == true);
+
+            if (lstCheckedCols.Count > 0)
             {
-                if (((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns[index].Header.ToString().Length > 0)
+                for (int index = 0; index < lstCheckedCols.Count; index++)
                 {
-                    properties.Add(((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns[index].Header.ToString());
-                    lstFieldValuePair.Add(new KeyValuePair<string, string>(((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns[index].Header.ToString(), String.Empty));
-                    GenerateDataRow(properties[index -2]);
+                    properties.Add(((CheckBox) lstCheckedCols[index].Header).Content.ToString());
+                    lstFieldValuePair.Add(new KeyValuePair<string, string>(properties[index], String.Empty));
+                    GenerateDataRow(properties[index]);
+                }
+            }
+            else
+            {
+                for (int index = 2; index < ((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns.Count(); index++)
+                {
+                    if (((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns[index].Header.ToString().Length > 0)
+                    {
+                        properties.Add(((CheckBox) ((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns[index].Header).Content.ToString());
+                        lstFieldValuePair.Add(new KeyValuePair<string, string>(properties[index - 2], String.Empty));
+                        GenerateDataRow(properties[index - 2]);
+                    }
                 }
             }
         }

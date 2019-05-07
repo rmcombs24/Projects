@@ -66,14 +66,22 @@
     </dependentAssembly>
   </dependency>
   <dependency>
+<<<<<<< HEAD
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MassMediaEditor.exe" size="56216">
+=======
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MassMediaEditor.exe" size="54168">
+>>>>>>> feature-fieldselect
       <assemblyIdentity name="MassMediaEditor" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+<<<<<<< HEAD
         <dsig:DigestValue>70Pp4bSj4+PXCKr5CPKB6SfAtAz5LkJdOFIK45Ws/JA=</dsig:DigestValue>
+=======
+        <dsig:DigestValue>95zK+7W21GFV/BbkoUKl7QH8M7o000AILQmpUbBZItw=</dsig:DigestValue>
+>>>>>>> feature-fieldselect
       </hash>
     </dependentAssembly>
   </dependency>
