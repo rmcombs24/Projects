@@ -74,19 +74,16 @@ namespace MassMediaEditor
                             switch (kvp.Key)
                             {
                                 case "Title":
-                                    ((Media)oItem).Title = kvp.Value;
-                                    break;
-                                case "Subject":
-                                    ((Media)oItem).Subject = kvp.Value;
+                                    ((Media)oItem).Title.StrValue = kvp.Value;
                                     break;
                                 case "Comments":
-                                    ((Media)oItem).Comments = kvp.Value;
+                                    ((Media)oItem).Comments.StrValue = kvp.Value;
                                     break;
                                 case "Rating":
-                                    ((Media)oItem).Rating = (Math.Round(double.Parse(kvp.Value)) == 0 ) ?  null : (uint?) Math.Round(double.Parse(kvp.Value));
+                                    ((Media)oItem).Rating.UintValue = (Math.Round(double.Parse(kvp.Value)) == 0 ) ?  null : (uint?) Math.Round(double.Parse(kvp.Value));
                                     break;
                                 case "Tags":
-                                    ((Media)oItem).Tags = ParseArray(kvp.Value);
+                                    ((Media)oItem).Tags.ArrayValue = ParseArray(kvp.Value);
                                     break;
                                 default:
                                     break;
@@ -96,20 +93,23 @@ namespace MassMediaEditor
                             {
                                 switch (kvp.Key)
                                 {
+                                    case "Subject":
+                                        ((Picture)oItem).Subject.StrValue = kvp.Value;
+                                        break;
                                     case "Author":
-                                        ((Picture)oItem).Authors = ParseArray(kvp.Value);
+                                        ((Picture)oItem).Authors.ArrayValue = ParseArray(kvp.Value);
                                         break;
                                     case "Program Name":
-                                        ((Picture)oItem).ProgramName = kvp.Value;
+                                        ((Picture)oItem).ProgramName.StrValue = kvp.Value;
                                         break;
                                     case "Copyright":
-                                        ((Picture)oItem).Copyright = kvp.Value;
+                                        //((Picture)oItem).Copyright = kvp.Value;
                                         break;
                                     case "Date Acquired":
-                                        ((Picture)oItem).DateAcquired = ParseDate(kvp.Value);
+                                        ((Picture)oItem).DateAcquired.DtValue = ParseDate(kvp.Value);
                                         break;
                                     case "Date Taken":
-                                         ((Picture)oItem).DateTaken = ParseDate(kvp.Value);
+                                         ((Picture)oItem).DateTaken.DtValue = ParseDate(kvp.Value);
                                        break;
                                     default:
                                         break;
@@ -122,16 +122,16 @@ namespace MassMediaEditor
                                     switch (kvp.Key)
                                     {
                                         case "Album":
-                                            ((Audio)oItem).Album = kvp.Value;
+                                            ((Audio)oItem).Album.StrValue = kvp.Value;
                                             break;
                                         case "Album Artist":
-                                            ((Audio)oItem).AlbumArtist = kvp.Value;
+                                            ((Audio)oItem).AlbumArtist.StrValue = kvp.Value;
                                             break;
                                         case "BPM":
-                                            ((Audio)oItem).BPM = kvp.Value;
+                                            ((Audio)oItem).BPM.StrValue = kvp.Value;
                                             break;
                                         case "Composers":
-                                            ((Audio)oItem).Composers = ParseArray(kvp.Value);
+                                            ((Audio)oItem).Composers.ArrayValue = ParseArray(kvp.Value);
                                             break;
                                         default:
                                             break;
@@ -141,23 +141,23 @@ namespace MassMediaEditor
                                 {
                                     switch (kvp.Key)
                                     {
-                                        //case "Media Created":
-                                          //  ((Video)oItem).MediaCreated = ParseDate(kvp.Value);
-                                            // break;
+                                        case "Media Created":
+                                            ((Video)oItem).MediaCreated.DtValue = ParseDate(kvp.Value);
+                                            break;
                                         case "Promotional URL":
-                                            ((Video)oItem).PromoURL = kvp.Value;
+                                            ((Video)oItem).PromoURL.StrValue = kvp.Value;
                                             break;
                                         case "Year":
-                                            ((Video)oItem).Year = (String.IsNullOrEmpty(kvp.Value)) ? (uint?) null : uint.Parse(kvp.Value);
+                                            ((Video)oItem).Year.UintValue = (String.IsNullOrEmpty(kvp.Value)) ? (uint?) null : uint.Parse(kvp.Value);
                                             break;
                                         case "Directors":
-                                            ((Video)oItem).Directors = ParseArray(kvp.Value);
+                                            ((Video)oItem).Directors.ArrayValue = ParseArray(kvp.Value);
                                             break;
                                         case "Writers":
-                                            ((Video)oItem).Writers = ParseArray(kvp.Value);
+                                            ((Video)oItem).Writers.ArrayValue = ParseArray(kvp.Value);
                                             break;
                                         case "Producers":
-                                            ((Video)oItem).Producers = ParseArray(kvp.Value);
+                                            ((Video)oItem).Producers.ArrayValue = ParseArray(kvp.Value);
                                             break;
                                         default:
                                             break;
@@ -167,19 +167,19 @@ namespace MassMediaEditor
                                 switch (kvp.Key)
                                 {
                                     case "Subtitle":
-                                        ((Media)oItem).Subtitle = kvp.Value;
+                                        ((Audio)oItem).Subtitle.StrValue = kvp.Value;
                                         break;
                                     case "Publisher":
-                                        ((Media)oItem).Publisher = kvp.Value;
+                                        ((Audio)oItem).Publisher.StrValue = kvp.Value;
                                         break;
                                     case "Genre":
-                                        ((Media)oItem).Genre = ParseArray(kvp.Value);
+                                        ((Audio)oItem).Genre.ArrayValue = ParseArray(kvp.Value);
                                         break;
                                     case "Author URL":
-                                        ((Media)oItem).AuthorURL = kvp.Value;
+                                        ((Audio)oItem).AuthorURL.StrValue = kvp.Value;
                                         break;
                                     case "Contributing Artists":
-                                        ((Media)oItem).ContributingArtists = ParseArray(kvp.Value);
+                                        ((Audio)oItem).ContributingArtists.ArrayValue = ParseArray(kvp.Value);
                                         break;
                                     default:
                                         break;
