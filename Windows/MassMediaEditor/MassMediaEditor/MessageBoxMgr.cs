@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace MassMediaEditor
 {
-    class MessageBoxMgr
+    public static class MessageBoxMgr
     {
-
-        public MessageBoxResult ItemsRequiredMessage ()
+        public static MessageBoxResult ItemsRequiredMessage ()
         {
-            return MessageBox.Show("At least one item must be selected to edit.", "Items Required", MessageBoxButton.OK);
+            return MessageBox.Show("At least one item must be selected to continue.", "Items Required", MessageBoxButton.OK);
         }
 
-        public MessageBoxResult CompleteMessage (bool completedOperation)
+        public static MessageBoxResult CompleteMessage (bool completedOperation)
         {
-
             if (!completedOperation)
             {
                 return MessageBox.Show("Operation completed but with errors. Please check the log for more details.", "Operation Complete", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -28,10 +21,9 @@ namespace MassMediaEditor
 
                 return MessageBox.Show(commitMsg, commitMsg, MessageBoxButton.OK);
             }
-
         }
 
-        public MessageBoxResult CreateNewResult(string message, string title, MessageBoxButton buttonLayout)
+        public static MessageBoxResult CreateNewResult(string message, string title, MessageBoxButton buttonLayout)
         {
             return MessageBox.Show(message, title, buttonLayout);
         }

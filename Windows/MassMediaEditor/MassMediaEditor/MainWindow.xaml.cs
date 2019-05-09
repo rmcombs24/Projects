@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace MassMediaEditor
 {
@@ -14,14 +15,12 @@ namespace MassMediaEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public Settings settings = new Settings();
-        
         public List<object> selectedItems = new List<object>();
 
         public MainWindow()
         {
             InitializeComponent();
-            settings.LoadStartupConfig();
+            Settings.LoadStartupConfig();
             LoadSettings();
         }
 
@@ -34,9 +33,7 @@ namespace MassMediaEditor
             }
 
             Type type = MediaObjects.GetType().GetGenericArguments()[0];
-
-            Media m = new Media();
-            Dictionary<String, Binding> headers = m.GenerateBindings(mediaType);
+            Dictionary<String, Binding> headers = Media.GenerateBindings(mediaType);
 
             for (int index = 0; index < headers.Count; index++)
             {
@@ -87,26 +84,26 @@ namespace MassMediaEditor
             dg.Items.Refresh();
             dg.IsEnabled = true;
             dg.Visibility = Visibility = Visibility.Visible;
+            dgInfoBox.Background = Brushes.White;   //"";   //"#FF4B4B4B"
         }
 
         private void LoadSettings()
         {
-            if (settings.MediaType == (int)MediaType.Audio)
+            if (Settings.DefaultMediaType() == MediaType.Audio)
             {
                 rdoAudio.IsChecked = true;
             }
-            else if (settings.MediaType == (int)MediaType.Video)
+            else if (Settings.DefaultMediaType() == MediaType.Video)
             {
                 rdoVideo.IsChecked = true;
             }
-            else if (settings.MediaType == (int)MediaType.Pictures)
+            else if (Settings.DefaultMediaType() == MediaType.Pictures)
             {
                 rdoPictures.IsChecked = true;
             }
         }
 
         #region Public Events
-
         private void mnuAbout_Click(object sender, RoutedEventArgs e)
         {
             AboutWindow aboutWindow = new AboutWindow();
@@ -114,7 +111,7 @@ namespace MassMediaEditor
         }
         private void mnuExit_Click(object sender, RoutedEventArgs e)
         {
-            System.Environment.Exit(0);
+            Environment.Exit(0);
         }
         private void mnuSettings_Click(object sender, RoutedEventArgs e)
         {
@@ -126,6 +123,7 @@ namespace MassMediaEditor
             ErrorLogWindow errorLogWindow = new ErrorLogWindow();
             errorLogWindow.ShowDialog();
         }
+
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
@@ -143,27 +141,12 @@ namespace MassMediaEditor
             if (result == true)
             {
                 List<Media> lstMediaObjects = new List<Media>();
-                
-                if (rdoAudio.IsChecked == true)
-                {                    
-                    foreach (string fp in dlg.FileNames)
-                    {
-                        lstMediaObjects.Add(new Audio(fp));
-                    }
-                }
-                else if (rdoPictures.IsChecked == true)
+
+                foreach (string fp in dlg.FileNames)
                 {
-                    foreach (string fp in dlg.FileNames)
-                    {
-                        lstMediaObjects.Add(new Picture(fp));
-                    }
-                }
-                else if (rdoVideo.IsChecked == true)
-                {
-                    foreach (string fp in dlg.FileNames)
-                    {
-                        lstMediaObjects.Add(new Video(fp));
-                    }
+                    if (rdoAudio.IsChecked == true) { lstMediaObjects.Add(new Audio(fp)); }
+                    else if (rdoPictures.IsChecked == true) { lstMediaObjects.Add(new Picture(fp)); }
+                    else if (rdoVideo.IsChecked == true) { lstMediaObjects.Add(new Video(fp)); }
                 }
 
                 GenerateGridView(dgInfoBox, lstMediaObjects, mediaType);
@@ -178,7 +161,7 @@ namespace MassMediaEditor
             {
                 dgInfoBox.ItemsSource = null;
                 dgInfoBox.Columns.Clear();
-                dgInfoBox.Visibility = Visibility = Visibility.Visible;
+                dgInfoBox.Visibility = Visibility.Hidden;
                 dgInfoBox.IsEnabled = false;
 
                 btnClear.IsEnabled = false;
@@ -196,19 +179,16 @@ namespace MassMediaEditor
                 editWindow.ShowDialog();
                 dgInfoBox.Items.Refresh();
             }
-            else { new MessageBoxMgr().ItemsRequiredMessage(); }
+            else { MessageBoxMgr.ItemsRequiredMessage(); }
         }
         private void btnCommit_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxMgr mbMgr = new MessageBoxMgr();
-
             if (dgInfoBox.ItemsSource.Cast<Media>().Where(x => x.isChecked == true).ToList().Count > 0)
             {
-                MessageBoxResult messageBoxCommit = mbMgr.CreateNewResult("Are you sure you want to save these changes? This cannot be undone.", "Edit Confirmation", MessageBoxButton.YesNo);
+                MessageBoxResult messageBoxCommit = MessageBoxMgr.CreateNewResult("Are you sure you want to save these changes? This cannot be undone.", "Edit Confirmation", MessageBoxButton.YesNo);
 
                 if (messageBoxCommit == MessageBoxResult.Yes)
                 {
-                    Media mFile = new Media();
                     bool completedWithoutErrors = true;
                     List<bool> listCompletion = new List<bool>();
 
@@ -220,9 +200,7 @@ namespace MassMediaEditor
                         {
                             if (item.isChecked)
                             {
-
-                                //completedWithoutErrors = mFile.WriteToShellFile(item, settings.AutoSort);
-
+                                completedWithoutErrors = Media.WriteToShellFile(item);
                                 listCompletion.Add(completedWithoutErrors);
                             }
                         }
@@ -231,27 +209,19 @@ namespace MassMediaEditor
                     worker.RunWorkerCompleted += (o, ea) =>
                     {
                         //work has completed. you can now interact with the UI
-
-                        if (listCompletion.Contains(false))
-                        {
-
-                            mbMgr.CompleteMessage(false);
-
-                        }
-                        else
-                        { mbMgr.CompleteMessage(true); }
+                        if (listCompletion.Contains(false)) { MessageBoxMgr.CompleteMessage(false); }
+                        else { MessageBoxMgr.CompleteMessage(true); }
 
                         biIsWorking.IsBusy = false;
                     };
 
                     biIsWorking.IsBusy = true;
                     worker.RunWorkerAsync();
-
                 }
-                else { /*Do nothing*/ }
             }
-            else { mbMgr.ItemsRequiredMessage(); }
+            else { MessageBoxMgr.ItemsRequiredMessage(); }
         }
+
         private void chkAll_Checked(object sender, RoutedEventArgs e)
         {
             CheckBox cb = sender as CheckBox;
@@ -271,7 +241,7 @@ namespace MassMediaEditor
                 }
             }
 
-            //Why do you have to commit twice?? That's so stupid. SO never lies though.
+            //Why do you have to commit twice?? That's so stupid. S.O. never lies though.
             dgInfoBox.CommitEdit();
             dgInfoBox.CommitEdit();
             dgInfoBox.Items.Refresh();

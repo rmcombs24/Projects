@@ -13,6 +13,6 @@
         <Label x:Name="lblAuthor" Content="Written By: Robert C" HorizontalAlignment="Left" Margin="0,27,0,0" VerticalAlignment="Top" Width="492" Foreground="White"/>
         <Label x:Name="lblGitHub" Content="https://github.com/rmcombs24/" HorizontalAlignment="Left" Margin="0,78,0,0" VerticalAlignment="Top" Width="484" Background="#00000000" Foreground="White"/>
         <Label x:Name="lblLinkedin" Content="https://www.linkedin.com/in/rmcombs24/" HorizontalAlignment="Left" Margin="0,51,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.646,3.285" Width="484" Foreground="White"/>
-        <Label x:Name="lblInfo" Content="MassMediaEditor Version 1.2.0.0" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.646,3.285" Width="484" Background="#00000000" Foreground="White"/>
+        <Label x:Name="lblInfo" Content="MassMediaEditor Version 1.2.1.0" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.646,3.285" Width="484" Background="#00000000" Foreground="White"/>
     </Grid>
 </Window>

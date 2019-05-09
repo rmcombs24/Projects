@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -74,16 +75,17 @@ namespace MassMediaEditor
                             switch (kvp.Key)
                             {
                                 case "Title":
-                                    ((Media)oItem).Title.StrValue = kvp.Value;
+                                    ((Media)oItem).Title.Val = kvp.Value;
                                     break;
                                 case "Comments":
-                                    ((Media)oItem).Comments.StrValue = kvp.Value;
+                                    ((Media)oItem).Comments.Val = kvp.Value;
                                     break;
                                 case "Rating":
-                                    ((Media)oItem).Rating.UintValue = (Math.Round(double.Parse(kvp.Value)) == 0 ) ?  null : (uint?) Math.Round(double.Parse(kvp.Value));
+                                    ((Media)oItem).Rating.Value = (Math.Round(double.Parse(kvp.Value)) == 0 ) ?  null : (uint?) Math.Round(double.Parse(kvp.Value));
                                     break;
                                 case "Tags":
-                                    ((Media)oItem).Tags.ArrayValue = ParseArray(kvp.Value);
+                                    ((Media)oItem).Tags.Value = ParseArray(kvp.Value);
+                                    ((Media)oItem).Tags.ArrayAsString = kvp.Value;
                                     break;
                                 default:
                                     break;
@@ -94,97 +96,111 @@ namespace MassMediaEditor
                                 switch (kvp.Key)
                                 {
                                     case "Subject":
-                                        ((Picture)oItem).Subject.StrValue = kvp.Value;
+                                        ((Picture)oItem).Subject.Val = kvp.Value;
                                         break;
                                     case "Author":
-                                        ((Picture)oItem).Authors.ArrayValue = ParseArray(kvp.Value);
+                                        ((Picture)oItem).Authors.Value = ParseArray(kvp.Value);
+                                        ((Picture)oItem).Authors.ArrayAsString = kvp.Value;
                                         break;
                                     case "Program Name":
-                                        ((Picture)oItem).ProgramName.StrValue = kvp.Value;
+                                        ((Picture)oItem).ProgramName.Val = kvp.Value;
                                         break;
                                     case "Copyright":
                                         //((Picture)oItem).Copyright = kvp.Value;
                                         break;
                                     case "Date Acquired":
-                                        ((Picture)oItem).DateAcquired.DtValue = ParseDate(kvp.Value);
+                                        ((Picture)oItem).DateAcquired.Value = ParseDate(kvp.Value);
                                         break;
                                     case "Date Taken":
-                                         ((Picture)oItem).DateTaken.DtValue = ParseDate(kvp.Value);
+                                         ((Picture)oItem).DateTaken.Value = ParseDate(kvp.Value);
                                        break;
                                     default:
                                         break;
                                 }
                             }
-                            else if (oItem is Audio || oItem is Video)
+                            else if (oItem is Audio)
                             {
-                                if (oItem is Audio)
-                                {
-                                    switch (kvp.Key)
-                                    {
-                                        case "Album":
-                                            ((Audio)oItem).Album.StrValue = kvp.Value;
-                                            break;
-                                        case "Album Artist":
-                                            ((Audio)oItem).AlbumArtist.StrValue = kvp.Value;
-                                            break;
-                                        case "BPM":
-                                            ((Audio)oItem).BPM.StrValue = kvp.Value;
-                                            break;
-                                        case "Composers":
-                                            ((Audio)oItem).Composers.ArrayValue = ParseArray(kvp.Value);
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                                else if (oItem is Video)
-                                {
-                                    switch (kvp.Key)
-                                    {
-                                        case "Media Created":
-                                            ((Video)oItem).MediaCreated.DtValue = ParseDate(kvp.Value);
-                                            break;
-                                        case "Promotional URL":
-                                            ((Video)oItem).PromoURL.StrValue = kvp.Value;
-                                            break;
-                                        case "Year":
-                                            ((Video)oItem).Year.UintValue = (String.IsNullOrEmpty(kvp.Value)) ? (uint?) null : uint.Parse(kvp.Value);
-                                            break;
-                                        case "Directors":
-                                            ((Video)oItem).Directors.ArrayValue = ParseArray(kvp.Value);
-                                            break;
-                                        case "Writers":
-                                            ((Video)oItem).Writers.ArrayValue = ParseArray(kvp.Value);
-                                            break;
-                                        case "Producers":
-                                            ((Video)oItem).Producers.ArrayValue = ParseArray(kvp.Value);
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-
                                 switch (kvp.Key)
                                 {
+                                    case "Album":
+                                        ((Audio)oItem).Album.Val = kvp.Value;
+                                        break;
+                                    case "Album Artist":
+                                        ((Audio)oItem).AlbumArtist.Val = kvp.Value;
+                                        break;
+                                    case "BPM":
+                                        ((Audio)oItem).BPM.Val = kvp.Value;
+                                        break;
+                                    case "Composers":
+                                        ((Audio)oItem).Composers.Value = ParseArray(kvp.Value);
+                                        ((Audio)oItem).Composers.ArrayAsString = kvp.Value;
+                                        break;
                                     case "Subtitle":
-                                        ((Audio)oItem).Subtitle.StrValue = kvp.Value;
+                                        ((Audio)oItem).Subtitle.Val = kvp.Value;
                                         break;
                                     case "Publisher":
-                                        ((Audio)oItem).Publisher.StrValue = kvp.Value;
+                                        ((Audio)oItem).Publisher.Val = kvp.Value;
                                         break;
                                     case "Genre":
-                                        ((Audio)oItem).Genre.ArrayValue = ParseArray(kvp.Value);
+                                        ((Audio)oItem).Genre.Value = ParseArray(kvp.Value);
+                                        ((Audio)oItem).Genre.ArrayAsString = kvp.Value;
                                         break;
                                     case "Author URL":
-                                        ((Audio)oItem).AuthorURL.StrValue = kvp.Value;
+                                        ((Audio)oItem).AuthorURL.Val = kvp.Value;
                                         break;
                                     case "Contributing Artists":
-                                        ((Audio)oItem).ContributingArtists.ArrayValue = ParseArray(kvp.Value);
+                                        ((Audio)oItem).ContributingArtists.Value = ParseArray(kvp.Value);
+                                        ((Audio)oItem).ContributingArtists.ArrayAsString = kvp.Value;
                                         break;
                                     default:
                                         break;
                                 }
-                                
+                            }
+                            else if (oItem is Video)
+                            {
+                                switch (kvp.Key)
+                                {
+                                    case "Media Created":
+                                        ((Video)oItem).MediaCreated.Value = ParseDate(kvp.Value);
+                                        break;
+                                    case "Promotional URL":
+                                        ((Video)oItem).PromoURL.Val = kvp.Value;
+                                        break;
+                                    case "Year":
+                                        ((Video)oItem).Year.Value = (String.IsNullOrEmpty(kvp.Value)) ? (uint?) null : uint.Parse(kvp.Value);
+                                        break;
+                                    case "Directors":
+                                        ((Video)oItem).Directors.Value = ParseArray(kvp.Value);
+                                        ((Video)oItem).Directors.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Writers":
+                                        ((Video)oItem).Writers.Value = ParseArray(kvp.Value);
+                                        ((Video)oItem).Writers.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Producers":
+                                        ((Video)oItem).Producers.Value = ParseArray(kvp.Value);
+                                        ((Video)oItem).Producers.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Subtitle":
+                                        ((Video)oItem).Subtitle.Val = kvp.Value;
+                                        break;
+                                    case "Publisher":
+                                        ((Video)oItem).Publisher.Val = kvp.Value;
+                                        break;
+                                    case "Genre":
+                                        ((Video)oItem).Genre.Value = ParseArray(kvp.Value);
+                                        ((Video)oItem).Genre.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Author URL":
+                                        ((Video)oItem).AuthorURL.Val = kvp.Value;
+                                        break;
+                                    case "Contributing Artists":
+                                        ((Video)oItem).ContributingArtists.Value = ParseArray(kvp.Value);
+                                        ((Video)oItem).ContributingArtists.ArrayAsString = kvp.Value; 
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
                     }
@@ -192,127 +208,11 @@ namespace MassMediaEditor
             }
             catch (Exception ex)
             {
-                new ErrorLog().WriteToLog(ex.Message, ex.StackTrace);
+                ErrorLog.WriteToLog(ex.Message, ex.StackTrace);
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
         }
 
-        private void GenerateDataRow(string currentField)
-        {
-            RowDefinition autoRow = new RowDefinition();
-            autoRow.Height = new GridLength(40);
-            grdEdit.RowDefinitions.Add(autoRow);
-
-            Label autoLabel = new Label
-            {
-                Name = String.Format("lblAutoGenerated_{0}", string.Join("", currentField.Split(' '))),
-                Content = String.Format("{0}:", currentField),
-                Foreground = Brushes.White
-            };
-
-            grdEdit.Children.Add(autoLabel);
-            Grid.SetRow(autoLabel, grdEdit.RowDefinitions.Count - 1);
-
-            //Column 1
-            if (lstDateNumericFields.Contains(currentField))
-            {
-                if (currentField == "Rating")
-                {
-                    Slider sldControl = new Slider()
-                    {
-                        Name = String.Format("sldrRating_{0}", grdEdit.RowDefinitions.Count - 1),
-                        Minimum = 0,
-                        Maximum = 99,
-                        Width = 245,
-                        Height = 25
-                    };
-
-                    grdEdit.Children.Add(sldControl);
-                    Grid.SetRow(sldControl, grdEdit.RowDefinitions.Count - 1);
-                    Grid.SetColumn(sldControl, 1);
-
-                    sldControl.ValueChanged += sldEditor_ValueChanged;
-
-                    Label sliderValue = new Label
-                    {
-                        Name = String.Format("lblAutoGenerated_{0}", grdEdit.RowDefinitions.Count - 1),
-                        Content = String.Empty,
-                        Foreground = Brushes.White,
-                        Margin = new Thickness(0, 5, 0, 0)
-                };
-
-                    grdEdit.Children.Add(sliderValue);
-                    Grid.SetRow(sliderValue, grdEdit.RowDefinitions.Count - 1);
-                    Grid.SetColumn(sliderValue, 2);
-                }
-                else if (currentField == "Year")
-                {
-                    ComboBox Years = new ComboBox();
-                    Years.Height = 25;
-                    Years.Width = 240;
-                    Years.Items.Add(String.Empty);
-
-                    for (int year = DateTime.Now.Year; year >= 1900 ; year--)
-                    {
-                        Years.Items.Add(year);
-                    }
-                    
-                    grdEdit.Children.Add(Years);
-                    Grid.SetRow(Years, grdEdit.RowDefinitions.Count - 1);
-                    Grid.SetColumn(Years, 1);
-                }
-                else
-                {
-                    DatePicker dp = new DatePicker()
-                    {
-                        Name = String.Format("dpAutoGenerated_{0}", grdEdit.RowDefinitions.Count - 1),
-                        Height = 25
-                    };
-
-                    grdEdit.Children.Add(dp);
-                    Grid.SetRow(dp, grdEdit.RowDefinitions.Count - 1);
-                    Grid.SetColumn(dp, 1);
-                }
-            }
-            else
-            {
-                TextBox autoTextBox = new TextBox
-                {
-                    Name = String.Format("txtAutoGenerated_{0}", string.Join("", currentField.Split(' '))),
-                    Width = 240,
-                    Height = 25
-                };
-
-                grdEdit.Children.Add(autoTextBox);
-                Grid.SetColumn(autoTextBox, 1);
-                Grid.SetRow(autoTextBox, grdEdit.RowDefinitions.Count - 1);
-            }
-
-            //Column 2
-            if (lstArrayFields.Contains(currentField))
-            {
-                //Stack Panel. List Box, Stack Panel, Button Button
-
-                //In here we need to assign the name values of the ArrayValueTemplate so that we can differeniate based on the rows.
-                DataTemplate dt = (DataTemplate)grdEdit.FindResource("tmplArray");
-                StackPanel outerSP = ((StackPanel)dt.LoadContent());
-
-                //Outer Stack Panel
-                outerSP.Name = String.Format("spParent_{0}", grdEdit.RowDefinitions.Count - 1);
-
-                //ListBox
-                ((ListBox)outerSP.Children[2]).Name = String.Format("lstbxValueContainer_{0}", grdEdit.RowDefinitions.Count - 1);
-
-                //Buttons
-                ((Button)outerSP.Children[0]).Name = String.Format("btnAddValue_{0}", grdEdit.RowDefinitions.Count - 1);
-                ((Button)outerSP.Children[1]).Name = String.Format("btnRemoveValue_{0}", grdEdit.RowDefinitions.Count - 1);
-
-                //Add to the grid and set the row.
-                grdEdit.Children.Add(outerSP);
-                Grid.SetRow(outerSP, grdEdit.RowDefinitions.Count - 1);
-            }
-        }
- 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -346,10 +246,7 @@ namespace MassMediaEditor
                             value = (((ListBox)((StackPanel)currentControl).Children[2]).HasItems) ? String.Join(";", ((ListBox)((StackPanel)currentControl).Children[2]).Items.Cast<string>()) : String.Empty;
                         }
                     }
-                    else
-                    {
-                        value = ((TextBox)currentControl).Text;
-                    }
+                    else { value = ((TextBox)currentControl).Text; }
 
                     dicCurrentValues.Add(properties[row], value);
                 }
@@ -361,7 +258,7 @@ namespace MassMediaEditor
             }
             catch (Exception ex)
             {
-                new ErrorLog().WriteToLog(ex.Message, ex.StackTrace);
+                ErrorLog.WriteToLog(ex.Message, ex.StackTrace);
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
         }
@@ -414,22 +311,15 @@ namespace MassMediaEditor
             }
             catch (Exception ex)
             {
-                new ErrorLog().WriteToLog(ex.Message, ex.StackTrace);
+                ErrorLog.WriteToLog(ex.Message, ex.StackTrace);
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
         }
         
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxMgr mbMgr = new MessageBoxMgr();
-            MessageBoxResult result = mbMgr.CreateNewResult("You will lose any unsaved changes. Proceed?", "Warning", MessageBoxButton.YesNo);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                this.Close();
-            }
-
-        }
+            Close();
+        } 
 
         private void sldEditor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -438,9 +328,18 @@ namespace MassMediaEditor
             ((Label)lbl).Content = String.Format("{0}/99", Math.Round(((Slider)sender).Value).ToString());
         }
 
-        private void wndEdit_Closed(object sender, EventArgs e)
+        private void wndEdit_Closed(object sender, CancelEventArgs e)
         {
-            UpdateSelectedFiles();
+            MessageBoxResult result = MessageBoxMgr.CreateNewResult("You will lose any unsaved changes. Proceed?", "Warning", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                UpdateSelectedFiles();
+            }
+            else
+            {
+                e.Cancel = true;
+            }
         }
 
         void timer_Tick(object sender, EventArgs e)
@@ -449,12 +348,126 @@ namespace MassMediaEditor
             timer.Stop();
         }
 
+        private void GenerateDataRow(string currentField)
+        {
+            RowDefinition autoRow = new RowDefinition();
+            autoRow.Height = new GridLength(40);
+            grdEdit.RowDefinitions.Add(autoRow);
+
+            Label autoLabel = new Label
+            {
+                Name = String.Format("lblAutoGenerated_{0}", string.Join("", currentField.Split(' '))),
+                Content = String.Format("{0}:", currentField),
+                Foreground = Brushes.White
+            };
+
+            grdEdit.Children.Add(autoLabel);
+            Grid.SetRow(autoLabel, grdEdit.RowDefinitions.Count - 1);
+
+            //Column 1
+            if (lstDateNumericFields.Contains(currentField))
+            {
+                if (currentField == "Rating")
+                {
+                    Slider sldControl = new Slider()
+                    {
+                        Name = String.Format("sldrRating_{0}", grdEdit.RowDefinitions.Count - 1),
+                        Minimum = 0,
+                        Maximum = 99,
+                        Width = 245,
+                        Height = 25
+                    };
+
+                    grdEdit.Children.Add(sldControl);
+                    Grid.SetRow(sldControl, grdEdit.RowDefinitions.Count - 1);
+                    Grid.SetColumn(sldControl, 1);
+
+                    sldControl.ValueChanged += sldEditor_ValueChanged;
+
+                    Label sliderValue = new Label
+                    {
+                        Name = String.Format("lblAutoGenerated_{0}", grdEdit.RowDefinitions.Count - 1),
+                        Content = String.Empty,
+                        Foreground = Brushes.White,
+                        Margin = new Thickness(0, 5, 0, 0)
+                    };
+
+                    grdEdit.Children.Add(sliderValue);
+                    Grid.SetRow(sliderValue, grdEdit.RowDefinitions.Count - 1);
+                    Grid.SetColumn(sliderValue, 2);
+                }
+                else if (currentField == "Year")
+                {
+                    ComboBox Years = new ComboBox();
+                    Years.Height = 25;
+                    Years.Width = 240;
+                    Years.Items.Add(String.Empty);
+
+                    for (int year = DateTime.Now.Year; year >= 1900; year--)
+                    {
+                        Years.Items.Add(year);
+                    }
+
+                    grdEdit.Children.Add(Years);
+                    Grid.SetRow(Years, grdEdit.RowDefinitions.Count - 1);
+                    Grid.SetColumn(Years, 1);
+                }
+                else
+                {
+                    DatePicker dp = new DatePicker()
+                    {
+                        Name = String.Format("dpAutoGenerated_{0}", grdEdit.RowDefinitions.Count - 1),
+                        Height = 25
+                    };
+
+                    grdEdit.Children.Add(dp);
+                    Grid.SetRow(dp, grdEdit.RowDefinitions.Count - 1);
+                    Grid.SetColumn(dp, 1);
+                }
+            }
+            else
+            {
+                TextBox autoTextBox = new TextBox
+                {
+                    Name = String.Format("txtAutoGenerated_{0}", string.Join("", currentField.Split(' '))),
+                    Width = 240,
+                    Height = 25
+                };
+
+                grdEdit.Children.Add(autoTextBox);
+                Grid.SetColumn(autoTextBox, 1);
+                Grid.SetRow(autoTextBox, grdEdit.RowDefinitions.Count - 1);
+            }
+
+            //Column 2
+            if (lstArrayFields.Contains(currentField))
+            {
+                //In here we need to assign the name values of the ValueTemplate so that we can differeniate based on the rows.
+                DataTemplate dt = (DataTemplate)grdEdit.FindResource("tmplArray");
+                StackPanel outerSP = ((StackPanel)dt.LoadContent());
+
+                //Outer Stack Panel
+                outerSP.Name = String.Format("spParent_{0}", grdEdit.RowDefinitions.Count - 1);
+
+                //ListBox
+                ((ListBox)outerSP.Children[2]).Name = String.Format("lstbxValueContainer_{0}", grdEdit.RowDefinitions.Count - 1);
+
+                //Buttons
+                ((Button)outerSP.Children[0]).Name = String.Format("btnAddValue_{0}", grdEdit.RowDefinitions.Count - 1);
+                ((Button)outerSP.Children[1]).Name = String.Format("btnRemoveValue_{0}", grdEdit.RowDefinitions.Count - 1);
+
+                //Add to the grid and set the row.
+                grdEdit.Children.Add(outerSP);
+                Grid.SetRow(outerSP, grdEdit.RowDefinitions.Count - 1);
+            }
+        }
+
         private string[] ParseArray(String itemArray)
         {
             string[] splitArray = (String.IsNullOrEmpty(itemArray)) ? Array.Empty<string>() : itemArray.Split(';');
 
             //Check the config to see if sorting is enabled.
-            if (((MainWindow)Application.Current.MainWindow).settings.AutoSort)
+            if (Settings.CanSort())
             {
                 Array.Sort(splitArray, StringComparer.InvariantCulture);
             }
@@ -464,8 +477,7 @@ namespace MassMediaEditor
 
         private DateTime? ParseDate(string dateString)
         {
-            DateTime dateTimeOut = DateTime.MinValue;
-
+            DateTime dateTimeOut;
             if (DateTime.TryParse(dateString, out dateTimeOut))
             {
                 return dateTimeOut;
@@ -474,6 +486,11 @@ namespace MassMediaEditor
             {
                 return null;
             }
+        }
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
