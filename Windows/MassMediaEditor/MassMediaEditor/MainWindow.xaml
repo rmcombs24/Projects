@@ -6,8 +6,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
-        Title="Mass Media Editor v1.2.0.0" MinHeight="500" MinWidth="800" 
-        SizeToContent="WidthAndHeight">
+        Title="Mass Media Editor v1.2.1.0" Height="500" Width="800" >
 
     <DockPanel Background="#FF323232">
         
@@ -49,7 +48,7 @@
 
         <xctk:BusyIndicator x:Name="biIsWorking" IsBusy="false"  >
 
-            <StackPanel Background="#FF4B4B4B">
+            <DockPanel x:Name="dpInfoBox" Background="#FF4B4B4B">
                 <DataGrid x:Name="dgInfoBox" Background="#BF646464"
                             Visibility="Hidden"
                               GridLinesVisibility="None" 
@@ -58,12 +57,14 @@
                               CanUserResizeRows="False"
                               CanUserAddRows="False"
                               VerticalAlignment="Stretch"
-                              HorizontalAlignment="Stretch"/>
-            </StackPanel>
+                              HorizontalAlignment="Stretch"
+                          VerticalScrollBarVisibility="Auto"/>
+            </DockPanel>
             
         </xctk:BusyIndicator>
         
 
         
     </DockPanel>
+    
 </Window>

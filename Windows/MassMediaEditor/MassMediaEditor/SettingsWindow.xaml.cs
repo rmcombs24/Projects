@@ -15,9 +15,9 @@ namespace MassMediaEditor
 
         private void LoadConfigSettings()
         {
-            ddlMediaType.SelectedIndex = ((MainWindow)Application.Current.MainWindow).settings.MediaType;
+            ddlMediaType.SelectedIndex = (int) Settings.DefaultMediaType();
 
-            if (((MainWindow)Application.Current.MainWindow).settings.AutoSort)
+            if (Settings.CanSort())
             {
                 rdoSortYes.IsChecked = true;
             }
@@ -32,12 +32,11 @@ namespace MassMediaEditor
             Settings newSettings = new Settings
             {
                 AutoSort = (rdoSortYes.IsChecked == true) ? true : false,
-                MediaType = ddlMediaType.SelectedIndex
+                MediaType = (MediaType) ddlMediaType.SelectedIndex
             };
 
-            ((MainWindow)Application.Current.MainWindow).settings.WriteToSettingsConfig(newSettings);
-
-            this.Close();
+            Settings.WriteToSettingsConfig(newSettings);
+            Close();
         }
 
         private void rdoSort_Checked(object sender, RoutedEventArgs e)

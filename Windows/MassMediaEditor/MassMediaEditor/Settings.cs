@@ -8,13 +8,15 @@ namespace MassMediaEditor
 {
     public class Settings
     {
-        public int MediaType { get; set; }
+        public MediaType MediaType { get; set; }
+        private static MediaType _MediaType { get; set; }
         public string Theme { get; set; }
         public bool AutoSort { get; set; }
-        
-        string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MassMediaEditor";
+        private static bool _AutoSort { get; set; }
 
-        public void LoadStartupConfig()
+        static string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MassMediaEditor";
+
+        public static void LoadStartupConfig()
         {
             if (!File.Exists(filePath + "\\config.json"))
             {
@@ -42,26 +44,31 @@ namespace MassMediaEditor
                     JsonSerializer serializer = new JsonSerializer();
                     Settings s = (Settings)serializer.Deserialize(file, typeof(Settings));
 
-                    MediaType = s.MediaType;
-                    AutoSort = s.AutoSort;
+                    _MediaType = s.MediaType;
+                    _AutoSort = s.AutoSort;
                 }
             }
         }
 
-        public void WriteToSettingsConfig(Settings settings)
+        public static void WriteToSettingsConfig(Settings settings)
         {
             string json = File.ReadAllText(filePath + "\\config.json");
             dynamic jsonObj = JsonConvert.DeserializeObject(json);
-            jsonObj["MediaType"] = settings.MediaType;
+            jsonObj["MediaType"] = settings.MediaType.ToString();
             jsonObj["AutoSort"] = settings.AutoSort;
 
             string output = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
             File.WriteAllText(filePath + "\\config.json", output);
         }
 
-        public Settings()
+        public static bool CanSort()
         {
+            return _AutoSort;
+        }
 
+        public static MediaType DefaultMediaType()
+        {
+            return _MediaType;
         }
     }
 }
