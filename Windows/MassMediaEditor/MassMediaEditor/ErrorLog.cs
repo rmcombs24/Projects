@@ -1,19 +1,23 @@
 ﻿using System;
+using System.IO;
 
 namespace MassMediaEditor
 {
-    class ErrorLog
+    public partial class ErrorLog
     {
+        public static string GetLogPath(){ return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MassMediaEditor\\error.log"; }
 
-        public void WriteToLog(string message, string filePath = "")
+        public static void WriteToLog(string message, string StackTrace , string filePath = "")
         {
-            string userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MassMediaEditor\\error.log";
-
-            using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter(userPath, true))
+            using (StreamWriter file = new StreamWriter(GetLogPath(), true))
             {
-                file.WriteLine(String.Format("({0}) {1}: {2}", DateTime.Now, filePath, message));
+                file.WriteLine(String.Format("({0}) {1}: {2} \r Stack Trace:{3} \n", DateTime.Now, filePath, message, StackTrace));
             }
+        }
+
+        public void ClearErrorLog()
+        {
+            File.Create(GetLogPath()).Close();
         }
     }
 }

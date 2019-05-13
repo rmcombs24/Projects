@@ -1,0 +1,21 @@
+﻿<Window x:Class="MassMediaEditor.ErrorLogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Error Log" Height="750" Width="600" Background="#FF363636" ResizeMode="NoResize">
+    
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom">
+            <!-- <Button x:Name="btnSave" Click="btnSave_Click" Content="Close"/> -->
+            <Button x:Name="btnCancel" Click="btnClearLog_Click" Content="Clear Log"/>
+        </StackPanel>
+        <ScrollViewer>
+            <DockPanel>
+                <RichTextBox Background="#FF5D5A5A" Foreground="White" Margin="10,10,10,10" x:Name="rtbLogText" HorizontalAlignment="Left"  VerticalAlignment="Top" />
+            </DockPanel>
+        </ScrollViewer>
+    </DockPanel>
+   
+</Window>
