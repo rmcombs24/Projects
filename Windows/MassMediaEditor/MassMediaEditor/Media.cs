@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Data;
+using System.Reflection;
 using Microsoft.WindowsAPICodePack.Shell;
+using System.Linq;
 
 namespace MassMediaEditor
 {
@@ -14,7 +16,7 @@ namespace MassMediaEditor
             Title, Subject, Rating, Tags, Comments
         */
 
-        #region Properties
+       #region Properties
         public bool isChecked           { get; set; }
         public string FileName          { get; set; }
         public string FilePath          { get; set; }
@@ -24,7 +26,17 @@ namespace MassMediaEditor
         public UintMediaProperty Rating { get; set; }
         public ArrayMediaProperty Tags  { get; set; }
         #endregion
-   
+
+        public static MediaSection GetPropertySection(string propertyName)
+        { 
+            return MediaSection.Media;
+        }
+
+        public static MediaSection GetPropertySection(MediaProperty property)
+        {
+            return property.MediaSection;
+        }
+
         public static bool WriteToShellFile(Media mediaFile)
         {
             bool hasErrors = false;
