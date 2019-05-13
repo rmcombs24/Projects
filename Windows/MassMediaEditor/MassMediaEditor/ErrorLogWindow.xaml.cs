@@ -21,7 +21,7 @@ namespace MassMediaEditor
         private void LoadErrorLog()
         {
             textRange = new TextRange(rtbLogText.Document.ContentStart, rtbLogText.Document.ContentEnd);
-            FileStream fileStream = new FileStream(eLog.GetLogPath, FileMode.Open, FileAccess.Read);
+            FileStream fileStream = new FileStream(ErrorLog.GetLogPath(), FileMode.Open, FileAccess.Read);
             StringBuilder sb = new StringBuilder();
 
            using (StreamReader streamReader = new StreamReader(fileStream, Encoding.UTF8))
@@ -46,8 +46,7 @@ namespace MassMediaEditor
 
         private void btnClearLog_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxMgr mbMgr = new MessageBoxMgr();
-            MessageBoxResult result = mbMgr.CreateNewResult("Are you sure you want to clear the error log?", "Clear Error Log?", MessageBoxButton.OKCancel);
+           MessageBoxResult result = MessageBoxMgr.CreateNewResult("Are you sure you want to clear the error log?", "Clear Error Log?", MessageBoxButton.OKCancel);
 
             if (result == MessageBoxResult.OK)
             {

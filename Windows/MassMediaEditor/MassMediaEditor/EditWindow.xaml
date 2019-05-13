@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
-        Closed="wndEdit_Closed"
+        Closing="wndEdit_Closed"    
         Title="Edit" Height="550" Width="640"
         ResizeMode="NoResize"
         SizeToContent="Height"

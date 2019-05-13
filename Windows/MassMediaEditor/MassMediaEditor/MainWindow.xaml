@@ -6,8 +6,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
-        Title="Mass Media Editor v1.2.0.0" MinHeight="500" MinWidth="800" 
-        SizeToContent="WidthAndHeight">
+        Title="Mass Media Editor v1.2.1.0" Height="500" Width="800" >
 
     <DockPanel Background="#FF323232">
         
@@ -29,10 +28,10 @@
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Background="#FF323232">
 
             <StackPanel Margin="0,10,0,0">
-                <Button x:Name="btnBrowse" Content="Browse" Width="75" Click="BtnBrowse_Click"/>
-                <Button x:Name="btnEdit" Content="Edit"  Width="75" Click="BtnEdit_Click" IsEnabled="False" />
-                <Button x:Name="btnCommit" Content="Commit" Width="75" Click="BtnCommit_Click" IsEnabled="False"/>
-                <Button x:Name="btnClear" Content="Clear" Width="75" IsEnabled="False" Click="BtnClear_Click"/>
+                <Button x:Name="btnBrowse" Content="Browse" Width="75" Click="btnBrowse_Click"/>
+                <Button x:Name="btnEdit" Content="Edit"  Width="75" Click="btnEdit_Click" IsEnabled="False" />
+                <Button x:Name="btnCommit" Content="Commit" Width="75" Click="btnCommit_Click" IsEnabled="False"/>
+                <Button x:Name="btnClear" Content="Clear" Width="75" IsEnabled="False" Click="btnClear_Click"/>
             </StackPanel>
 
             <GroupBox x:Name="groupBox" Header="Media Type" Height="75" Width="90" Margin="5,10,5,0" Foreground="White">
@@ -49,7 +48,7 @@
 
         <xctk:BusyIndicator x:Name="biIsWorking" IsBusy="false"  >
 
-            <StackPanel Background="#FF4B4B4B">
+            <DockPanel x:Name="dpInfoBox" Background="#FF4B4B4B">
                 <DataGrid x:Name="dgInfoBox" Background="#BF646464"
                             Visibility="Hidden"
                               GridLinesVisibility="None" 
@@ -58,12 +57,14 @@
                               CanUserResizeRows="False"
                               CanUserAddRows="False"
                               VerticalAlignment="Stretch"
-                              HorizontalAlignment="Stretch"/>
-            </StackPanel>
+                              HorizontalAlignment="Stretch"
+                          VerticalScrollBarVisibility="Auto"/>
+            </DockPanel>
             
         </xctk:BusyIndicator>
         
 
         
     </DockPanel>
+    
 </Window>
