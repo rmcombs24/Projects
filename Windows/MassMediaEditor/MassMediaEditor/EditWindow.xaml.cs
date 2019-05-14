@@ -74,6 +74,8 @@ namespace MassMediaEditor
                     y => y.Header is CheckBox).ToList().FindAll(
                         z => ((CheckBox)z.Header).IsChecked == true);
 
+            //Media.GetMediaSection(new Picture(), "Title");
+
             if (lstCheckedCols.Count > 0)
             {                
                 for (int index = 0; index < lstCheckedCols.Count; index++)
@@ -91,8 +93,6 @@ namespace MassMediaEditor
                     {
                         properties.Add(((CheckBox)((MainWindow) Application.Current.MainWindow).dgInfoBox.Columns[index].Header).Content.ToString());
                         lstFieldValuePair.Add(new KeyValuePair<string, string>(properties[index - 2], String.Empty));
-
-                        Media.GetPropertySection(properties[index - 2]);
 
                         GenerateDataRow(properties[index - 2]);
                     }

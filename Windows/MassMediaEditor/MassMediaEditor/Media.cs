@@ -27,12 +27,13 @@ namespace MassMediaEditor
         public ArrayMediaProperty Tags  { get; set; }
         #endregion
 
-        public static MediaSection GetPropertySection(string propertyName)
-        { 
-            return MediaSection.Media;
+        public static MediaSection GetMediaSection(Media mediaObj, string propName)
+        {
+            var mediaSectionProp = mediaObj.GetType().GetProperty(propName).GetValue(mediaObj, null);
+            return ((MediaProperty) mediaSectionProp).MediaSection;
         }
 
-        public static MediaSection GetPropertySection(MediaProperty property)
+        public static MediaSection GetMediaSection(MediaProperty property)
         {
             return property.MediaSection;
         }
@@ -99,6 +100,7 @@ namespace MassMediaEditor
 
             return !hasErrors;
          }
+
         public static Dictionary<String, Binding> GenerateBindings (MediaType mediaType)
         {
             var d = new Dictionary<String, Binding>();
@@ -197,6 +199,24 @@ namespace MassMediaEditor
             
             //Copyright       = file.Properties.System.Copyright.Value;
         }
+
+        public Picture()
+        {
+            FilePath = null;
+            FileName = null;
+
+            Comments        = new MediaProperty(String.Empty, MediaSection.Description);
+            Title           = new MediaProperty(String.Empty, MediaSection.Description);
+            Tags            = new ArrayMediaProperty(Array.Empty<string>(), MediaSection.Description);
+            Subject         = new MediaProperty(String.Empty, MediaSection.Description);
+            Rating          = new UintMediaProperty(null, MediaSection.Description);
+
+            Authors         = new ArrayMediaProperty(Array.Empty<string>(), MediaSection.Origin);
+            ProgramName     = new MediaProperty(String.Empty, MediaSection.Origin);
+            DateAcquired    = new DateTimeMediaProperty(null, MediaSection.Origin);
+            DateTaken       = new DateTimeMediaProperty(null, MediaSection.Origin);
+
+        }
     }
     class Audio : Media
     {
@@ -287,30 +307,30 @@ namespace MassMediaEditor
         public MediaProperty Publisher                      { get; set; }
         #endregion
 
-        public Video (string filePath)
+        public Video(string filePath)
         {
             ShellFile file = ShellFile.FromFilePath(filePath);
 
             FilePath = filePath;
             FileName = file.Properties.System.FileName.Value;
 
-            Tags                = new ArrayMediaProperty(file.Properties.System.Keywords.Value, MediaSection.Description);
-            Subtitle            = new MediaProperty(file.Properties.System.Media.Subtitle.Value, MediaSection.Description);
-            Comments            = new MediaProperty(file.Properties.System.Comment.Value, MediaSection.Description);
-            Rating              = new UintMediaProperty(file.Properties.System.Rating.Value, MediaSection.Description);
-            Title               = new MediaProperty(file.Properties.System.Title.Value, MediaSection.Description);
+            Tags = new ArrayMediaProperty(file.Properties.System.Keywords.Value, MediaSection.Description);
+            Subtitle = new MediaProperty(file.Properties.System.Media.Subtitle.Value, MediaSection.Description);
+            Comments = new MediaProperty(file.Properties.System.Comment.Value, MediaSection.Description);
+            Rating = new UintMediaProperty(file.Properties.System.Rating.Value, MediaSection.Description);
+            Title = new MediaProperty(file.Properties.System.Title.Value, MediaSection.Description);
 
-            Directors           = new ArrayMediaProperty(file.Properties.System.Video.Director.Value, MediaSection.Origin);
-            Producers           = new ArrayMediaProperty(file.Properties.System.Media.Producer.Value, MediaSection.Origin);
-            Writers             = new ArrayMediaProperty(file.Properties.System.Media.Writer.Value, MediaSection.Origin);
-            MediaCreated        = new DateTimeMediaProperty(file.Properties.System.DateCreated.Value, MediaSection.Origin);
-            AuthorURL           = new MediaProperty(file.Properties.System.Media.AuthorUrl.Value, MediaSection.Origin);
-            PromoURL            = new MediaProperty(file.Properties.System.Media.PromotionUrl.Value, MediaSection.Origin);
-            Publisher           = new MediaProperty(file.Properties.System.Media.Publisher.Value, MediaSection.Origin);
+            Directors = new ArrayMediaProperty(file.Properties.System.Video.Director.Value, MediaSection.Origin);
+            Producers = new ArrayMediaProperty(file.Properties.System.Media.Producer.Value, MediaSection.Origin);
+            Writers = new ArrayMediaProperty(file.Properties.System.Media.Writer.Value, MediaSection.Origin);
+            MediaCreated = new DateTimeMediaProperty(file.Properties.System.DateCreated.Value, MediaSection.Origin);
+            AuthorURL = new MediaProperty(file.Properties.System.Media.AuthorUrl.Value, MediaSection.Origin);
+            PromoURL = new MediaProperty(file.Properties.System.Media.PromotionUrl.Value, MediaSection.Origin);
+            Publisher = new MediaProperty(file.Properties.System.Media.Publisher.Value, MediaSection.Origin);
 
             ContributingArtists = new ArrayMediaProperty(file.Properties.System.Music.Artist.Value, MediaSection.Media);
-            Genre               = new ArrayMediaProperty(file.Properties.System.Music.Genre.Value, MediaSection.Media);
-            Year                = new UintMediaProperty(file.Properties.System.Media.Year.Value, MediaSection.Media);
+            Genre = new ArrayMediaProperty(file.Properties.System.Music.Genre.Value, MediaSection.Media);
+            Year = new UintMediaProperty(file.Properties.System.Media.Year.Value, MediaSection.Media);
         }
     }
 }

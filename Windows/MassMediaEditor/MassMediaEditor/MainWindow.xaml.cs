@@ -66,7 +66,7 @@ namespace MassMediaEditor
                         CheckBox chkHeader = new CheckBox()
                         {
                             Content = headers.Keys.ElementAt(index).ToString(),
-                            Name = String.Format("chk{0}", headers.Keys.ElementAt(index).ToString().Replace(" ", String.Empty)),
+                            Name = String.Format("chk{0}", headers.Keys.ElementAt(index).ToString().Replace(" ", String.Empty))
                         };
 
                         dgCol.Header = chkHeader;
