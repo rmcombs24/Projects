@@ -16,6 +16,7 @@ namespace MassMediaEditor
     public partial class MainWindow : Window
     {
         public List<object> selectedItems = new List<object>();
+        public static MediaType selectedMediaType = Settings.DefaultMediaType();
 
         public MainWindow()
         {
@@ -248,5 +249,14 @@ namespace MassMediaEditor
         }
         #endregion
 
+        private void rdoGroup_Checked(object sender, RoutedEventArgs e)
+        {
+            if (rdoAudio.IsChecked == true)
+                selectedMediaType = MediaType.Audio;
+            else if (rdoPictures.IsChecked == true)
+                selectedMediaType = MediaType.Pictures;
+            else
+                selectedMediaType = MediaType.Video;
+        }
     }
 }

@@ -14,55 +14,14 @@ namespace MassMediaEditor
     /// </summary>
     public partial class EditWindow : Window
     {
-        List<string> lstArrayFields = new List<string> { "Author", "Tags", "Composers", "Contributing Artists", "Directors", "Producers", "Writers", "Genre" };
-        List<string> lstDateNumericFields = new List<string> { "Date Acquired", "Date Taken", "Media Created", "Year", "Rating" };
+        //I'm going to redo these with reflection..soon(tm).
+        private List<string> lstArrayFields = new List<string> { "Author", "Tags", "Composers", "Contributing Artists", "Directors", "Producers", "Writers", "Genre" };
+        private List<string> lstDateNumericFields = new List<string> { "Date Acquired", "Date Taken", "Media Created", "Year", "Rating" };
 
         private Dictionary<string, string> dicCurrentValues = new Dictionary<string, string>();
         private List<KeyValuePair<string, string>> lstFieldValuePair = new List<KeyValuePair<string, string>>();
         private List<string> properties = new List<string>();
-        DispatcherTimer timer = new DispatcherTimer();
-
-        public void GenerateHeader(MediaSection section)
-        {
-            /*  Label 
-             *      FontSize = "20" 
-             *      Foreground = "White" 
-             *      FontWeight = "Bold" 
-             *      Grid.Column = "0" 
-             *      Grid.ColumnSpan = "1" 
-             *      FontFamily = "Calibri"
-
-             *  Separator 
-             *      Grid.Column = "1" 
-             *      Grid.ColumnSpan = "2"
-             */
-
-            Label lblheader = new Label
-            {
-                FontSize = 20,
-                //FontWeight = ,
-                //FontFamily = ,
-                Foreground = Brushes.White,
-                Content = section
-            };
-
-            Separator sepHeader = new Separator();
-
-            RowDefinition autoRow = new RowDefinition { Height = new GridLength(40) };
-
-            grdEdit.RowDefinitions.Add(autoRow);
-            grdEdit.Children.Add(lblheader);
-
-            Grid.SetRow(lblheader, 0);
-            Grid.SetColumn(lblheader, 0);
-            Grid.SetColumnSpan(lblheader, 1);
-
-            grdEdit.Children.Add(sepHeader);
-            Grid.SetRow(sepHeader, 0);
-            Grid.SetColumn(sepHeader, 1);
-            Grid.SetColumnSpan(sepHeader, 2);
-
-        }
+        private DispatcherTimer timer = new DispatcherTimer();
 
         public EditWindow()
         {
@@ -74,15 +33,12 @@ namespace MassMediaEditor
                     y => y.Header is CheckBox).ToList().FindAll(
                         z => ((CheckBox)z.Header).IsChecked == true);
 
-            //Media.GetMediaSection(new Picture(), "Title");
-
             if (lstCheckedCols.Count > 0)
             {                
                 for (int index = 0; index < lstCheckedCols.Count; index++)
                 {
                     properties.Add(((CheckBox)lstCheckedCols[index].Header).Content.ToString());
                     lstFieldValuePair.Add(new KeyValuePair<string, string>(properties[index], String.Empty));
-                    GenerateDataRow(properties[index]);
                 }
             }
             else
@@ -93,166 +49,11 @@ namespace MassMediaEditor
                     {
                         properties.Add(((CheckBox)((MainWindow) Application.Current.MainWindow).dgInfoBox.Columns[index].Header).Content.ToString());
                         lstFieldValuePair.Add(new KeyValuePair<string, string>(properties[index - 2], String.Empty));
-
-                        GenerateDataRow(properties[index - 2]);
                     }
                 }
             }
-        }
 
-        private void UpdateSelectedFiles()
-        {
-            try
-            {
-                foreach (object oItem in ((MainWindow)Application.Current.MainWindow).dgInfoBox.Items)
-                {
-                    if (((Media)oItem).isChecked == true)
-                    {
-                        foreach (KeyValuePair<string, string> kvp in dicCurrentValues)
-                        {
-                            //Since we're dealing with a mutable type of objects.
-                            //If the object has a valid property field then we can update the file
-                            //To have the new properties that were used in the edit window.
-
-                            switch (kvp.Key)
-                            {
-                                case "Title":
-                                    ((Media)oItem).Title.Val = kvp.Value;
-                                    break;
-                                case "Comments":
-                                    ((Media)oItem).Comments.Val = kvp.Value;
-                                    break;
-                                case "Rating":
-                                    ((Media)oItem).Rating.Value = (Math.Round(double.Parse(kvp.Value)) == 0) ? null : (uint?)Math.Round(double.Parse(kvp.Value));
-                                    break;
-                                case "Tags":
-                                    ((Media)oItem).Tags.Value = ParseArray(kvp.Value);
-                                    ((Media)oItem).Tags.ArrayAsString = kvp.Value;
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                            if (oItem is Picture)
-                            {
-                                switch (kvp.Key)
-                                {
-                                    case "Subject":
-                                        ((Picture)oItem).Subject.Val = kvp.Value;
-                                        break;
-                                    case "Author":
-                                        ((Picture)oItem).Authors.Value = ParseArray(kvp.Value);
-                                        ((Picture)oItem).Authors.ArrayAsString = kvp.Value;
-                                        break;
-                                    case "Program Name":
-                                        ((Picture)oItem).ProgramName.Val = kvp.Value;
-                                        break;
-                                    case "Copyright":
-                                        //((Picture)oItem).Copyright = kvp.Value;
-                                        break;
-                                    case "Date Acquired":
-                                        ((Picture)oItem).DateAcquired.Value = ParseDate(kvp.Value);
-                                        break;
-                                    case "Date Taken":
-                                        ((Picture)oItem).DateTaken.Value = ParseDate(kvp.Value);
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                            else if (oItem is Audio)
-                            {
-                                switch (kvp.Key)
-                                {
-                                    case "Album":
-                                        ((Audio)oItem).Album.Val = kvp.Value;
-                                        break;
-                                    case "Album Artist":
-                                        ((Audio)oItem).AlbumArtist.Val = kvp.Value;
-                                        break;
-                                    case "BPM":
-                                        ((Audio)oItem).BPM.Val = kvp.Value;
-                                        break;
-                                    case "Composers":
-                                        ((Audio)oItem).Composers.Value = ParseArray(kvp.Value);
-                                        ((Audio)oItem).Composers.ArrayAsString = kvp.Value;
-                                        break;
-                                    case "Subtitle":
-                                        ((Audio)oItem).Subtitle.Val = kvp.Value;
-                                        break;
-                                    case "Publisher":
-                                        ((Audio)oItem).Publisher.Val = kvp.Value;
-                                        break;
-                                    case "Genre":
-                                        ((Audio)oItem).Genre.Value = ParseArray(kvp.Value);
-                                        ((Audio)oItem).Genre.ArrayAsString = kvp.Value;
-                                        break;
-                                    case "Author URL":
-                                        ((Audio)oItem).AuthorURL.Val = kvp.Value;
-                                        break;
-                                    case "Contributing Artists":
-                                        ((Audio)oItem).ContributingArtists.Value = ParseArray(kvp.Value);
-                                        ((Audio)oItem).ContributingArtists.ArrayAsString = kvp.Value;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                            else if (oItem is Video)
-                            {
-                                switch (kvp.Key)
-                                {
-                                    case "Media Created":
-                                        ((Video)oItem).MediaCreated.Value = ParseDate(kvp.Value);
-                                        break;
-                                    case "Promotional URL":
-                                        ((Video)oItem).PromoURL.Val = kvp.Value;
-                                        break;
-                                    case "Year":
-                                        ((Video)oItem).Year.Value = (String.IsNullOrEmpty(kvp.Value)) ? (uint?)null : uint.Parse(kvp.Value);
-                                        break;
-                                    case "Directors":
-                                        ((Video)oItem).Directors.Value = ParseArray(kvp.Value);
-                                        ((Video)oItem).Directors.ArrayAsString = kvp.Value;
-                                        break;
-                                    case "Writers":
-                                        ((Video)oItem).Writers.Value = ParseArray(kvp.Value);
-                                        ((Video)oItem).Writers.ArrayAsString = kvp.Value;
-                                        break;
-                                    case "Producers":
-                                        ((Video)oItem).Producers.Value = ParseArray(kvp.Value);
-                                        ((Video)oItem).Producers.ArrayAsString = kvp.Value;
-                                        break;
-                                    case "Subtitle":
-                                        ((Video)oItem).Subtitle.Val = kvp.Value;
-                                        break;
-                                    case "Publisher":
-                                        ((Video)oItem).Publisher.Val = kvp.Value;
-                                        break;
-                                    case "Genre":
-                                        ((Video)oItem).Genre.Value = ParseArray(kvp.Value);
-                                        ((Video)oItem).Genre.ArrayAsString = kvp.Value;
-                                        break;
-                                    case "Author URL":
-                                        ((Video)oItem).AuthorURL.Val = kvp.Value;
-                                        break;
-                                    case "Contributing Artists":
-                                        ((Video)oItem).ContributingArtists.Value = ParseArray(kvp.Value);
-                                        ((Video)oItem).ContributingArtists.ArrayAsString = kvp.Value;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrorLog.WriteToLog(ex.Message, ex.StackTrace);
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
-            }
+            SortHeadersBySections(properties);
         }
 
         private void GenerateDataRow(string currentField)
@@ -372,6 +173,214 @@ namespace MassMediaEditor
             }
         }
 
+        private void GenerateHeaderAndRows(MediaSection section, List<string> sectionProperties)
+        {
+            //Header 
+            DataTemplate dt = (DataTemplate)grdEdit.FindResource("tmplHeader");
+            StackPanel spOuter = (StackPanel)dt.LoadContent();
+            RowDefinition autoRow = new RowDefinition { Height = new GridLength(45) };
+
+            ((Label)spOuter.Children[0]).Content = section;
+
+            grdEdit.Children.Add(spOuter);
+            grdEdit.RowDefinitions.Add(autoRow);
+
+            Grid.SetRow(spOuter, grdEdit.RowDefinitions.Count - 1);
+
+            //Rows
+            foreach (string properties in sectionProperties)
+            {
+                GenerateDataRow(properties);
+            }
+        }
+
+        private void SortHeadersBySections(List<string> headers)
+        {
+            Dictionary<string, MediaSection> dicSortedSections = new Dictionary<string, MediaSection>();
+
+            Media mediaType;
+
+            if (((MainWindow)Application.Current.MainWindow).dgInfoBox.Items.CurrentItem is Audio) { mediaType = new Audio(); }
+            else if (((MainWindow)Application.Current.MainWindow).dgInfoBox.Items.CurrentItem is Picture) { mediaType = new Picture(); }
+            else { mediaType = new Video(); }
+
+            //Headers has the current headers for whatever we're looking at, so we iterate through it, and put these into the sections they should be in
+            foreach (string property in headers)
+            {
+                if (Media.GetMediaSection(mediaType, property) == MediaSection.Description) { dicSortedSections.Add(property, MediaSection.Description); }
+                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Origin) { dicSortedSections.Add(property, MediaSection.Origin); }
+                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Media) { dicSortedSections.Add(property, MediaSection.Media); }
+                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Content) { dicSortedSections.Add(property, MediaSection.Content); }
+                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Camera) { dicSortedSections.Add(property, MediaSection.Camera); }
+                else if (Media.GetMediaSection(mediaType, property) == MediaSection.AdvancedPhoto) { dicSortedSections.Add(property, MediaSection.AdvancedPhoto); }
+            }
+
+            //Now we have it sorted. We need to filter based on the sections we have, and generate rows
+            foreach (MediaSection currentSection in dicSortedSections.Values.Distinct())
+            {
+                if (dicSortedSections.Where(kvp => kvp.Value == currentSection).Count() > 0)
+                {
+                    GenerateHeaderAndRows(currentSection, dicSortedSections.Where(kvp => kvp.Value == currentSection).Select(kvp => kvp.Key).ToList());
+                }
+            }
+        }
+
+        private void UpdateSelectedFiles()
+        {
+            try
+            {
+                foreach (object oItem in ((MainWindow)Application.Current.MainWindow).dgInfoBox.Items)
+                {
+                    if (((Media)oItem).isChecked == true)
+                    {
+                        foreach (KeyValuePair<string, string> kvp in dicCurrentValues)
+                        {
+                            //Since we're dealing with a mutable type of objects.
+                            //If the object has a valid property field then we can update the file
+                            //To have the new properties that were used in the edit window.
+
+                            switch (kvp.Key)
+                            {
+                                case "Title":
+                                    ((Media)oItem).Title.Val = kvp.Value;
+                                    break;
+                                case "Comments":
+                                    ((Media)oItem).Comments.Val = kvp.Value;
+                                    break;
+                                case "Rating":
+                                    ((Media)oItem).Rating.Value = (Math.Round(double.Parse(kvp.Value)) == 0) ? null : (uint?)Math.Round(double.Parse(kvp.Value));
+                                    break;
+                                case "Tags":
+                                    ((Media)oItem).Tags.Value = ParseArray(kvp.Value);
+                                    ((Media)oItem).Tags.ArrayAsString = kvp.Value;
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            if (oItem is Picture)
+                            {
+                                switch (kvp.Key)
+                                {
+                                    case "Subject":
+                                        ((Picture)oItem).Subject.Val = kvp.Value;
+                                        break;
+                                    case "Author":
+                                        ((Picture)oItem).Authors.Value = ParseArray(kvp.Value);
+                                        ((Picture)oItem).Authors.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Program Name":
+                                        ((Picture)oItem).ProgramName.Val = kvp.Value;
+                                        break;
+                                    case "Copyright":
+                                        //((Picture)oItem).Copyright = kvp.Value;
+                                        break;
+                                    case "Date Acquired":
+                                        ((Picture)oItem).DateAcquired.Value = ParseDate(kvp.Value);
+                                        break;
+                                    case "Date Taken":
+                                        ((Picture)oItem).DateTaken.Value = ParseDate(kvp.Value);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else if (oItem is Audio)
+                            {
+                                switch (kvp.Key)
+                                {
+                                    case "Album":
+                                        ((Audio)oItem).Album.Val = kvp.Value;
+                                        break;
+                                    case "Album Artist":
+                                        ((Audio)oItem).AlbumArtist.Val = kvp.Value;
+                                        break;
+                                    case "BPM":
+                                        ((Audio)oItem).BPM.Val = kvp.Value;
+                                        break;
+                                    case "Composers":
+                                        ((Audio)oItem).Composer.Value = ParseArray(kvp.Value);
+                                        ((Audio)oItem).Composer.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Subtitle":
+                                        ((Audio)oItem).Subtitle.Val = kvp.Value;
+                                        break;
+                                    case "Publisher":
+                                        ((Audio)oItem).Publisher.Val = kvp.Value;
+                                        break;
+                                    case "Genre":
+                                        ((Audio)oItem).Genre.Value = ParseArray(kvp.Value);
+                                        ((Audio)oItem).Genre.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Author URL":
+                                        ((Audio)oItem).AuthorURL.Val = kvp.Value;
+                                        break;
+                                    case "Contributing Artists":
+                                        ((Audio)oItem).ContributingArtists.Value = ParseArray(kvp.Value);
+                                        ((Audio)oItem).ContributingArtists.ArrayAsString = kvp.Value;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else if (oItem is Video)
+                            {
+                                switch (kvp.Key)
+                                {
+                                    case "Media Created":
+                                        ((Video)oItem).MediaCreated.Value = ParseDate(kvp.Value);
+                                        break;
+                                    case "Promotional URL":
+                                        ((Video)oItem).PromotionalURL.Val = kvp.Value;
+                                        break;
+                                    case "Year":
+                                        ((Video)oItem).Year.Value = (String.IsNullOrEmpty(kvp.Value)) ? (uint?)null : uint.Parse(kvp.Value);
+                                        break;
+                                    case "Directors":
+                                        ((Video)oItem).Directors.Value = ParseArray(kvp.Value);
+                                        ((Video)oItem).Directors.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Writers":
+                                        ((Video)oItem).Writers.Value = ParseArray(kvp.Value);
+                                        ((Video)oItem).Writers.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Producers":
+                                        ((Video)oItem).Producers.Value = ParseArray(kvp.Value);
+                                        ((Video)oItem).Producers.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Subtitle":
+                                        ((Video)oItem).Subtitle.Val = kvp.Value;
+                                        break;
+                                    case "Publisher":
+                                        ((Video)oItem).Publisher.Val = kvp.Value;
+                                        break;
+                                    case "Genre":
+                                        ((Video)oItem).Genre.Value = ParseArray(kvp.Value);
+                                        ((Video)oItem).Genre.ArrayAsString = kvp.Value;
+                                        break;
+                                    case "Author URL":
+                                        ((Video)oItem).AuthorURL.Val = kvp.Value;
+                                        break;
+                                    case "Contributing Artists":
+                                        ((Video)oItem).ContributingArtists.Value = ParseArray(kvp.Value);
+                                        ((Video)oItem).ContributingArtists.ArrayAsString = kvp.Value;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.WriteToLog(ex.Message, ex.StackTrace);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+            }
+        }
+
+        #region Helper Methods
         private string[] ParseArray(String itemArray)
         {
             string[] splitArray = (String.IsNullOrEmpty(itemArray)) ? Array.Empty<string>() : itemArray.Split(';');
@@ -397,6 +406,8 @@ namespace MassMediaEditor
                 return null;
             }
         }
+        
+        #endregion
 
         #region Event Handlers
         private void btnSave_Click(object sender, RoutedEventArgs e)
