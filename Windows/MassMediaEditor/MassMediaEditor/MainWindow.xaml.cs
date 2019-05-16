@@ -21,6 +21,7 @@ namespace MassMediaEditor
         public MainWindow()
         {
             InitializeComponent();
+            Title = "MassMediaEditor " + Version.GetVersionNumber();
             Settings.LoadStartupConfig();
             LoadSettings();
         }
