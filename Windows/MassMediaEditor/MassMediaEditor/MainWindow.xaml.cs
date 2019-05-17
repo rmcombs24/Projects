@@ -16,10 +16,12 @@ namespace MassMediaEditor
     public partial class MainWindow : Window
     {
         public List<object> selectedItems = new List<object>();
+        public static MediaType selectedMediaType = Settings.DefaultMediaType();
 
         public MainWindow()
         {
             InitializeComponent();
+            Title = "MassMediaEditor " + Version.GetVersionNumber();
             Settings.LoadStartupConfig();
             LoadSettings();
         }
@@ -66,7 +68,7 @@ namespace MassMediaEditor
                         CheckBox chkHeader = new CheckBox()
                         {
                             Content = headers.Keys.ElementAt(index).ToString(),
-                            Name = String.Format("chk{0}", headers.Keys.ElementAt(index).ToString().Replace(" ", String.Empty)),
+                            Name = String.Format("chk{0}", headers.Keys.ElementAt(index).ToString().Replace(" ", String.Empty))
                         };
 
                         dgCol.Header = chkHeader;
@@ -248,5 +250,14 @@ namespace MassMediaEditor
         }
         #endregion
 
+        private void rdoGroup_Checked(object sender, RoutedEventArgs e)
+        {
+            if (rdoAudio.IsChecked == true)
+                selectedMediaType = MediaType.Audio;
+            else if (rdoPictures.IsChecked == true)
+                selectedMediaType = MediaType.Pictures;
+            else
+                selectedMediaType = MediaType.Video;
+        }
     }
 }

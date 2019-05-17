@@ -10,6 +10,7 @@ namespace MassMediaEditor
         public AboutWindow()
         {
             InitializeComponent();
+            lblInfo.Content = "MassMediaEditor " + Version.GetVersionNumber();
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)

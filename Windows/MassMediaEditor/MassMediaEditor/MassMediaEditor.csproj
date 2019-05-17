@@ -126,6 +126,7 @@
     <Compile Include="ErrorLogWindow.xaml.cs">
       <DependentUpon>ErrorLogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Version.cs" />
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

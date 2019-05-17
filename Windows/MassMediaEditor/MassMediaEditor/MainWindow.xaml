@@ -37,9 +37,9 @@
             <GroupBox x:Name="groupBox" Header="Media Type" Height="75" Width="90" Margin="5,10,5,0" Foreground="White">
                 <Grid>
                     <StackPanel Orientation="Vertical">
-                        <RadioButton x:Name="rdoAudio"  Content="Audio" Foreground="White"/>
-                        <RadioButton x:Name="rdoVideo"  Content="Video" Foreground="White"/>
-                        <RadioButton x:Name="rdoPictures" Content="Pictures"  Foreground="White" />
+                        <RadioButton x:Name="rdoAudio"  Content="Audio" Foreground="White" Checked="rdoGroup_Checked"/>
+                        <RadioButton x:Name="rdoVideo"  Content="Video" Foreground="White" Checked="rdoGroup_Checked"/>
+                        <RadioButton x:Name="rdoPictures" Content="Pictures"  Foreground="White" Checked="rdoGroup_Checked"/>
                     </StackPanel>
                 </Grid>
             </GroupBox>

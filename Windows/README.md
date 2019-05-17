@@ -2,15 +2,21 @@ Mass Media Editor
 
 What's New?
 
-The latest realease has some QoL changes that allow for easier editing. Such as selectable fields for editing. There's also access to the error log from inside of the app.
+The latest realease has added the section headers that fields belong to. Now when you edit a file the fields will be in the correct sections. There was also some backend stuff for versioning so I can easily update versions as well as other fixes.
 
 Upcoming:
 
-So in the upcoming update I plan on having a bit clearer direction as to which sections the fields belong to. The program should mimic which fields belong to which section(s) in the file details. This may or may not include a refactoring to the underlying classes, as well as more updates to the edit-ui.
+I want to add some QoL things like a elapsed timer on commiting changes, and maybe some other things like select field commits or something.
 
 Description:
 
 Mass Media Editor is a tool that it used for editing metadata on Media files in windows. Now you will be able to organize multiple files at a time instead of having to do it manually.
+
+
+----Changelog version 1.2.3.0
+
++ Section headers have been added to the edit window. Fields will now appear under their appropriate sections as they do in the Windows file dialog
++ Added a versioning method for easier version updating.
 
 ----Changelog version 1.2.1.0
 

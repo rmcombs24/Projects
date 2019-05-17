@@ -3,12 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MassMediaEditor"
         mc:Ignorable="d"
         Closing="wndEdit_Closed"    
         Title="Edit" Height="550" Width="640"
         ResizeMode="NoResize"
-        SizeToContent="Height"
         WindowStartupLocation="CenterOwner" Background="#FF363636">
 
     <Window.Resources>
@@ -19,6 +17,13 @@
                 <ListBox x:Name="lstbxTags" Width="125" Height="40" Margin="5,2,0,0" Visibility="Hidden" IsEnabled="False"/>
             </StackPanel>
         </DataTemplate>
+        <DataTemplate x:Key="tmplHeader">
+            <StackPanel x:Name="spHeader" Grid.ColumnSpan="3">
+                <Label x:Name="lblHeader_" FontSize="20" Foreground="White" FontWeight="Bold" Grid.Column="0" Grid.ColumnSpan="1" FontFamily="Calibri"></Label>
+                <Separator x:Name="sepHeader_" Grid.Column="1" Grid.ColumnSpan="1"/>
+            </StackPanel>
+        </DataTemplate>
+
     </Window.Resources>
 
     <DockPanel>
