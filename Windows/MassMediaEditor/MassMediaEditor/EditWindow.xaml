@@ -18,7 +18,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="tmplHeader">
-            <StackPanel  Grid.ColumnSpan="3">
+            <StackPanel x:Name="spHeader" Grid.ColumnSpan="3">
                 <Label x:Name="lblHeader_" FontSize="20" Foreground="White" FontWeight="Bold" Grid.Column="0" Grid.ColumnSpan="1" FontFamily="Calibri"></Label>
                 <Separator x:Name="sepHeader_" Grid.Column="1" Grid.ColumnSpan="1"/>
             </StackPanel>

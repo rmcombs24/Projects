@@ -15,30 +15,29 @@ namespace MassMediaEditor
     public partial class EditWindow : Window
     {
         //I'm going to redo these with reflection..soon(tm).
-        private List<string> lstArrayFields = new List<string> { "Author", "Tags", "Composers", "Contributing Artists", "Directors", "Producers", "Writers", "Genre" };
+        private List<string> lstArrayFields = new List<string> { "Authors", "Tags", "Composer", "Contributing Artists", "Directors", "Producers", "Writers", "Genre" };
         private List<string> lstDateNumericFields = new List<string> { "Date Acquired", "Date Taken", "Media Created", "Year", "Rating" };
 
         private Dictionary<string, string> dicCurrentValues = new Dictionary<string, string>();
-        private List<KeyValuePair<string, string>> lstFieldValuePair = new List<KeyValuePair<string, string>>();
-        private List<string> properties = new List<string>();
-        private DispatcherTimer timer = new DispatcherTimer();
+        private List<string> propertiesSortedBySection = new List<string>();
+        private readonly DispatcherTimer timer = new DispatcherTimer();
 
         public EditWindow()
         {
             InitializeComponent();
-
+            List<string> properties = new List<string>();
+            
             //Field Select -- Start by looking at all the headers and see if ANY are checked, if yes, show ONLY those, otherwise show ALL
             List<DataGridColumn> lstCheckedCols = ((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns.ToList().FindAll(
-                x => x is DataGridTextColumn).ToList().FindAll(
-                    y => y.Header is CheckBox).ToList().FindAll(
-                        z => ((CheckBox)z.Header).IsChecked == true);
+                    x => x is DataGridTextColumn).ToList().FindAll(
+                        y => y.Header is CheckBox).ToList().FindAll(
+                            z => ((CheckBox)z.Header).IsChecked == true);
 
             if (lstCheckedCols.Count > 0)
             {                
                 for (int index = 0; index < lstCheckedCols.Count; index++)
                 {
                     properties.Add(((CheckBox)lstCheckedCols[index].Header).Content.ToString());
-                    lstFieldValuePair.Add(new KeyValuePair<string, string>(properties[index], String.Empty));
                 }
             }
             else
@@ -48,7 +47,6 @@ namespace MassMediaEditor
                     if (((MainWindow)Application.Current.MainWindow).dgInfoBox.Columns[index].Header.ToString().Length > 0)
                     {
                         properties.Add(((CheckBox)((MainWindow) Application.Current.MainWindow).dgInfoBox.Columns[index].Header).Content.ToString());
-                        lstFieldValuePair.Add(new KeyValuePair<string, string>(properties[index - 2], String.Empty));
                     }
                 }
             }
@@ -58,8 +56,7 @@ namespace MassMediaEditor
 
         private void GenerateDataRow(string currentField)
         {
-            RowDefinition autoRow = new RowDefinition { Height = new GridLength(40) };
-
+            RowDefinition autoRow = new RowDefinition { Height = new GridLength(40), Name = "rowTextValue" };
             grdEdit.RowDefinitions.Add(autoRow);
 
             Label autoLabel = new Label
@@ -131,7 +128,10 @@ namespace MassMediaEditor
                     grdEdit.Children.Add(dp);
                     Grid.SetRow(dp, grdEdit.RowDefinitions.Count - 1);
                     Grid.SetColumn(dp, 1);
+                    autoRow.Name = "rowDateTimeValue";
                 }
+
+                autoRow.Name = "rowIntValue";
             }
             else
             {
@@ -141,9 +141,6 @@ namespace MassMediaEditor
                     Width = 240,
                     Height = 25
                 };
-
-                //Grid.SetRow(outerSP, grdEdit.RowDefinitions.Count - 1);
-
 
                 grdEdit.Children.Add(autoTextBox);
                 Grid.SetColumn(autoTextBox, 1);
@@ -170,6 +167,7 @@ namespace MassMediaEditor
                 //Add to the grid and set the row.
                 grdEdit.Children.Add(outerSP);
                 Grid.SetRow(outerSP, grdEdit.RowDefinitions.Count - 1);
+                autoRow.Name = "rowArrayValues";
             }
         }
 
@@ -178,7 +176,7 @@ namespace MassMediaEditor
             //Header 
             DataTemplate dt = (DataTemplate)grdEdit.FindResource("tmplHeader");
             StackPanel spOuter = (StackPanel)dt.LoadContent();
-            RowDefinition autoRow = new RowDefinition { Height = new GridLength(45) };
+            RowDefinition autoRow = new RowDefinition { Height = new GridLength(45), Name= "rowSectionHeader" };
 
             ((Label)spOuter.Children[0]).Content = section;
 
@@ -190,6 +188,7 @@ namespace MassMediaEditor
             //Rows
             foreach (string properties in sectionProperties)
             {
+                propertiesSortedBySection.Add(properties);
                 GenerateDataRow(properties);
             }
         }
@@ -207,12 +206,12 @@ namespace MassMediaEditor
             //Headers has the current headers for whatever we're looking at, so we iterate through it, and put these into the sections they should be in
             foreach (string property in headers)
             {
-                if (Media.GetMediaSection(mediaType, property) == MediaSection.Description) { dicSortedSections.Add(property, MediaSection.Description); }
-                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Origin) { dicSortedSections.Add(property, MediaSection.Origin); }
-                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Media) { dicSortedSections.Add(property, MediaSection.Media); }
-                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Content) { dicSortedSections.Add(property, MediaSection.Content); }
-                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Camera) { dicSortedSections.Add(property, MediaSection.Camera); }
-                else if (Media.GetMediaSection(mediaType, property) == MediaSection.AdvancedPhoto) { dicSortedSections.Add(property, MediaSection.AdvancedPhoto); }
+                if (Media.GetMediaSection(mediaType, property) == MediaSection.Description)         { dicSortedSections.Add(property, MediaSection.Description); }
+                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Origin)         { dicSortedSections.Add(property, MediaSection.Origin); }
+                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Media)          { dicSortedSections.Add(property, MediaSection.Media); }
+                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Content)        { dicSortedSections.Add(property, MediaSection.Content); }
+                else if (Media.GetMediaSection(mediaType, property) == MediaSection.Camera)         { dicSortedSections.Add(property, MediaSection.Camera); }
+                else if (Media.GetMediaSection(mediaType, property) == MediaSection.AdvancedPhoto)  { dicSortedSections.Add(property, MediaSection.AdvancedPhoto); }
             }
 
             //Now we have it sorted. We need to filter based on the sections we have, and generate rows
@@ -298,7 +297,7 @@ namespace MassMediaEditor
                                     case "BPM":
                                         ((Audio)oItem).BPM.Val = kvp.Value;
                                         break;
-                                    case "Composers":
+                                    case "Composer":
                                         ((Audio)oItem).Composer.Value = ParseArray(kvp.Value);
                                         ((Audio)oItem).Composer.ArrayAsString = kvp.Value;
                                         break;
@@ -414,38 +413,44 @@ namespace MassMediaEditor
         {
             try
             {
-                string value = String.Empty;
+                List<string> value = new List<string>();
 
                 // Hit Save -> Get all the fields -> keep a tally of the "New" values.
                 if (dicCurrentValues.Count > 0) { dicCurrentValues.Clear(); }
 
-                for (int row = 0; row < grdEdit.RowDefinitions.Count; row++)
+                //We start at one because we will ALWAYS have a section header
+                for (int row = 1; row < grdEdit.RowDefinitions.Count; row++)
                 {
-                    int column = (lstArrayFields.Contains(properties[row])) ? 2 : 1;
-                    var currentControl = grdEdit.Children.Cast<UIElement>().First(x => Grid.GetRow(x) == row && Grid.GetColumn(x) == column);
+                    int column = 0;
+                    UIElement currentControl;
+                    
+                    //If it's a header, do the one below it instead
+                    if (grdEdit.RowDefinitions[row].Name == "rowSectionHeader") { row++; }
 
-                    if (currentControl is ComboBox)
-                    {
-                        value = (((ComboBox)currentControl).SelectedValue != null) ? ((ComboBox)currentControl).SelectedValue.ToString() : null;
-                    }
-                    else if (currentControl is Slider)
-                    {
-                        value = Math.Round(((Slider)currentControl).Value).ToString();
-                    }
-                    else if (currentControl is DatePicker)
-                    {
-                        value = (((DatePicker)currentControl).SelectedDate.HasValue) ? ((DatePicker)currentControl).SelectedDate.Value.Date.ToShortDateString() : null;
-                    }
+                    column = (grdEdit.RowDefinitions[row].Name == "rowArrayValues") ? 2 : 1;                    
+                    currentControl = grdEdit.Children.Cast<UIElement>().First(x => Grid.GetRow(x) == row && Grid.GetColumn(x) == column); //Default State.
+
+                    if (currentControl is ComboBox) { value.Add((((ComboBox)currentControl).SelectedValue != null) ? ((ComboBox)currentControl).SelectedValue.ToString() : null); }
+                    else if (currentControl is Slider) { value.Add(Math.Round(((Slider)currentControl).Value).ToString()); }
+                    else if (currentControl is DatePicker) { value.Add(((DatePicker)currentControl).SelectedDate.HasValue ? ((DatePicker)currentControl).SelectedDate.Value.Date.ToShortDateString() : null); }
                     else if (currentControl is StackPanel)
                     {
-                        if (((StackPanel)currentControl).Children.Count > 2)
+                        if (((StackPanel)currentControl).Children.Count > 2 && ((StackPanel)currentControl).Name != "spHeader")
                         {
-                            value = (((ListBox)((StackPanel)currentControl).Children[2]).HasItems) ? String.Join(";", ((ListBox)((StackPanel)currentControl).Children[2]).Items.Cast<string>()) : String.Empty;
+                            value.Add(((ListBox)((StackPanel)currentControl).Children[2]).HasItems ? String.Join(";", ((ListBox)((StackPanel)currentControl).Children[2]).Items.Cast<string>()) : String.Empty);
                         }
                     }
-                    else { value = ((TextBox)currentControl).Text; }
+                    else { value.Add(((TextBox)currentControl).Text ); }
+                }
 
-                    dicCurrentValues.Add(properties[row], value);
+                //Okay so, these headers are a real PITA so what we're doing is getting all the values first, since we can remove the headers there, then add them into the current value dictionary
+                //I don't think anything should be affected programatically as the positions aren't dynamic once you hit the edit screen, the transfer process should be a 1:1 deal with no issues.
+                if (propertiesSortedBySection.Count == value.Count)
+                {
+                    for (int index = 0; index < propertiesSortedBySection.Count; index++)
+                    {
+                        dicCurrentValues.Add(propertiesSortedBySection[index], value[index]);
+                    }                    
                 }
 
                 lblUpdate.Visibility = Visibility.Visible;
