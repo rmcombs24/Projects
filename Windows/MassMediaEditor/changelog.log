@@ -1,3 +1,8 @@
+----Changelog version 1.2.3.0
+
++ Section headers have been added to the edit window. Fields will now appear under their appropriate sections as they do in the Windows file dialog
++ Added a versioning method for easier version updating.
+
 ----Changelog version 1.2.1.0
 
 + Datagrid now expands the entire panel size
