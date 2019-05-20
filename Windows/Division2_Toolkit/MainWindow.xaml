@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Division2_WeaponDmg_Calc"
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Title="MainWindow" Height="450" Width="600" Background="Black">
@@ -14,10 +13,10 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition Height="110"/>
-            <RowDefinition/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="60"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -41,12 +40,12 @@
         
         
         <StackPanel x:Name="spFamMakeModel" Grid.Column="1" Grid.Row="2" Margin="10,0,10,0">
-            <ComboBox x:Name="ddlFamily" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120"/>
-            <ComboBox x:Name="ddlMake"   HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120"/>
-            <ComboBox x:Name="ddlModel"  HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Bottom" Width="120" />
+            <ComboBox x:Name="ddlFamily" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" SelectionChanged="ddl_SelectionChanged" />
+            <ComboBox x:Name="ddlMake"   HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" IsEnabled="False" SelectionChanged ="ddl_SelectionChanged"/>
+            <ComboBox x:Name="ddlModel"  HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Bottom" Width="120"  IsEnabled="False" SelectionChanged="ddl_SelectionChanged"/>
         </StackPanel>
 
-        <DataGrid Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" Background="Black" BorderBrush="Black" Foreground="#FFFF7B0C"/>
+        <DataGrid x:Name="dgSelected" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" Background="Black" BorderBrush="Black" Foreground="#FFFF7B0C" AutoGenerateColumns="True" Visibility="Hidden"/>
 
     </Grid>
 </Window>
