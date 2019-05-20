@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Division2_WeaponDmg_Calc
+namespace Division2_Toolkit
 {
     public partial class ErrorLog
     {

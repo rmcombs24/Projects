@@ -31,13 +31,6 @@ namespace Division2_Toolkit
 
                 lblCalculateRoll.Content = String.Format("Top Damage for \n{0} ", ddlModel.SelectedValue.ToString());
                 lblCalculateRollVal.Content = String.Format("{0}", Math.Round(basedmg));
-
-                lblCalculateRoll.Visibility = Visibility.Visible;
-                lblCalculateRollVal.Visibility = Visibility.Visible;
-            }
-            catch(FormatException ex)
-            {
-                MessageBox.Show("Please enter values before calculating", "Error", MessageBoxButton.OK);
             }
         }
 
@@ -55,9 +48,6 @@ namespace Division2_Toolkit
                     spModelInfo_col_2.Visibility = Visibility.Hidden;
                     spModelVal_col_3.Visibility = Visibility.Hidden;
                     spModeVal_col_1.Visibility = Visibility.Hidden;
-                    btnCalculate.Visibility = Visibility.Hidden;
-                    lblCalculateRoll.Visibility = Visibility.Hidden;
-                    lblCalculateRollVal.Visibility = Visibility.Hidden;
 
                     break;
                 case "ddlMake":
@@ -72,7 +62,6 @@ namespace Division2_Toolkit
                         spModelInfo_col_2.Visibility = Visibility.Visible;
                         spModelVal_col_3.Visibility = Visibility.Visible;
                         spModeVal_col_1.Visibility = Visibility.Visible;
-                        btnCalculate.Visibility = Visibility.Visible;
                     }
                     break;
                 default:

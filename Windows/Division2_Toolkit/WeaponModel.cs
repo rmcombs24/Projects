@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Division2_WeaponDmg_Calc
+namespace Division2_Toolkit
 {
     class WeaponModel
     {
@@ -15,30 +15,33 @@ namespace Division2_WeaponDmg_Calc
 
         public int CritDistanceMin { get; set; }
         public int CritDistanceMax { get; set; }
+        public string CritMinMax { get { return String.Format("{0}m/{1}m", CritDistanceMin, CritDistanceMax); } }
         public int RPM { get; set; }
         public int OptimalRange { get; set; }
         public int MagSize { get; set; }
         public double ReloadSpeed { get; set; }
-        public double HSMultipler { get; set; }
+        public double HSMultiplier { get; set; }
         public int NormalizedDmg { get; set; }
+        public string TypeBonus { get; set; }
         public int[] DamageRange { get; set; }
+        public string DamageRangeStr { get { return String.Format("{0}/{1}", DamageRange[0], DamageRange[1]); }}
         public bool isExotic { get; set; }
 
-        public WeaponModel(string family, string make, string model, int critDistanceMin, int critDistanceMax, int rpm, int optimalRange, int magSize, double reloadSpeed, double hsMultipler, int normalizedDmg, string damageRange)
+        public WeaponModel(string family, string make, string model, int critDistanceMin, int critDistanceMax, int rpm, int optimalRange, int magSize, double reloadSpeed, double hsMultipler, int normalizedDmg, string damageRange, string typeBonus)
         {
 
             Family = family;
             Make = make;
             Model = model;
-
             CritDistanceMin = critDistanceMin;
             CritDistanceMax = critDistanceMax;
             RPM = rpm;
             OptimalRange = optimalRange;
             MagSize = magSize;
             ReloadSpeed = reloadSpeed;
-            HSMultipler = hsMultipler;
+            HSMultiplier = hsMultipler;
             NormalizedDmg = normalizedDmg;
+            TypeBonus = typeBonus; 
             DamageRange = Array.ConvertAll(damageRange.Replace(" - ", ";").Split(';'), int.Parse);
             isExotic = false;
         }
@@ -82,7 +85,8 @@ namespace Division2_WeaponDmg_Calc
                         Convert.ToInt32(data[9]),
                        (Double.TryParse(data[10], out parse)) ? parse : 1,
                         Convert.ToInt32(data[12]),
-                        data[15]));
+                        data[15],
+                        data[11]));
                 };
 
                 return weaponList;
@@ -114,9 +118,9 @@ namespace Division2_WeaponDmg_Calc
             return weaponsList.Where(x => x.Family == currentFamily).Select(o => o.Make).Distinct().ToList();
         }
 
-        public static List<string> GetWeaponModelsByMake(List<WeaponModel> weaponsList, string currentMake)
+        public static List<string> GetWeaponModelsByMake(List<WeaponModel> weaponsList, string currentFamily, string currentMake)
         {
-            return weaponsList.Where(x => x.Make == currentMake).Select(o => o.Model).Distinct().ToList();
+            return weaponsList.Where(x => (x.Make == currentMake) && (x.Family == currentFamily)).Select(o => o.Model).Distinct().ToList();
         }
     }
 }

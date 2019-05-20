@@ -1,7 +1,7 @@
-﻿<Application x:Class="Division2_WeaponDmg_Calc.App"
+﻿<Application x:Class="Division2_Toolkit.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Division2_WeaponDmg_Calc"
+             xmlns:local="clr-namespace:Division2_Toolkit"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
