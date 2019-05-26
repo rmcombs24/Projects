@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Division2_Toolkit
 {
@@ -57,11 +57,6 @@ namespace Division2_Toolkit
                 // We change file extension here to make sure it's a .csv file.
                 string[] lines = File.ReadAllLines(Path.ChangeExtension(path, ".csv"));
 
-                // lines.Select allows me to project each line as a Person. 
-                // This will give me an IEnumerable<Person> back.
-                //int index = 0;
-                //foreach (string line in lines)
-                //
                 for (int index = 0; index < lines.Count(); index++)
                 {
                     double parse = 0;
@@ -71,7 +66,6 @@ namespace Division2_Toolkit
                     if (!String.IsNullOrEmpty(data[0])) { currentFamily = data[0]; }
                     if (!String.IsNullOrEmpty(data[1])) { currentMake = data[1]; }
 
-                    // We return a person with the data in order.
                     weaponList.Add(
                       new WeaponModel(
                         (!String.IsNullOrEmpty(data[0])) ? data[0] : currentFamily,
