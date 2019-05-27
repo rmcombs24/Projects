@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Division2_Toolkit
+namespace Division2Toolkit
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -15,13 +15,25 @@ namespace Division2_Toolkit
     {
         Brush DivisionOrange = new SolidColorBrush(Color.FromArgb(100, 253, 107, 13));
 
-        static List<WeaponModel> weaponList = WeaponModel.ReadCSV("gearsheet.csv");
-
         public MainWindow()
         {            
-            InitializeComponent();
-            ddlFamily.ItemsSource = WeaponModel.GetWeaponFamilies(weaponList);
+            InitializeComponent();            
         }
+
+        private void LoadValues(WeaponModel selected)
+        {
+            foreach (UIElement ele in spModeVal_col_1.Children)
+            {
+                ((Label)ele).DataContext = selected;
+            }
+
+            foreach (UIElement ele in spModelVal_col_3.Children)
+            {
+                ((Label)ele).DataContext = selected;
+            }
+        }
+
+        #region Event Handlers
 
         private void btnCalculate_Click(object sender, RoutedEventArgs e)
         {
@@ -42,35 +54,47 @@ namespace Division2_Toolkit
                 double rollPercentage = (basedmg - intArray[0]) / (intArray[1] - intArray[0]);
 
                 lblCalculateRoll.Content = String.Format("Top Damage for \n{0} ", ddlModel.SelectedValue.ToString());
-                lblCalculateRollVal.Content = String.Format("{0}\nRoll percentage: {1}%", Math.Round(basedmg), rollPercentage * 100);
                 lblCalculateRoll.Visibility = Visibility.Visible;
-                lblCalculateRollVal.Visibility = Visibility.Visible;
 
-                    if (rollPercentage >= .90)
-                    gradient.Color = Brushes.Green.Color;
-                    else if (rollPercentage >= .80)
-                    gradient.Color = Brushes.LawnGreen.Color;
-                    else if (rollPercentage >= .70)
-                    gradient.Color = Brushes.GreenYellow.Color;
-                    else if (rollPercentage >= .60)
-                    gradient.Color = Brushes.YellowGreen.Color;
-                    else  if (rollPercentage >= .50)
-                    gradient.Color = Brushes.Yellow.Color;
-                    else if (rollPercentage >= .40)
-                    gradient.Color = Brushes.OrangeRed.Color;
-                    else if (rollPercentage <= .20)
-                    gradient.Color = Brushes.Red.Color;
-                    else
-                    gradient.Color = Color.FromRgb(253, 107, 13);
+                sldWeaponRoll.Visibility = Visibility.Visible;
+                sldWeaponRoll.Value = Math.Round(rollPercentage * 100, 2);
+                sldWeaponRoll.IsEnabled = false;
+
             }
-            catch(FormatException ex)
+            catch (FormatException ex)
             {
                 MessageBox.Show("Please enter values before calculating", "Error", MessageBoxButton.OK);
             }
         }
 
+        private void btn_OpenGearSection(object sender, RoutedEventArgs e)
+        {
+            expMainMenu.IsExpanded = false;
+            grdWeaponCalc.IsEnabled = false;
+            grdWeaponCalc.Visibility = Visibility.Collapsed;
+            grdGearSection.Visibility = Visibility.Visible;
+            grdGearSection.IsEnabled = true;
+
+            List<Gear> lstGear = Gear.ReadGearXLSX("gear.xlsx");
+
+            ddlGear.ItemsSource = lstGear;
+            ddlGear.DisplayMemberPath = "gearType";
+            ddlGear.SelectedValue = "gearAttributes";
+        }
+
+        private void btn_OpenWeaponCalc(object sender, RoutedEventArgs e)
+        {
+            expMainMenu.IsExpanded = false;
+            grdGearSection.IsEnabled = false;
+            grdGearSection.Visibility = Visibility.Collapsed;
+            grdWeaponCalc.Visibility = Visibility.Visible;
+            grdWeaponCalc.IsEnabled = true;
+
+            ddlFamily.ItemsSource = WeaponModel.GetWeaponFamilies(weaponList);
+        }
+
         private void ddl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {          
+        {
             string selectedDDLValue = (((ComboBox)sender).SelectedValue != null) ? ((ComboBox)sender).SelectedValue.ToString() : string.Empty;
 
             switch (((ComboBox)sender).Name)
@@ -86,10 +110,11 @@ namespace Division2_Toolkit
                     btnCalculate.Visibility = Visibility.Hidden;
                     lblCalculateRoll.Visibility = Visibility.Hidden;
                     lblCalculateRollVal.Visibility = Visibility.Hidden;
+                    sldWeaponRoll.Visibility = Visibility.Hidden;
 
                     break;
                 case "ddlMake":
-                    ddlModel.ItemsSource =  (String.IsNullOrEmpty(selectedDDLValue)) ?  null : WeaponModel.GetWeaponModelsByMake(weaponList, ddlFamily.SelectedValue.ToString() ,selectedDDLValue);
+                    ddlModel.ItemsSource = (String.IsNullOrEmpty(selectedDDLValue)) ? null : WeaponModel.GetWeaponModelsByMake(weaponList, ddlFamily.SelectedValue.ToString(), selectedDDLValue);
                     ddlModel.IsEnabled = (String.IsNullOrEmpty(selectedDDLValue)) ? false : true;
 
                     spModelInfo_col_0.Visibility = Visibility.Hidden;
@@ -99,6 +124,8 @@ namespace Division2_Toolkit
                     btnCalculate.Visibility = Visibility.Hidden;
                     lblCalculateRoll.Visibility = Visibility.Hidden;
                     lblCalculateRollVal.Visibility = Visibility.Hidden;
+                    sldWeaponRoll.Visibility = Visibility.Hidden;
+
                     break;
                 case "ddlModel":
                     if (!String.IsNullOrEmpty(selectedDDLValue))
@@ -108,9 +135,8 @@ namespace Division2_Toolkit
                         spModelInfo_col_2.Visibility = Visibility.Visible;
                         spModelVal_col_3.Visibility = Visibility.Visible;
                         spModeVal_col_1.Visibility = Visibility.Visible;
-                        btnCalculate.Visibility = Visibility.Visible;
-                        rectRollBar.Visibility = Visibility.Visible;
-                        gradient.Color = Color.FromRgb(253, 107, 13);
+                        btnCalculate.Visibility = Visibility.Hidden;
+                        sldWeaponRoll.Visibility = Visibility.Hidden;
                     }
                     break;
                 default:
@@ -118,54 +144,10 @@ namespace Division2_Toolkit
             }
         }
 
-        private void PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
-        {
-            e.Handled = !IsTextAllowed(e.Text);
-        }
-
-        private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text
-        private static bool IsTextAllowed(string text)
-        {
-            return !_regex.IsMatch(text);
-        }
-
-        private void LoadValues(WeaponModel selected)
-        {
-            foreach (UIElement ele in spModeVal_col_1.Children)
-            {
-                ((Label)ele).DataContext = selected;
-            }
-
-            foreach (UIElement ele in spModelVal_col_3.Children)
-            {
-                ((Label)ele).DataContext = selected;
-            }
-        }
-
-        private void StackPanel_CollapseEvent(object sender, RoutedEventArgs e)
-        {
-            if (expMainMenu.IsExpanded) { expMainMenu.Header = "Main Menu"; }
-            else { expMainMenu.Header = String.Empty; }
-        }
-
-        private void btn_OpenGearSection(object sender, RoutedEventArgs e)
-        {
-            expMainMenu.IsExpanded = false;
-            grdWeaponCalc.IsEnabled = false;
-            grdWeaponCalc.Visibility = Visibility.Hidden;
-            
-            List<Gear> lstGear = Gear.ReadGearXLSX("gear.xlsx");
-            
-            ddlGear.ItemsSource = lstGear;
-            ddlGear.DisplayMemberPath = "gearType";
-            ddlGear.SelectedValue = "gearAttributes";
-
-            //string selectedGear
-        }
-
         private void ddl_GearSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            wpAttributes.Children.Clear();
+            wpChkAttributes.Children.Clear();
+            wpAttributeDesc.Children.Clear();
 
             foreach (GearAttribute ga in ((Gear)((ComboBox)sender).SelectedValue).gearAttributes)
             {
@@ -173,23 +155,123 @@ namespace Division2_Toolkit
             }
         }
 
+        private void stackPanel_CollapseEvent(object sender, RoutedEventArgs e)
+        {
+            if (expMainMenu.IsExpanded) { expMainMenu.Header = "Menu "; }
+            else
+            {
+                expMainMenu.Header = String.Empty;
+                sectCalculators.IsExpanded = false;
+                sectGear.IsExpanded = false;
+                sectWeapons.IsExpanded = false;
+            }
+        }
+
+        private void textbox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            e.Handled = !IsTextAllowed(e.Text);
+        }
+
+        private void generatedChk_Checked(object sender, RoutedEventArgs e)
+        {
+            GearAttribute checkedAttribute = (GearAttribute)((CheckBox)sender).DataContext;
+            StackPanel spDescription = new StackPanel()
+            {
+                Name = String.Format("spDescription_{0}", checkedAttribute.AttributeName.Replace(" ", String.Empty).Replace("/", String.Empty)),
+                Orientation = Orientation.Horizontal
+            };
+
+            Label lblDescription = new Label()
+            {
+                Name = String.Format("lblDescription_{0}", checkedAttribute.AttributeName.Replace(" ", String.Empty).Replace("/", String.Empty)),
+                Content = String.Format("{0}: {1}-{2}", checkedAttribute.AttributeName, checkedAttribute.minRoll, (chkIsGearSet.IsChecked == true) ? checkedAttribute.setMaxRoll : checkedAttribute.maxRoll),
+                Foreground = DivisionOrange,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom
+            };
+
+            TextBox txtAttributeInput = new TextBox()
+            {
+                Name = String.Format("txtAttributeInput_{0}", checkedAttribute.AttributeName.Replace(" ", String.Empty).Replace("/", String.Empty)),
+                Text = String.Empty,
+                Height = 18,
+                Width = 75,
+                Margin = new Thickness(10,0,5,0),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            
+            Slider slider = new Slider()
+            {
+                Minimum = checkedAttribute.minRoll,
+                Maximum = (chkIsGearSet.IsChecked == true) ? checkedAttribute.setMaxRoll : checkedAttribute.maxRoll,
+                Height= 15,
+                Width = 40,
+                TickFrequency = checkedAttribute.minRoll,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(20,0,5,0)
+            };
+
+            slider.Style = FindResource("Horizontal_Slider") as Style;
+            spDescription.Children.Add(lblDescription);
+            spDescription.Children.Add(txtAttributeInput);
+            spDescription.Children.Add(slider);
+
+            if (((CheckBox)sender).IsChecked == true)
+            {
+                wpAttributeDesc.Children.Add(spDescription);
+                //wpPercentiles.Children.Add(slider);
+                btnCalculatePercentile_Gear.IsEnabled = true;
+                btnCalculatePercentile_Gear.Visibility = Visibility.Visible;
+            }
+            else if (((CheckBox)sender).IsChecked == false)
+            {
+                for(int index = 0; index < wpAttributeDesc.Children.Count; index++)
+                { 
+                    if (((StackPanel)wpAttributeDesc.Children[index]).Name == spDescription.Name)
+                    {
+                        wpAttributeDesc.Children.RemoveAt(index);
+                        //wpPercentiles.Children.RemoveAt(index);
+                    }
+                }
+
+                if (wpAttributeDesc.Children.Count == 0)
+                {
+                    btnCalculatePercentile_Gear.IsEnabled = false;
+                    btnCalculatePercentile_Gear.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text
+        private static List<WeaponModel> weaponList = WeaponModel.ReadCSV("gearsheet.csv");
+
+        private static bool IsTextAllowed(string text)
+        {
+            return !_regex.IsMatch(text);
+        }
+
         private void checkboxFactory(GearAttribute currentAttribute)
         {
             CheckBox generatedChk = new CheckBox()
             {
                 Foreground = DivisionOrange,
-                Name = String.Format("chkAttribute_{0}",  currentAttribute.AttributeName.Replace(" ", String.Empty)).Replace("/", ""),
+                Name = String.Format("chkAttribute_{0}", currentAttribute.AttributeName.Replace(" ", String.Empty)).Replace("/", ""),
                 Content = currentAttribute.AttributeName,
                 DataContext = currentAttribute
             };
-            
+
             generatedChk.Checked += generatedChk_Checked;
-            wpAttributes.Children.Add(generatedChk);
+            generatedChk.Unchecked += generatedChk_Checked;
+            wpChkAttributes.Children.Add(generatedChk);
         }
 
-        private void generatedChk_Checked(object sender, RoutedEventArgs e)
-        {
-            //((CheckBox)sender).DataContext;
-        }
+
+        #endregion
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Division2_Toolkit
+namespace Division2Toolkit
 {
     public partial class ErrorLog
     {

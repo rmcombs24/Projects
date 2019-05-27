@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Division2_WeaponDmg_Calc
+namespace Division2Toolkit
 {
     /// <summary>
     /// Interaction logic for App.xaml

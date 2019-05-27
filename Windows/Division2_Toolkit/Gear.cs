@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ExcelDataReader;
 
-namespace Division2_Toolkit
+namespace Division2Toolkit
 {
     class Gear
     {

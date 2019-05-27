@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Division2_Toolkit.Properties {
+namespace Division2Toolkit.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

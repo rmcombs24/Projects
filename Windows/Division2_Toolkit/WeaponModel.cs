@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 
 
-namespace Division2_Toolkit
+namespace Division2Toolkit
 {
     class WeaponModel
     {
