@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="The Division 2 Toolkit" Height="500" Width="650">
+        Title="The Division 2 Toolkit" Height="550" Width="700">
+
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
             <GradientStop Color="Black" Offset="0.972"/>
@@ -108,41 +109,45 @@
 
     <DockPanel>
 
-        <Image DockPanel.Dock="Top" x:Name="image"  Height="50" Width="180" Source="Assets/logo.png" RenderTransformOrigin="0.156,2.289" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Image DockPanel.Dock="Top" x:Name="image"  Height="50" Width="180" Source="Assets/images/logo.png" RenderTransformOrigin="0.156,2.289" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Separator DockPanel.Dock="Top" Foreground="#FFFD6B0D" Background="#7FFD6B0D"/>
 
         <!-- Side Menu -->
-        <Expander  x:Name="expMainMenu" FlowDirection="RightToLeft" Header="" Foreground="#FFFD6B0D" Collapsed="stackPanel_CollapseEvent" Expanded="stackPanel_CollapseEvent" ExpandDirection="Up" Margin="0,-40,0,10">
+        <Expander DockPanel.Dock="Left"  x:Name="expMainMenu" FlowDirection="RightToLeft" Header="" Foreground="#FFFD6B0D" Collapsed="stackPanel_CollapseEvent" Expanded="stackPanel_CollapseEvent" ExpandDirection="Up" Margin="0,3,0,10">
 
-            <StackPanel DockPanel.Dock="Left" FlowDirection="LeftToRight" Orientation="Vertical">
+            <StackPanel  FlowDirection="LeftToRight" Orientation="Vertical">
+                <Separator Foreground="#FFFD6B0D" Background="#7FFD6B0D" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 <!-- <Image Source="Assets/logo.png" Width="100" Height="20"/> -->
                 <StackPanel>
                     <Expander x:Name="sectGear" Header="Gear"  Foreground="#FFFD6B0D">
                         <StackPanel Margin="5,5,5,5">
-                            <Button Content="Percentiles"  Height="20"  Click="btn_OpenGearSection" Foreground="#FFFD6B0D" BorderBrush="#00707070" Background="#00DDDDDD" HorizontalContentAlignment="Left"/>
-                            <Button Content="Values" Height="20" Foreground="#FFFD6B0D" BorderBrush="#00707070" Background="#00DDDDDD" HorizontalAlignment="Left"/>
+                            <Button Content="Percentiles"  Height="20"  Foreground="#FFFD6B0D" BorderBrush="#00707070" Background="#00DDDDDD" HorizontalContentAlignment="Left" Click="btnOpenSection_GearPercentile_Click"/>
                         </StackPanel>
                     </Expander>
                     <Expander x:Name="sectWeapons"  Header="Weapons"  Foreground="#FFFD6B0D">
-                        <Button Content="Percentiles" Height="20"  Margin="5,5,5,5" Click="btn_OpenWeaponCalc" Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" HorizontalAlignment="Left"/>
+                        <StackPanel Margin="5,5,5,5">
+                            <Button Content="Percentiles" Height="20"   Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" HorizontalAlignment="Left" Click="btnOpenSection_WeaponPercentile_Click" />
+                            <Button Content="DPS Comparsion" Height="20"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" HorizontalAlignment="Left" Click="btnOpenSection_WeaponDPSCalculator_Click"/>
+                        </StackPanel>
                     </Expander>
-                    <Expander x:Name="sectCalculators"  Header="Calcuators"  Foreground="#FFFD6B0D">
-                        <Button Content="DPS Comparsion" Height="20"  Margin="5,5,5,5" Click="btn_OpenWeaponCalc" Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" HorizontalAlignment="Left"/>
+                    <Expander x:Name="sectResources"  Header="Resources"  Foreground="#FFFD6B0D">
                     </Expander>
                 </StackPanel>
             </StackPanel>
         </Expander>
         <!-- Side Menu -->
         <!--Start Gear Section -->
-        <Grid x:Name="grdGearSection" Visibility="Collapsed" IsEnabled="False">
+        <Grid x:Name="grdSectionGear" Visibility="Collapsed" IsEnabled="False">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="210"/>
+                <ColumnDefinition Width="250"/>
                 <ColumnDefinition Width="400"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
                 <RowDefinition Height="150"/>
-                <RowDefinition Height="150"/>
-                <RowDefinition Height="37*"/>
+                <RowDefinition Height="73"/>
+                <RowDefinition Height="135"/>
             </Grid.RowDefinitions>
 
             <!-- Row 0-->
@@ -153,115 +158,197 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
-                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="60"/>
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
 
                 <StackPanel x:Name="spGearType" Orientation="Horizontal">
                     <Label x:Name="lblGearSelection" Foreground="#FFFD6B0D" Content="Gear Type" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                    <ComboBox x:Name="ddlGear" VerticalAlignment="Center" Width="120" SelectionChanged="ddl_GearSelectionChanged" HorizontalAlignment="Right"/>
+                    <ComboBox x:Name="ddlGear" VerticalAlignment="Center" Width="120" HorizontalAlignment="Right" SelectionChanged="ddlGearPercentile_SelectionChanged" />
                 </StackPanel>
 
-                <CheckBox x:Name="chkIsGearSet" Content="Gear Set Item" FlowDirection="RightToLeft" Grid.Column="0" Grid.Row="1" Foreground="#FF00FF80" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"/>
-                <Button x:Name="btnCalculatePercentile_Gear" Content="Calculate" Grid.Column="0" Grid.Row="1" Height="20"  Width="65" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" FontWeight="Bold" FontFamily="Corbel" Margin="0,0,15,0" Visibility="Collapsed" />
+                <CheckBox x:Name="chkIsGearSet" Content="Gear Set Item" FlowDirection="RightToLeft" Grid.Column="0" Grid.Row="1" Foreground="#FF00FF80" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,1,0,44"/>
+                <Button x:Name="btnCalculatePercentile_Gear" Content="Calculate" Grid.Column="0" Grid.Row="1" Height="20"  Width="65" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" FontWeight="Bold" FontFamily="Corbel" Margin="0,0,15,40" Visibility="Collapsed" Click="btnCalculatePercentile_Gear_Click"/>
+                <Button x:Name="btnClearPercentile_Gear" Content="Clear" Grid.Column="0" Grid.Row="1" Height="20"  Width="65" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" FontWeight="Bold" FontFamily="Corbel" Margin="0,25,15,15" Visibility="Collapsed" Click="btnClearPercentile_Gear_Click" />
             </Grid>
             <!-- Row 1-->
-
-            <Grid Height="200" Grid.Row="1" Grid.Column="1" Margin="0,1,0,60" Grid.RowSpan="2">
-                <WrapPanel Orientation="Vertical" x:Name="wpPercentiles" Height="200" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></WrapPanel>
-            </Grid>
-
-            <WrapPanel x:Name="wpAttributeDesc" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical" Height="250" Margin="0,1,0,10" Grid.RowSpan="2">
-            </WrapPanel>
-            <WrapPanel x:Name="wpChkAttributes" Grid.Row="0" Grid.Column="1" Orientation="Vertical" Margin="0,0,0,149" Grid.RowSpan="2"/>
+            <WrapPanel x:Name="wpAttributeDesc" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical" Height="280" Grid.RowSpan="3" />
+            <WrapPanel x:Name="wpChkAttributes" Grid.Row="0" Grid.Column="1" Orientation="Vertical" Grid.RowSpan="2"/>
         </Grid>
         <!--End Gear Section -->
         <!--Start Weapons Section -->
-        <Grid x:Name="grdWeaponCalc" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="130"/>
-                <RowDefinition Height="160" />
-                <RowDefinition Height="100" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+        <Grid x:Name="grdSectionWeapons" Visibility="Collapsed">
+            <!--DPS CALC -->
+            <Grid x:Name="grdSectionWeapons_DPS" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="325"/>
+                    <ColumnDefinition Width="325"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="150" />
+                </Grid.RowDefinitions>
 
-            <!-- Row 0-->
-            <StackPanel x:Name="spInGameLabels" Grid.Column="0" Grid.Row="0" Margin="0,5,0,0">
-                <Label x:Name="lblAddDmg" Grid.Column="0" Grid.Row="1" 
-                       Content="Addtional Weapon Damage" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0"/>
-                <Label x:Name="lblTypeDmg" Grid.Column="0"
-                       Content="Addtional Weapon Type Damage" HorizontalAlignment="Left"  VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0"/>
-                <Label x:Name="lblUIDmg" Grid.Column="0"
-                       Content="Weapon Damage in UI" HorizontalAlignment="Left"  VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0"/>
-            </StackPanel>
+                <Grid x:Name="grdInputs_DPSCalc">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="125"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
 
-            <StackPanel x:Name="spInGameValues" Grid.Column="1" Grid.Row="0" Margin="10,0,0,0">
-                <TextBox x:Name="txtTypeDmg" Grid.Column="1"  Grid.Row="0" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput"/>
-                <TextBox x:Name="txtAddDmg" Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput"/>
-                <TextBox x:Name="txtUIDmg" Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput"/>
-            </StackPanel>
-
-            <StackPanel x:Name="spFamMakeModelLabels" Grid.Column="2" Grid.Row="0" Margin="0,0,0,0">
-                <Label x:Name="lblFamily" Content="Weapon Family" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblMake"   Content="Weapon Make" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblModel"  Content="Weapon Model" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="120" Foreground="#FFFD6B0D" />
-            </StackPanel>
-
-            <StackPanel x:Name="spFamMakeModel" Grid.Column="3" Grid.Row="0" Margin="10,0,10,0">
-                <ComboBox x:Name="ddlFamily" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" SelectionChanged="ddl_SelectionChanged" />
-                <ComboBox x:Name="ddlMake"   HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" IsEnabled="False" SelectionChanged ="ddl_SelectionChanged"/>
-                <ComboBox x:Name="ddlModel"  HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Bottom" Width="120"  IsEnabled="False" SelectionChanged="ddl_SelectionChanged"/>
-                <Button x:Name="btnCalculate" Margin="18,10,10,0" Content="Calcuate" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" Click="btnCalculate_Click" BorderBrush="Black" Visibility="Hidden" FontFamily="Corbel" FontWeight="Bold"/>
-            </StackPanel>
-
-            <!-- End Row 0-->
-            <!-- Row 1-->
-
-            <StackPanel x:Name="spModelInfo_col_0" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
-                <Label x:Name="lblCritMinMax"       Content="Min/Max Crit Distance" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblOptimalRange"     Content="Optimal Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblRPM"              Content="RPM" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
-                <Label x:Name="lblMagSize"          Content="Magazine Size" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblTypeBonus"        Content="Type Bonus" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-            </StackPanel>
-
-            <StackPanel x:Name="spModeVal_col_1" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
-                <Label x:Name="lblCritMinMaxVal"       Content="{Binding Path=CritMinMax, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblOptimalRangeVal"     Content="{Binding Path=OptimalRange, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblRPMVal"              Content="{Binding Path=RPM, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
-                <Label x:Name="lblMagSizeVal"          Content="{Binding Path=MagSize, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblTypeBonusVal"        Content="{Binding Path=TypeBonus, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="175" Foreground="#FFFD6B0D"/>
-            </StackPanel>
-
-            <StackPanel x:Name="spModelInfo_col_2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
-                <Label x:Name="lblHSMultiplier"     Content="Headshot Multiplier" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblReloadSpeed"      Content="Reload Speed" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
-                <Label x:Name="lblNormalizedDmg"    Content="Normalized Damage" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblDamageRange"      Content="Damage Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-            </StackPanel>
-
-            <StackPanel x:Name="spModelVal_col_3" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
-                <Label x:Name="lblHSMultiplierVal"     Content="{Binding Path=HSMultiplier, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblReloadSpeedVal"      Content="{Binding Path=ReloadSpeed, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
-                <Label x:Name="lblNormalizedDmgVal"    Content="{Binding Path=NormalizedDmg, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                <Label x:Name="lblDamageRangeVal"      Content="{Binding Path=DamageRangeStr, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-            </StackPanel>
-
-            <!-- End Row 1-->
-
-            <Label x:Name="lblCalculateRoll" Visibility="Hidden" Margin="0,20,0,0" Grid.Column="0" Grid.Row="2" Grid.RowSpan="3" Foreground="#FFFD6B0D" Width="1600">Calculate Roll</Label>
-            <Label x:Name="lblCalculateRollVal" Visibility="Hidden" Margin="0,20,0,0" Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Foreground="#FFFD6B0D" Width="1600">Calculate Roll</Label>
-            <!-- Roll Precentage Bar-->
-            <Slider x:Name="sldWeaponRoll" Grid.Row="2" Grid.Column="1" Style="{StaticResource Horizontal_Slider}" VerticalAlignment="Center" Grid.ColumnSpan="4" TickFrequency="10" Minimum="0" Maximum="100"  Width="375" Height="40" Foreground="White" Visibility="Collapsed" HorizontalAlignment="Center"/>
-            <!-- Roll Precentage Bar-->
+                    <Label x:Name="lblDPSCalc_GunDmg" Content="Gun Damage: " Foreground="#FFFD6B0D" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <Label x:Name="lblDPSCalc_RPM" Content="RPM: " Foreground="#FFFD6B0D" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1"/>
+                    <Label x:Name="lblDPSCalc_MagSize" Content="Magazine Size: " Foreground="#FFFD6B0D" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    <Label x:Name="lblDPSCalc_Reload" Content="Reload Speed (ms): " Foreground="#FFFD6B0D" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center" />
 
 
+                    <TextBox x:Name="txtDPSCalc_GunDmg" Height="20" Width="50" Grid.Column="1" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="txtDPSCalc_RPM" Height="20" Width="50" IsEnabled="False" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="txtDPSCalc_MagSize" Height="20" Width="50" IsEnabled="False" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="txtDPSCalc_Reload" Height="20" Width="50" IsEnabled="False" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"/>
+
+
+                    <CheckBox x:Name="chkDPSCalc_CustomRPM" Content="Custom" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,5" Foreground="#FFFD6B0D" Checked="chkDPSCalc_CustomValue" Unchecked="chkDPSCalc_CustomValue"/>
+                    <CheckBox x:Name="chkDPSCalc_CustomMagSize" Content="Custom" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,5" Foreground="#FFFD6B0D" Checked="chkDPSCalc_CustomValue" Unchecked="chkDPSCalc_CustomValue"/>
+                    <CheckBox x:Name="chkDPSCalc_CustomReload" Content="Custom" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,5" Foreground="#FFFD6B0D" Checked="chkDPSCalc_CustomValue" Unchecked="chkDPSCalc_CustomValue"/>
+                </Grid>
+
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="125"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
+
+                    <Label x:Name="lblDPSCalc_Family" Grid.Row="0" Grid.Column="0" Content="Weapon Family" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblDPSCalc_Make"   Grid.Row="1" Grid.Column="0" Content="Weapon Make" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblDPSCalc_Model"  Grid.Row="2" Grid.Column="0" Content="Weapon Model" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="120" Foreground="#FFFD6B0D" />
+
+                    <ComboBox x:Name="ddlDPSCalc_Family" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" SelectionChanged="ddlWeaponPercentile_SelectionChanged" />
+                    <ComboBox x:Name="ddlDPSCalc_Make" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" IsEnabled="False" SelectionChanged ="ddlWeaponPercentile_SelectionChanged"/>
+                    <ComboBox x:Name="ddlDPSCalc_Model" Grid.Row="2"  Grid.Column="1" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Bottom" Width="120"  IsEnabled="False" SelectionChanged="ddlWeaponPercentile_SelectionChanged"/>
+                    <WrapPanel x:Name="wpDPSCalc_Controls" Grid.Row="2" Orientation="Vertical" Margin="123,36,0,-56" HorizontalAlignment="Left" Width="129" Height="51" VerticalAlignment="Top" Grid.ColumnSpan="2" Visibility="Collapsed" >
+                        <Button x:Name="btnDPSCalc_Add" Margin="2,2,2,2"  Content="Add" VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" Visibility="Visible" FontFamily="Corbel" FontWeight="Bold" Click="btnDPSCalc_AddWeapon_Click" IsEnabled="True"/>
+                        <Button x:Name="btnDPSCalc_Remove" Margin="2,2,2,2"  Grid.Column="2" Grid.Row="3" Content="Remove"  VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" FontFamily="Corbel" FontWeight="Bold" Click="btnDPSCalc_RemoveWeapon_Click" IsEnabled="False" Visibility="Collapsed"/>
+                        <Button x:Name="btnDPSCalc_Calculate" Margin="2,2,2,2" Grid.Column="2"  Grid.Row="3" Content="Calcuate"  VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" FontFamily="Corbel" FontWeight="Bold" Click="btnDPSCalc_CalculateDamage_Click" IsEnabled="False" Visibility="Collapsed" />
+                        <Button x:Name="btnDPSCalc_Clear" Margin="2,2,2,2"  Grid.Column="2" Grid.Row="3" Content="Clear"  VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" FontFamily="Corbel" FontWeight="Bold" Click="btnDPSCalc_ClearList_Click" IsEnabled="False" Visibility="Collapsed"/>
+                    </WrapPanel>
+                </Grid>
+          
+                <ListView x:Name="lvDPSCalc_CompareView" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,40,23" Grid.RowSpan="2" Background="Transparent" BorderBrush="#00828790" Foreground="#FFFD6B0D" Visibility="Collapsed" >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding ModelName }" Header="Model" Width="135"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Damage }" Header="Damage" Width="50"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding RPM }" Header="RPM" Width="50"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding ReloadSpeed}" Header="Reload Speed"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding MagSize}" Header="Magazine Size"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding DPS}" Header="DPS (No Reloading)"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding DPM}" Header="DPM (Reloading)"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+            <!--DPS CALC -->
+            <!--PERCENTILE-->
+            <Grid x:Name="grdSectionWeapons_Percentile" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="130"/>
+                    <RowDefinition Height="160" />
+                    <RowDefinition Height="100" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <!-- Row 0-->
+                <StackPanel x:Name="spInGameLabels" Grid.Column="0" Grid.Row="0" Margin="0,5,0,0">
+                    <Label x:Name="lblAddDmg" Grid.Column="0" Grid.Row="1" 
+                           Content="Addtional Weapon Damage" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0"/>
+                    <Label x:Name="lblTypeDmg" Grid.Column="0"
+                           Content="Addtional Weapon Type Damage" HorizontalAlignment="Left"  VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0"/>
+                    <Label x:Name="lblUIDmg" Grid.Column="0"
+                           Content="Weapon Damage in UI" HorizontalAlignment="Left"  VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spInGameValues" Grid.Column="1" Grid.Row="0" Margin="10,0,0,0">
+                    <TextBox x:Name="txtTypeDmg" Grid.Column="1"  Grid.Row="0" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput"/>
+                    <TextBox x:Name="txtAddDmg" Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput"/>
+                    <TextBox x:Name="txtUIDmg" Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spFamMakeModelLabels" Grid.Column="2" Grid.Row="0" Margin="0,0,0,0">
+                    <Label x:Name="lblFamily" Content="Weapon Family" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblMake"   Content="Weapon Make" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblModel"  Content="Weapon Model" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="120" Foreground="#FFFD6B0D" />
+                </StackPanel>
+
+                <StackPanel x:Name="spFamMakeModel" Grid.Column="3" Grid.Row="0" Margin="10,0,10,0">
+                    <ComboBox x:Name="ddlFamily" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" SelectionChanged="ddlWeaponPercentile_SelectionChanged" />
+                    <ComboBox x:Name="ddlMake"   HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" IsEnabled="False" SelectionChanged ="ddlWeaponPercentile_SelectionChanged"/>
+                    <ComboBox x:Name="ddlModel"  HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Bottom" Width="120"  IsEnabled="False" SelectionChanged="ddlWeaponPercentile_SelectionChanged"/>
+                    <Button x:Name="btnCalculate" Margin="18,10,10,0" Content="Calcuate" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" Visibility="Collapsed" FontFamily="Corbel" FontWeight="Bold" Click="btnCalculatePercentile_Weapon_Click" />
+                </StackPanel>
+
+                <!-- End Row 0-->
+                <!-- Row 1-->
+
+                <StackPanel x:Name="spModelInfo_col_0" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
+                    <Label x:Name="lblCritMinMax"       Content="Min/Max Crit Distance" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblOptimalRange"     Content="Optimal Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblRPM"              Content="RPM" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
+                    <Label x:Name="lblMagSize"          Content="Magazine Size" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblTypeBonus"        Content="Type Bonus" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spModeVal_col_1" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
+                    <Label x:Name="lblCritMinMaxVal"       Content="{Binding Path=CritMinMax, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblOptimalRangeVal"     Content="{Binding Path=OptimalRange, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblRPMVal"              Content="{Binding Path=RPM, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
+                    <Label x:Name="lblMagSizeVal"          Content="{Binding Path=MagSize, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblTypeBonusVal"        Content="{Binding Path=TypeBonus, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="175" Foreground="#FFFD6B0D"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spModelInfo_col_2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
+                    <Label x:Name="lblHSMultiplier"     Content="Headshot Multiplier" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblReloadSpeed"      Content="Reload Speed" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
+                    <Label x:Name="lblNormalizedDmg"    Content="Normalized Damage" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblDamageRange"      Content="Damage Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spModelVal_col_3" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
+                    <Label x:Name="lblHSMultiplierVal"     Content="{Binding Path=HSMultiplier, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblReloadSpeedVal"      Content="{Binding Path=ReloadSpeed, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
+                    <Label x:Name="lblNormalizedDmgVal"    Content="{Binding Path=NormalizedDmg, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblDamageRangeVal"      Content="{Binding Path=DamageRangeStr, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                </StackPanel>
+
+                <!-- End Row 1-->
+
+                <Label x:Name="lblCalculateRoll" Visibility="Hidden" Margin="0,20,0,0" Grid.Column="0" Grid.Row="2" Grid.RowSpan="3" Foreground="#FFFD6B0D" Width="1600">Calculate Roll</Label>
+                <Label x:Name="lblCalculateRollVal" Visibility="Hidden" Margin="0,20,0,0" Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Foreground="#FFFD6B0D" Width="1600">Calculate Roll</Label>
+                <!-- Roll Precentage Bar-->
+                <Slider x:Name="sldWeaponRoll" Grid.Row="2" Grid.Column="1" Style="{StaticResource Horizontal_Slider}" VerticalAlignment="Center" Grid.ColumnSpan="4" TickFrequency="10" Minimum="0" Maximum="100"  Width="375" Height="40" Foreground="White" Visibility="Collapsed" HorizontalAlignment="Center"/>
+                <!-- Roll Precentage Bar-->
+
+
+            </Grid>
+            <!--PERCENTILE-->
         </Grid>
         <!--End Weapons Section -->
     </DockPanel>
