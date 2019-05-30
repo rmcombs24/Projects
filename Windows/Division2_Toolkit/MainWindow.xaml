@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="The Division 2 Toolkit" Height="550" Width="700">
+        Height="550" Width="700">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
@@ -119,18 +119,21 @@
                 <Separator Foreground="#FFFD6B0D" Background="#7FFD6B0D" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 <!-- <Image Source="Assets/logo.png" Width="100" Height="20"/> -->
                 <StackPanel>
-                    <Expander x:Name="sectGear" Header="Gear"  Foreground="#FFFD6B0D">
+                    <Expander x:Name="sectGear" Header="Gear"  Foreground="#FFFD6B0D" FontFamily="Montserrat Medium">
                         <StackPanel Margin="5,5,5,5">
                             <Button Content="Percentiles"  Height="20"  Foreground="#FFFD6B0D" BorderBrush="#00707070" Background="#00DDDDDD" HorizontalContentAlignment="Left" Click="btnOpenSection_GearPercentile_Click"/>
                         </StackPanel>
                     </Expander>
-                    <Expander x:Name="sectWeapons"  Header="Weapons"  Foreground="#FFFD6B0D">
+                    <Expander x:Name="sectWeapons"  Header="Weapons"  Foreground="#FFFD6B0D" FontFamily="Montserrat Medium">
                         <StackPanel Margin="5,5,5,5">
                             <Button Content="Percentiles" Height="20"   Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" HorizontalAlignment="Left" Click="btnOpenSection_WeaponPercentile_Click" />
                             <Button Content="DPS Comparsion" Height="20"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" HorizontalAlignment="Left" Click="btnOpenSection_WeaponDPSCalculator_Click"/>
                         </StackPanel>
                     </Expander>
-                    <Expander x:Name="sectResources"  Header="Resources"  Foreground="#FFFD6B0D">
+                    <Expander x:Name="sectResources"  Header="Resources"  Foreground="#FFFD6B0D" FontFamily="Montserrat Medium">
+                        <StackPanel Margin="5,5,5,5">
+                            <Button  Content="Exotic Locations" Height="20" IsEnabled="False" Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" HorizontalAlignment="Left" Click="btnOpenSection_ResourcesExotics_Click" />
+                        </StackPanel>
                     </Expander>
                 </StackPanel>
             </StackPanel>
@@ -163,13 +166,13 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel x:Name="spGearType" Orientation="Horizontal">
-                    <Label x:Name="lblGearSelection" Foreground="#FFFD6B0D" Content="Gear Type" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                    <ComboBox x:Name="ddlGear" VerticalAlignment="Center" Width="120" HorizontalAlignment="Right" SelectionChanged="ddlGearPercentile_SelectionChanged" />
+                    <Label x:Name="lblGearSelection" Foreground="#FFFD6B0D" Content="Gear Type" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" FontFamily="Montserrat" />
+                    <ComboBox x:Name="ddlGear" VerticalAlignment="Center" Width="120" HorizontalAlignment="Right" SelectionChanged="ddlGearPercentile_SelectionChanged" FontFamily="Montserrat" />
                 </StackPanel>
 
-                <CheckBox x:Name="chkIsGearSet" Content="Gear Set Item" FlowDirection="RightToLeft" Grid.Column="0" Grid.Row="1" Foreground="#FF00FF80" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,1,0,44"/>
-                <Button x:Name="btnCalculatePercentile_Gear" Content="Calculate" Grid.Column="0" Grid.Row="1" Height="20"  Width="65" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" FontWeight="Bold" FontFamily="Corbel" Margin="0,0,15,40" Visibility="Collapsed" Click="btnCalculatePercentile_Gear_Click"/>
-                <Button x:Name="btnClearPercentile_Gear" Content="Clear" Grid.Column="0" Grid.Row="1" Height="20"  Width="65" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" FontWeight="Bold" FontFamily="Corbel" Margin="0,25,15,15" Visibility="Collapsed" Click="btnClearPercentile_Gear_Click" />
+                <CheckBox x:Name="chkIsGearSet" Content="Gear Set Item" FlowDirection="RightToLeft" Grid.Column="0" Grid.Row="1" Foreground="#FF00FF80" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,1,0,44" FontFamily="Montserrat"/>
+                <Button x:Name="btnCalculatePercentile_Gear" Content="Calculate" Grid.Column="0" Grid.Row="1" Height="20"  Width="65" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" FontWeight="Bold" FontFamily="Montserrat SemiBold" Margin="0,0,15,40" Visibility="Collapsed" Click="btnCalculatePercentile_Gear_Click"/>
+                <Button x:Name="btnClearPercentile_Gear" Content="Clear" Grid.Column="0" Grid.Row="1" Height="20"  Width="65" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" FontWeight="Bold" FontFamily="Montserrat SemiBold" Margin="0,25,15,15" Visibility="Collapsed" Click="btnClearPercentile_Gear_Click" />
             </Grid>
             <!-- Row 1-->
             <WrapPanel x:Name="wpAttributeDesc" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical" Height="280" Grid.RowSpan="3" />
@@ -203,21 +206,21 @@
                         <RowDefinition Height="30" />
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="lblDPSCalc_GunDmg" Content="Gun Damage: " Foreground="#FFFD6B0D" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                    <Label x:Name="lblDPSCalc_RPM" Content="RPM: " Foreground="#FFFD6B0D" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1"/>
-                    <Label x:Name="lblDPSCalc_MagSize" Content="Magazine Size: " Foreground="#FFFD6B0D" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                    <Label x:Name="lblDPSCalc_Reload" Content="Reload Speed (ms): " Foreground="#FFFD6B0D" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    <Label x:Name="lblDPSCalc_GunDmg" Content="Gun Damage: " Foreground="#FFFD6B0D" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Montserrat"/>
+                    <Label x:Name="lblDPSCalc_RPM" Content="RPM: " Foreground="#FFFD6B0D" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" FontFamily="Montserrat"/>
+                    <Label x:Name="lblDPSCalc_MagSize" Content="Magazine Size: " Foreground="#FFFD6B0D" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Montserrat" />
+                    <Label x:Name="lblDPSCalc_Reload" Content="Reload Speed (ms): " Foreground="#FFFD6B0D" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Montserrat" />
 
 
-                    <TextBox x:Name="txtDPSCalc_GunDmg" Height="20" Width="50" Grid.Column="1" HorizontalAlignment="Left"/>
-                    <TextBox x:Name="txtDPSCalc_RPM" Height="20" Width="50" IsEnabled="False" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"/>
-                    <TextBox x:Name="txtDPSCalc_MagSize" Height="20" Width="50" IsEnabled="False" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
-                    <TextBox x:Name="txtDPSCalc_Reload" Height="20" Width="50" IsEnabled="False" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="txtDPSCalc_GunDmg"     Height="20" Width="50" IsEnabled="False" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" PreviewTextInput="textbox_PreviewTextInput" FontFamily="Montserrat"/>
+                    <TextBox x:Name="txtDPSCalc_RPM"        Height="20" Width="50" IsEnabled="False" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" PreviewTextInput="textbox_PreviewTextInput" FontFamily="Montserrat"/>
+                    <TextBox x:Name="txtDPSCalc_MagSize"    Height="20" Width="50" IsEnabled="False" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" PreviewTextInput="textbox_PreviewTextInput" FontFamily="Montserrat"/>
+                    <TextBox x:Name="txtDPSCalc_Reload"     Height="20" Width="50" IsEnabled="False" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" PreviewTextInput="textbox_PreviewTextInput" FontFamily="Montserrat"/>
 
 
-                    <CheckBox x:Name="chkDPSCalc_CustomRPM" Content="Custom" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,5" Foreground="#FFFD6B0D" Checked="chkDPSCalc_CustomValue" Unchecked="chkDPSCalc_CustomValue"/>
-                    <CheckBox x:Name="chkDPSCalc_CustomMagSize" Content="Custom" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,5" Foreground="#FFFD6B0D" Checked="chkDPSCalc_CustomValue" Unchecked="chkDPSCalc_CustomValue"/>
-                    <CheckBox x:Name="chkDPSCalc_CustomReload" Content="Custom" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,5" Foreground="#FFFD6B0D" Checked="chkDPSCalc_CustomValue" Unchecked="chkDPSCalc_CustomValue"/>
+                    <CheckBox x:Name="chkDPSCalc_CustomRPM"     Content="Update" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,5" Foreground="#FFFD6B0D" Checked="chkDPSCalc_CustomValue" Unchecked="chkDPSCalc_CustomValue" IsEnabled="False" FontFamily="Montserrat"/>
+                    <CheckBox x:Name="chkDPSCalc_CustomMagSize" Content="Update" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,5" Foreground="#FFFD6B0D" Checked="chkDPSCalc_CustomValue" Unchecked="chkDPSCalc_CustomValue" IsEnabled="False" FontFamily="Montserrat"/>
+                    <CheckBox x:Name="chkDPSCalc_CustomReload"  Content="Update" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,5" Foreground="#FFFD6B0D" Checked="chkDPSCalc_CustomValue" Unchecked="chkDPSCalc_CustomValue" IsEnabled="False" FontFamily="Montserrat"/>
                 </Grid>
 
                 <Grid Grid.Row="0" Grid.Column="1">
@@ -231,13 +234,13 @@
                         <RowDefinition Height="30" />
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="lblDPSCalc_Family" Grid.Row="0" Grid.Column="0" Content="Weapon Family" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblDPSCalc_Make"   Grid.Row="1" Grid.Column="0" Content="Weapon Make" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblDPSCalc_Model"  Grid.Row="2" Grid.Column="0" Content="Weapon Model" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="120" Foreground="#FFFD6B0D" />
+                    <Label x:Name="lblDPSCalc_Family" Grid.Row="0" Grid.Column="0" Content="Weapon Family" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblDPSCalc_Make"   Grid.Row="1" Grid.Column="0" Content="Weapon Make" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblDPSCalc_Model"  Grid.Row="2" Grid.Column="0" Content="Weapon Model" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="120" Foreground="#FFFD6B0D" FontFamily="Montserrat" />
 
-                    <ComboBox x:Name="ddlDPSCalc_Family" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" SelectionChanged="ddlWeaponPercentile_SelectionChanged" />
-                    <ComboBox x:Name="ddlDPSCalc_Make" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" IsEnabled="False" SelectionChanged ="ddlWeaponPercentile_SelectionChanged"/>
-                    <ComboBox x:Name="ddlDPSCalc_Model" Grid.Row="2"  Grid.Column="1" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Bottom" Width="120"  IsEnabled="False" SelectionChanged="ddlWeaponPercentile_SelectionChanged"/>
+                    <ComboBox x:Name="ddlDPSCalc_Family" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" SelectionChanged="ddlWeaponFamilyMakeModel_SelectionChanged" FontFamily="Montserrat" />
+                    <ComboBox x:Name="ddlDPSCalc_Make" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" IsEnabled="False" SelectionChanged ="ddlWeaponFamilyMakeModel_SelectionChanged" FontFamily="Montserrat"/>
+                    <ComboBox x:Name="ddlDPSCalc_Model" Grid.Row="2"  Grid.Column="1" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Bottom" Width="120"  IsEnabled="False" SelectionChanged="ddlWeaponFamilyMakeModel_SelectionChanged" FontFamily="Montserrat"/>
                     <WrapPanel x:Name="wpDPSCalc_Controls" Grid.Row="2" Orientation="Vertical" Margin="123,36,0,-56" HorizontalAlignment="Left" Width="129" Height="51" VerticalAlignment="Top" Grid.ColumnSpan="2" Visibility="Collapsed" >
                         <Button x:Name="btnDPSCalc_Add" Margin="2,2,2,2"  Content="Add" VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" Visibility="Visible" FontFamily="Corbel" FontWeight="Bold" Click="btnDPSCalc_AddWeapon_Click" IsEnabled="True"/>
                         <Button x:Name="btnDPSCalc_Remove" Margin="2,2,2,2"  Grid.Column="2" Grid.Row="3" Content="Remove"  VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" FontFamily="Corbel" FontWeight="Bold" Click="btnDPSCalc_RemoveWeapon_Click" IsEnabled="False" Visibility="Collapsed"/>
@@ -245,8 +248,8 @@
                         <Button x:Name="btnDPSCalc_Clear" Margin="2,2,2,2"  Grid.Column="2" Grid.Row="3" Content="Clear"  VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" FontFamily="Corbel" FontWeight="Bold" Click="btnDPSCalc_ClearList_Click" IsEnabled="False" Visibility="Collapsed"/>
                     </WrapPanel>
                 </Grid>
-          
-                <ListView x:Name="lvDPSCalc_CompareView" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,40,23" Grid.RowSpan="2" Background="Transparent" BorderBrush="#00828790" Foreground="#FFFD6B0D" Visibility="Collapsed" >
+
+                <ListView x:Name="lvDPSCalc_CompareView" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,40,23" Grid.RowSpan="2" Background="Transparent" BorderBrush="#00828790" Foreground="#FFFD6B0D" Visibility="Collapsed" FontFamily="Montserrat" >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn DisplayMemberBinding="{Binding ModelName }" Header="Model" Width="135"/>
@@ -279,77 +282,99 @@
                 <!-- Row 0-->
                 <StackPanel x:Name="spInGameLabels" Grid.Column="0" Grid.Row="0" Margin="0,5,0,0">
                     <Label x:Name="lblAddDmg" Grid.Column="0" Grid.Row="1" 
-                           Content="Addtional Weapon Damage" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0"/>
+                           Content="Addtional Weapon Damage" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0" FontFamily="Montserrat"/>
                     <Label x:Name="lblTypeDmg" Grid.Column="0"
-                           Content="Addtional Weapon Type Damage" HorizontalAlignment="Left"  VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0"/>
+                           Content="Addtional Type Damage" HorizontalAlignment="Left"  VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0" FontFamily="Montserrat"/>
                     <Label x:Name="lblUIDmg" Grid.Column="0"
-                           Content="Weapon Damage in UI" HorizontalAlignment="Left"  VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0"/>
+                           Content="Weapon Damage in UI" HorizontalAlignment="Left"  VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0" FontFamily="Montserrat"/>
                 </StackPanel>
 
                 <StackPanel x:Name="spInGameValues" Grid.Column="1" Grid.Row="0" Margin="10,0,0,0">
-                    <TextBox x:Name="txtTypeDmg" Grid.Column="1"  Grid.Row="0" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput"/>
-                    <TextBox x:Name="txtAddDmg" Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput"/>
-                    <TextBox x:Name="txtUIDmg" Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput"/>
+                    <TextBox x:Name="txtTypeDmg" Grid.Column="1"  Grid.Row="0" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput" FontFamily="Montserrat"/>
+                    <TextBox x:Name="txtAddDmg" Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput" FontFamily="Montserrat"/>
+                    <TextBox x:Name="txtUIDmg" Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput" FontFamily="Montserrat"/>
                 </StackPanel>
 
                 <StackPanel x:Name="spFamMakeModelLabels" Grid.Column="2" Grid.Row="0" Margin="0,0,0,0">
-                    <Label x:Name="lblFamily" Content="Weapon Family" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblMake"   Content="Weapon Make" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblModel"  Content="Weapon Model" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="120" Foreground="#FFFD6B0D" />
+                    <Label x:Name="lblFamily" Content="Weapon Family" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblMake"   Content="Weapon Make" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblModel"  Content="Weapon Model" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="120" Foreground="#FFFD6B0D" FontFamily="Montserrat" />
                 </StackPanel>
 
                 <StackPanel x:Name="spFamMakeModel" Grid.Column="3" Grid.Row="0" Margin="10,0,10,0">
-                    <ComboBox x:Name="ddlFamily" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" SelectionChanged="ddlWeaponPercentile_SelectionChanged" />
-                    <ComboBox x:Name="ddlMake"   HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" IsEnabled="False" SelectionChanged ="ddlWeaponPercentile_SelectionChanged"/>
-                    <ComboBox x:Name="ddlModel"  HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Bottom" Width="120"  IsEnabled="False" SelectionChanged="ddlWeaponPercentile_SelectionChanged"/>
-                    <Button x:Name="btnCalculate" Margin="18,10,10,0" Content="Calcuate" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" Visibility="Collapsed" FontFamily="Corbel" FontWeight="Bold" Click="btnCalculatePercentile_Weapon_Click" />
+                    <ComboBox x:Name="ddlFamily" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" SelectionChanged="ddlWeaponFamilyMakeModel_SelectionChanged" FontFamily="Montserrat" />
+                    <ComboBox x:Name="ddlMake"   HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" IsEnabled="False" SelectionChanged ="ddlWeaponFamilyMakeModel_SelectionChanged" FontFamily="Montserrat"/>
+                    <ComboBox x:Name="ddlModel"  HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Bottom" Width="120"  IsEnabled="False" SelectionChanged="ddlWeaponFamilyMakeModel_SelectionChanged" FontFamily="Montserrat"/>
+                    <Button x:Name="btnCalculate" Margin="18,10,10,0" Content="Calcuate" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" Visibility="Collapsed" FontFamily="Montserrat SemiBold" FontWeight="Bold" Click="btnCalculatePercentile_Weapon_Click" />
                 </StackPanel>
 
                 <!-- End Row 0-->
                 <!-- Row 1-->
 
                 <StackPanel x:Name="spModelInfo_col_0" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
-                    <Label x:Name="lblCritMinMax"       Content="Min/Max Crit Distance" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblOptimalRange"     Content="Optimal Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblRPM"              Content="RPM" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
-                    <Label x:Name="lblMagSize"          Content="Magazine Size" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblTypeBonus"        Content="Type Bonus" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblCritMinMax"       Content="Min/Max Crit Distance" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+                    <Label x:Name="lblOptimalRange"     Content="Optimal Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+                    <Label x:Name="lblRPM"              Content="RPM" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+                    <Label x:Name="lblMagSize"          Content="Magazine Size" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+                    <Label x:Name="lblTypeBonus"        Content="Type Bonus" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
                 </StackPanel>
 
                 <StackPanel x:Name="spModeVal_col_1" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
-                    <Label x:Name="lblCritMinMaxVal"       Content="{Binding Path=CritMinMax, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblOptimalRangeVal"     Content="{Binding Path=OptimalRange, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblRPMVal"              Content="{Binding Path=RPM, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
-                    <Label x:Name="lblMagSizeVal"          Content="{Binding Path=MagSize, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblTypeBonusVal"        Content="{Binding Path=TypeBonus, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="175" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblCritMinMaxVal"       Content="{Binding Path=CritMinMax, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblOptimalRangeVal"     Content="{Binding Path=OptimalRange, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblRPMVal"              Content="{Binding Path=RPM, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblMagSizeVal"          Content="{Binding Path=MagSize, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblTypeBonusVal"        Content="{Binding Path=TypeBonus, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="175" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
                 </StackPanel>
 
                 <StackPanel x:Name="spModelInfo_col_2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
-                    <Label x:Name="lblHSMultiplier"     Content="Headshot Multiplier" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblReloadSpeed"      Content="Reload Speed" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
-                    <Label x:Name="lblNormalizedDmg"    Content="Normalized Damage" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblDamageRange"      Content="Damage Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblHSMultiplier"     Content="Headshot Multiplier" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+                    <Label x:Name="lblReloadSpeed"      Content="Reload Speed" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+                    <Label x:Name="lblNormalizedDmg"    Content="Normalized Damage" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+                    <Label x:Name="lblDamageRange"      Content="Damage Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
                 </StackPanel>
 
                 <StackPanel x:Name="spModelVal_col_3" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
-                    <Label x:Name="lblHSMultiplierVal"     Content="{Binding Path=HSMultiplier, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblReloadSpeedVal"      Content="{Binding Path=ReloadSpeed, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" />
-                    <Label x:Name="lblNormalizedDmgVal"    Content="{Binding Path=NormalizedDmg, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
-                    <Label x:Name="lblDamageRangeVal"      Content="{Binding Path=DamageRangeStr, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D"/>
+                    <Label x:Name="lblHSMultiplierVal"     Content="{Binding Path=HSMultiplier, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblReloadSpeedVal"      Content="{Binding Path=ReloadSpeed, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblNormalizedDmgVal"    Content="{Binding Path=NormalizedDmg, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+                    <Label x:Name="lblDamageRangeVal"      Content="{Binding Path=DamageRangeStr, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
                 </StackPanel>
 
                 <!-- End Row 1-->
 
-                <Label x:Name="lblCalculateRoll" Visibility="Hidden" Margin="0,20,0,0" Grid.Column="0" Grid.Row="2" Grid.RowSpan="3" Foreground="#FFFD6B0D" Width="1600">Calculate Roll</Label>
+                <Label x:Name="lblCalculateRoll" Visibility="Hidden" Margin="0,20,0,0" Grid.Column="0" Grid.Row="2" Grid.RowSpan="3" Foreground="#FFFD6B0D" Width="1600" FontFamily="Montserrat Medium">Calculate Roll</Label>
                 <Label x:Name="lblCalculateRollVal" Visibility="Hidden" Margin="0,20,0,0" Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Foreground="#FFFD6B0D" Width="1600">Calculate Roll</Label>
                 <!-- Roll Precentage Bar-->
                 <Slider x:Name="sldWeaponRoll" Grid.Row="2" Grid.Column="1" Style="{StaticResource Horizontal_Slider}" VerticalAlignment="Center" Grid.ColumnSpan="4" TickFrequency="10" Minimum="0" Maximum="100"  Width="375" Height="40" Foreground="White" Visibility="Collapsed" HorizontalAlignment="Center"/>
                 <!-- Roll Precentage Bar-->
-
-
             </Grid>
             <!--PERCENTILE-->
         </Grid>
         <!--End Weapons Section -->
+        <Grid x:Name="grdSectionResources" Visibility="Collapsed">
+            <!--EXOTICS-->
+            <!--#FFFF6432-->
+            <Grid x:Name="grdSectionResources_Exotics" Visibility="Visible">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="325"/>
+                    <ColumnDefinition Width="325"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="150" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0">
+                    <Label Content="Exotic" Height="25" Width="45" Foreground="#FFFF6432" FontFamily="Montserrat"/>
+                    <ComboBox x:Name="ddlResourcesExotics_ExoticList" Height="25" Width="150" Margin="10,0" Foreground="#FFFF6432"/>
+                </StackPanel>
+                <WrapPanel Orientation="Vertical" Grid.Column="1">
+                    <Expander Header="Talents" Foreground="#FFFF6432" FontFamily="Montserrat Medium"/>
+                    <Expander Header="Requirements" Foreground="#FFFF6432" FontFamily="Montserrat Medium"/>
+                </WrapPanel>
+            </Grid>
+
+        </Grid>
     </DockPanel>
 </Window>

@@ -84,7 +84,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ErrorLog.cs" />
+    <Compile Include="Exotic.cs" />
     <Compile Include="Gear.cs" />
+    <Compile Include="Talent.cs" />
+    <Compile Include="Version.cs" />
     <Compile Include="WeaponModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -16,6 +16,7 @@ namespace Division2Toolkit
         public MainWindow()
         {            
             InitializeComponent();
+            Title = String.Format("The Division 2 Toolkit v{0}", Version.GetVersion());
         }
 
         private void LoadValues(WeaponModel selected)
@@ -35,7 +36,7 @@ namespace Division2Toolkit
 
         private void btnDPSCalc_AddWeapon_Click(object sender, RoutedEventArgs e)
         {
-            if (!String.IsNullOrEmpty(txtDPSCalc_GunDmg.Text) || !String.IsNullOrEmpty(txtDPSCalc_MagSize.Text) || !String.IsNullOrEmpty(txtDPSCalc_Reload.Text) || !String.IsNullOrEmpty(txtDPSCalc_RPM.Text))
+            if (!String.IsNullOrEmpty(txtDPSCalc_GunDmg.Text) && !String.IsNullOrEmpty(txtDPSCalc_MagSize.Text) && !String.IsNullOrEmpty(txtDPSCalc_Reload.Text) && !String.IsNullOrEmpty(txtDPSCalc_RPM.Text))
             {
                 DPSCalcItem newItem = new DPSCalcItem();
                 newItem.ModelName = ddlDPSCalc_Model.SelectedValue.ToString();
@@ -43,8 +44,8 @@ namespace Division2Toolkit
                 newItem.MagSize = Convert.ToInt32(txtDPSCalc_MagSize.Text);
                 newItem.RPM = Convert.ToInt32(txtDPSCalc_RPM.Text);
                 newItem.ReloadSpeed = Convert.ToInt32(txtDPSCalc_Reload.Text);
-                newItem.DPM = 0;
-                newItem.DPS = 0;
+                newItem.DPM = String.Empty;
+                newItem.DPS = String.Empty;
 
                 lvDPSCalc_CompareView.Items.Add(newItem);
 
@@ -80,12 +81,12 @@ namespace Division2Toolkit
                 for (int lvIndex = 0; lvIndex < lvDPSCalc_CompareView.Items.Count; lvIndex++)
                 {
                     DPSCalcItem currentItem = (DPSCalcItem)lvDPSCalc_CompareView.Items[lvIndex];
-                    currentItem.DPM = (60 / (currentItem.MagSize / (currentItem.RPM / 60) + (currentItem.ReloadSpeed / 1000)) * currentItem.Damage * currentItem.MagSize);
-                    currentItem.DPS = (currentItem.Damage * currentItem.RPM / 60);
-
+                    currentItem.DPM = String.Format("{0:n0}", Math.Round((60 / (currentItem.MagSize / (currentItem.RPM / 60) + (currentItem.ReloadSpeed / 1000)) * currentItem.Damage * currentItem.MagSize)));
+                    currentItem.DPS = String.Format("{0:n0}", Math.Round((currentItem.Damage * currentItem.RPM / 60.0)));
                     lstCalculatedItems.Add(currentItem);
-                    lvDPSCalc_CompareView.Items.Remove(lvDPSCalc_CompareView.Items[lvIndex]);
                 }
+
+                lvDPSCalc_CompareView.Items.Clear();
 
                 for (int lstIndex = 0; lstIndex < lstCalculatedItems.Count; lstIndex++)
                 {
@@ -131,7 +132,7 @@ namespace Division2Toolkit
                         btnDPSCalc_Calculate.IsEnabled = false;
                         btnDPSCalc_Clear.IsEnabled = false;
                         btnDPSCalc_Remove.IsEnabled = false;
-                        btnDPSCalc_Add.IsEnabled = true;
+                        if (ddlDPSCalc_Model.SelectedValue == null) { btnDPSCalc_Add.IsEnabled = false; }
 
                         btnDPSCalc_Clear.Visibility = Visibility.Collapsed;
                         btnDPSCalc_Remove.Visibility = Visibility.Collapsed;
@@ -281,10 +282,12 @@ namespace Division2Toolkit
             ddlFamily.ItemsSource = WeaponModel.GetWeaponFamilies(weaponList);
         }
 
-        private void ddlWeaponPercentile_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ddlWeaponFamilyMakeModel_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string selectedDDLValue = (((ComboBox)sender).SelectedValue != null) ? ((ComboBox)sender).SelectedValue.ToString() : string.Empty;
 
+            //I know I could have simplified this with a DataTemplate or using the same DDLS for everything but cest la vie
+            //Maybe on a saturday I'll refactor.
             switch (((ComboBox)sender).Name)
             {
                 case "ddlFamily" :
@@ -324,7 +327,7 @@ namespace Division2Toolkit
                         spModelInfo_col_2.Visibility = Visibility.Visible;
                         spModelVal_col_3.Visibility = Visibility.Visible;
                         spModeVal_col_1.Visibility = Visibility.Visible;
-                        btnCalculate.Visibility = Visibility.Hidden;
+                        btnCalculate.Visibility = Visibility.Visible;
                         sldWeaponRoll.Visibility = Visibility.Hidden;
                     }
 
@@ -332,12 +335,44 @@ namespace Division2Toolkit
                 case "ddlDPSCalc_Family":
                     ddlDPSCalc_Make.ItemsSource = WeaponModel.GetWeaponMakesByFamily(weaponList, selectedDDLValue);
                     ddlDPSCalc_Make.IsEnabled = true;
-                    wpDPSCalc_Controls.Visibility = Visibility.Collapsed;
+                    if (!lvDPSCalc_CompareView.HasItems)
+                    {
+                        wpDPSCalc_Controls.Visibility = Visibility.Collapsed;
+                    }
+                    btnDPSCalc_Add.IsEnabled = false;
+
+                    chkDPSCalc_CustomMagSize.IsChecked = false;
+                    chkDPSCalc_CustomReload.IsChecked = false;
+                    chkDPSCalc_CustomRPM.IsChecked = false;
+                    chkDPSCalc_CustomMagSize.IsEnabled = false;
+                    chkDPSCalc_CustomReload.IsEnabled = false;
+                    chkDPSCalc_CustomRPM.IsEnabled = false;
+                    txtDPSCalc_GunDmg.IsEnabled = false;
+                    txtDPSCalc_MagSize.IsEnabled = false;
+                    txtDPSCalc_Reload.IsEnabled = false;
+                    txtDPSCalc_RPM.IsEnabled = false;
+
                     break;
                 case "ddlDPSCalc_Make":
                     ddlDPSCalc_Model.ItemsSource = (String.IsNullOrEmpty(selectedDDLValue)) ? null : WeaponModel.GetWeaponModelsByMake(weaponList, ddlDPSCalc_Family.SelectedValue.ToString(), selectedDDLValue);
                     ddlDPSCalc_Model.IsEnabled = (String.IsNullOrEmpty(selectedDDLValue)) ? false : true;
-                    wpDPSCalc_Controls.Visibility = Visibility.Collapsed;
+                    if (!lvDPSCalc_CompareView.HasItems)
+                    {
+                        wpDPSCalc_Controls.Visibility = Visibility.Collapsed;
+                    }
+                    btnDPSCalc_Add.IsEnabled = false;
+
+                    chkDPSCalc_CustomMagSize.IsChecked = false;
+                    chkDPSCalc_CustomReload.IsChecked = false;
+                    chkDPSCalc_CustomRPM.IsChecked = false;
+                    chkDPSCalc_CustomMagSize.IsEnabled = false;
+                    chkDPSCalc_CustomReload.IsEnabled = false;
+                    chkDPSCalc_CustomRPM.IsEnabled = false;
+                    txtDPSCalc_GunDmg.IsEnabled = false;
+                    txtDPSCalc_MagSize.IsEnabled = false;
+                    txtDPSCalc_Reload.IsEnabled = false;
+                    txtDPSCalc_RPM.IsEnabled = false;
+
                     break;
                 case "ddlDPSCalc_Model":
                     
@@ -347,11 +382,23 @@ namespace Division2Toolkit
                         txtDPSCalc_MagSize.Text = selectedModel.MagSize.ToString();
                         txtDPSCalc_RPM.Text = selectedModel.RPM.ToString();
                         txtDPSCalc_Reload.Text = selectedModel.ReloadSpeed.ToString();
+                        btnDPSCalc_Add.IsEnabled = true;
 
-                        wpDPSCalc_Controls.Visibility = Visibility.Visible;
-                        btnDPSCalc_Clear.Visibility = Visibility.Collapsed;
-                        btnDPSCalc_Remove.Visibility = Visibility.Collapsed;
-                        btnDPSCalc_Calculate.Visibility = Visibility.Collapsed;
+                        chkDPSCalc_CustomMagSize.IsEnabled = true;
+                        chkDPSCalc_CustomReload.IsEnabled = true;
+                        chkDPSCalc_CustomRPM.IsEnabled = true;
+                        txtDPSCalc_GunDmg.IsEnabled = true;
+                        txtDPSCalc_MagSize.IsEnabled = false;
+                        txtDPSCalc_Reload.IsEnabled = false;
+                        txtDPSCalc_RPM.IsEnabled = false;
+
+                        if (!lvDPSCalc_CompareView.HasItems)
+                        {
+                            wpDPSCalc_Controls.Visibility = Visibility.Visible;
+                            btnDPSCalc_Clear.Visibility = Visibility.Collapsed;
+                            btnDPSCalc_Remove.Visibility = Visibility.Collapsed;
+                            btnDPSCalc_Calculate.Visibility = Visibility.Collapsed;
+                        }
                     }
 
                     break;
@@ -378,7 +425,7 @@ namespace Division2Toolkit
 
         private void stackPanel_CollapseEvent(object sender, RoutedEventArgs e)
         {
-            if (expMainMenu.IsExpanded) { expMainMenu.Header = "Main Menu"; }
+            if (expMainMenu.IsExpanded) { expMainMenu.Header = "Main Menu"; expMainMenu.FontFamily = new FontFamily("Montserrat Medium"); }
             else
             {
                 expMainMenu.Header = String.Empty;
@@ -403,13 +450,14 @@ namespace Division2Toolkit
             };
 
             Label lblDescription = new Label()
-            {
+            {//Montserrat SemiBold
                 Name = String.Format("lblDescription_{0}", checkedAttribute.AttributeName.Replace(" ", String.Empty).Replace("/", String.Empty)),
                 Content = String.Format("{0}: {1}-{2}", checkedAttribute.AttributeName, checkedAttribute.minRoll, (chkIsGearSet.IsChecked == true) ? checkedAttribute.setMaxRoll : checkedAttribute.maxRoll),
                 Foreground = DivisionOrange,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Bottom
-            };
+                VerticalAlignment = VerticalAlignment.Bottom,
+                FontFamily = new FontFamily("Montserrat SemiBold")
+        };
 
             TextBox txtAttributeInput = new TextBox()
             {
@@ -420,7 +468,8 @@ namespace Division2Toolkit
                 Margin = new Thickness(10,0,5,0),
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Center,
-            };
+                FontFamily = new FontFamily("Montserrat")
+    };
 
             txtAttributeInput.PreviewTextInput += textbox_PreviewTextInput;
 
@@ -441,7 +490,8 @@ namespace Division2Toolkit
                 Foreground = Brushes.White,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Bottom,
-                FontSize = 10
+                FontSize = 10,
+                FontFamily = new FontFamily("Montserrat")
             };
 
             ProgressBar pbPercentile = new ProgressBar()
@@ -556,12 +606,31 @@ namespace Division2Toolkit
             public int Damage { get; set; }
             public int MagSize { get; set; }
             public int RPM { get; set; }
-            public double DPM { get; set; }
-            public double DPS { get; set; }
+            public string DPM { get; set; }
+            public string DPS { get; set; }
             public double ReloadSpeed { get; set; }
 
         }
 
         #endregion
+
+        private void btnOpenSection_ResourcesExotics_Click(object sender, RoutedEventArgs e)
+        {
+            grdSectionGear.IsEnabled = false;
+            grdSectionGear.Visibility = Visibility.Collapsed;
+
+            grdSectionWeapons.IsEnabled = false;
+            grdSectionWeapons.Visibility = Visibility.Collapsed;
+
+            grdSectionResources.IsEnabled = true;
+            grdSectionResources.Visibility = Visibility.Visible;
+            grdSectionResources_Exotics.IsEnabled = true;
+            grdSectionResources_Exotics.Visibility = Visibility.Visible;
+
+            //Get weapon exotics from weaponlist
+            //Load exotic talents
+            ddlResourcesExotics_ExoticList.ItemsSource = Exotic.ReadExoticXLSX("ExoticTalents.xlsx");
+            ddlResourcesExotics_ExoticList.DisplayMemberPath = "Name";
+        }
     }
 }
