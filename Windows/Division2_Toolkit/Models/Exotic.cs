@@ -14,8 +14,8 @@ namespace Division2Toolkit
         public string Name { get; set; }
 
         public Talent HolsteredTalent { get; set; }
-        public Talent ActiveTalent_1 { get; set; }
-        public Talent ActiveTalent_2 { get; set; }
+        public Talent ActiveTalent { get; set; }
+        public Talent PassiveTalent { get; set; }
 
 
         public static List<Exotic> ReadExoticXLSX(string filename)
@@ -35,25 +35,12 @@ namespace Division2Toolkit
                         foreach (DataRow currentRow in dsGearTable.Tables[tableIndex].Rows)
                         {
                             Exotic currentExotic = new Exotic();
-                            Talent currentTalent = new Talent();
 
                             //I'll refactor this later. I'm literally too tired to figure out the pattern recognition
                             currentExotic.Name = currentRow.ItemArray[0].ToString();
-
-                            currentTalent.Name = currentRow.ItemArray[1].ToString();
-                            currentTalent.Description = currentRow.ItemArray[2].ToString();
-
-                            currentExotic.ActiveTalent_1 = currentTalent;
-
-                            currentTalent.Name = currentRow.ItemArray[3].ToString();
-                            currentTalent.Description = currentRow.ItemArray[4].ToString();
-
-                            currentExotic.ActiveTalent_2 = currentTalent;
-
-                            currentTalent.Name = currentRow.ItemArray[5].ToString();
-                            currentTalent.Description = currentRow.ItemArray[6].ToString();
-
-                            currentExotic.HolsteredTalent = currentTalent;
+                            currentExotic.ActiveTalent = new Talent(currentRow.ItemArray[1].ToString(), currentRow.ItemArray[2].ToString());
+                            currentExotic.PassiveTalent = new Talent(currentRow.ItemArray[3].ToString(), currentRow.ItemArray[4].ToString());
+                            currentExotic.HolsteredTalent = new Talent(currentRow.ItemArray[5].ToString(), currentRow.ItemArray[6].ToString());
 
                             gearList.Add(currentExotic);
                         }

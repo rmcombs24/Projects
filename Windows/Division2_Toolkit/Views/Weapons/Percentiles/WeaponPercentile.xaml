@@ -1,0 +1,149 @@
+﻿<UserControl x:Class="Division2Toolkit.Views.WeaponPercentile"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:uc="clr-namespace:ToggleSwitch"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="130"/>
+            <RowDefinition Height="160"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!-- Row 0-->
+        <StackPanel x:Name="spInGameLabels" Grid.Column="0" Grid.Row="0" Margin="0,5,0,0">
+            <Label x:Name="lblUIDmg" Grid.Column="0"
+                           Content="Weapon Damage in UI" HorizontalAlignment="Left"  VerticalAlignment="Top" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0" FontFamily="Montserrat"/>
+            <Label x:Name="lblAddDmg" Grid.Column="0" Grid.Row="1" 
+                           Content="Addtional Weapon Damage" Background="#00000000" Foreground="#FFFD6B0D" Margin="0,5,10,0" FontFamily="Montserrat"/>
+            <Button Height="20" Width="160" 
+                    BorderBrush="Transparent" 
+                    Foreground="#FFFD6B0D" 
+                    Content="Additional Type Damage" 
+                    Background="Transparent" 
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left" 
+                    FontFamily="Montserrat"
+                    Margin="0,5" Click="btnOpenWeaponTypes_Click"/>
+
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Margin="180,35,20,125" Grid.RowSpan="2">
+
+        </StackPanel>
+
+        <StackPanel x:Name="spInGameValues" Grid.Column="1" Grid.Row="0" Margin="10,0,0,0">
+            <TextBox x:Name="txtUIDmg" Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput" FontFamily="Montserrat"/>
+            <TextBox x:Name="txtAddDmg" Grid.Column="1"  Grid.Row="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="65" Margin="0,10,10,0" PreviewTextInput="textbox_PreviewTextInput" FontFamily="Montserrat"/>
+        </StackPanel>
+
+        <StackPanel x:Name="spFamMakeModelLabels" Grid.Column="2" Grid.Row="0" Margin="0,0,0,0">
+            <Label x:Name="lblFamily" Content="Weapon Family" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblMake"   Content="Weapon Make" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="120" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblModel"  Content="Weapon Model" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="120" Foreground="#FFFD6B0D" FontFamily="Montserrat" />
+        </StackPanel>
+
+        <StackPanel x:Name="spFamMakeModel" Grid.Column="3" Grid.Row="0" Margin="10,0,10,0">
+            <ComboBox x:Name="ddlFamily" HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" SelectionChanged="ddlWeaponFamilyMakeModel_SelectionChanged" FontFamily="Montserrat" />
+            <ComboBox x:Name="ddlMake"   HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Top" Width="120" IsEnabled="False" SelectionChanged ="ddlWeaponFamilyMakeModel_SelectionChanged" FontFamily="Montserrat"/>
+            <ComboBox x:Name="ddlModel"  HorizontalAlignment="Left" Margin="0,10,10,0" VerticalAlignment="Bottom" Width="120"  IsEnabled="False" SelectionChanged="ddlWeaponFamilyMakeModel_SelectionChanged" FontFamily="Montserrat"/>
+            <Button x:Name="btnCalculate" Margin="18,10,10,0" Content="Calcuate" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="60" Background="#00000000" Foreground="#FFFD6B0D" BorderBrush="Black" Visibility="Collapsed" FontFamily="Montserrat SemiBold" FontWeight="Bold" Click="btnCalculatePercentile_Weapon_Click" />
+        </StackPanel>
+
+        <!-- End Row 0-->
+        <!-- Row 1-->
+
+        <StackPanel x:Name="spModelInfo_col_0" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="3" Visibility="Collapsed" Margin="0,40,0,-40">
+            <Label x:Name="lblCritMinMax"       Content="Min/Max Crit Distance" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblOptimalRange"     Content="Optimal Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblRPM"              Content="RPM" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblMagSize"          Content="Magazine Size" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblTypeBonus"        Content="Type Bonus" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+        </StackPanel>
+
+        <StackPanel x:Name="spModeVal_col_1" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Collapsed" Margin="0,40,0,-40" Grid.RowSpan="2">
+            <Label x:Name="lblCritMinMaxVal"       Content="{Binding Path=CritMinMax, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblOptimalRangeVal"     Content="{Binding Path=OptimalRange, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblRPMVal"              Content="{Binding Path=RPM, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblMagSizeVal"          Content="{Binding Path=MagSize, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblTypeBonusVal"        Content="{Binding Path=TypeBonus, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="175" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+        </StackPanel>
+
+        <StackPanel x:Name="spModelInfo_col_2" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Collapsed" Margin="0,40,0,-40">
+            <Label x:Name="lblHSMultiplier"     Content="Headshot Multiplier" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblReloadSpeed"      Content="Reload Speed" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblNormalizedDmg"    Content="Normalized Damage" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblDamageRange"      Content="Damage Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+        </StackPanel>
+
+        <StackPanel x:Name="spModelVal_col_3" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Collapsed" Margin="0,40,0,-40">
+            <Label x:Name="lblHSMultiplierVal"     Content="{Binding Path=HSMultiplier, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblReloadSpeedVal"      Content="{Binding Path=ReloadSpeed, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Bottom" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblNormalizedDmgVal"    Content="{Binding Path=NormalizedDmg, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblDamageRangeVal"      Content="{Binding Path=DamageRangeStr, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+        </StackPanel>
+
+        <!-- End Row 1-->
+
+        <Label x:Name="lblCalculateRoll" Visibility="Collapsed" Margin="0,45,0,0" Grid.Column="0" Grid.Row="2" Grid.RowSpan="3" Foreground="#FFFD6B0D" Width="1600" FontFamily="Montserrat Medium">Calculate Roll</Label>
+        <!-- Roll Precentage Bar-->
+
+        <StackPanel x:Name="spWeaponRoll"  Grid.Row="2" Grid.Column="1" Orientation="Vertical" Margin="0,0,0,0" Height="35" Visibility="Collapsed">
+            <Label x:Name="lblWeaponRoll"  Content="100%" Foreground="White" HorizontalAlignment="Center" />
+            <ProgressBar x:Name="prgWeaponRoll" Value="50"  Height="5" Foreground="White" Background="#00E6E6E6" BorderBrush="#3FFFFFFF"></ProgressBar>
+        </StackPanel>
+
+
+        <GroupBox x:Name="grpTalents" Header="" HorizontalAlignment="Left" Height="70" Margin="0,100,0,0" VerticalAlignment="Top" Width="290" BorderBrush="Black" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <StackPanel x:Name="spTglTalents" Orientation="Horizontal" IsEnabled="False">
+
+
+                <WrapPanel Margin="5,0,20,-32" x:Name="wrpTalentMeasured" Height="75" Width="84" Grid.RowSpan="2">
+                    <Label Margin="-10,25" Foreground="Red" Content="-15" Background="#00000000"/>
+
+                    <StackPanel>
+                        <Label Foreground="#FFFD6B0D" Content="Measured" Height="25" HorizontalContentAlignment="Center" Background="#00000000"/>
+                        <uc:ToggleButton x:Name="tglMeasured" Height="20"  Width="30" MouseLeftButtonDown="tglMeasured_MouseLeftButtonDown"/>
+                    </StackPanel>
+
+                    <Label Margin="-10,25" Foreground="#FFFD6B0D" Content="30"/>
+                </WrapPanel>
+
+                <WrapPanel Margin="5,0,0,-32" x:Name="wrpOptimist" Height="75" Width="85" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                    <Label Margin="-10,25" Foreground="#FFFD6B0D" Content="0"/>
+
+                    <StackPanel>
+                        <Label Foreground="#FFFD6B0D" Content="Optimist" Height="25" HorizontalContentAlignment="Center"/>
+                        <uc:ToggleButton x:Name="tglOptimist" Height="20"  Width="30" MouseLeftButtonDown="tglOptimist_MouseLeftButtonDown"/>
+                    </StackPanel>
+
+                    <Label Margin="-10,25" Foreground="#FFFD6B0D" Content="30"/>
+                </WrapPanel>
+
+
+                <WrapPanel Margin="0,1,0,0" x:Name="wrpTalentUnhinged" Height="75" Width="75" Grid.RowSpan="2">
+
+                    <Label Margin="-10,25" Foreground="#FFFD6B0D" Content=""/>
+                    <StackPanel>
+                        <Label Foreground="#FFFD6B0D" Content="Unhinged" Height="25" HorizontalContentAlignment="Center"/>
+                        <uc:ToggleButton x:Name="tglUnhinged" Height="20"  Width="30" MouseLeftButtonDown="tglUnhinged_MouseLeftButtonDown"/>
+                    </StackPanel>
+
+                    <Label Margin="-10,25" Foreground="#FFFD6B0D" Content="20"/>
+                </WrapPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Roll Precentage Bar-->
+    </Grid>
+</UserControl>

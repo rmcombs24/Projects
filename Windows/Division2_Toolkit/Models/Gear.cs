@@ -78,9 +78,26 @@ namespace Division2Toolkit
     class GearAttribute
     {
         public double minRoll { get; set; }
+        public double avgRoll { get; set; }
+        public double goodRoll { get; set; }
+        public double betterRoll { get; set; }
+        public double outstandingRoll { get; set; }
         public double maxRoll { get; set; }
         public double setMaxRoll { get; set; }
         public string AttributeName { get; set; }
+
+
+        public GearAttribute(string attributeName, double min, double average, double good, double better, double outstanding, double max, double setMax)
+        {
+            AttributeName = attributeName;
+            minRoll = min;
+            avgRoll = average;
+            goodRoll = good;
+            betterRoll = better;
+            outstandingRoll = outstanding;
+            maxRoll = max;
+            setMaxRoll = setMax;
+        }
 
         public GearAttribute(string attributeName, double min, double max, double setMax)
         {
@@ -96,6 +113,7 @@ namespace Division2Toolkit
             minRoll = 0;
             maxRoll = 0;
         }
+
         public GearAttribute() { }
     }
 }

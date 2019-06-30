@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Division2Toolkit.Views.GearPercentile"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid x:Name="grdGear_Percentiles">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="400"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="73"/>
+            <RowDefinition Height="135"/>
+        </Grid.RowDefinitions>
+
+        <!-- Row 0-->
+        <Grid x:Name="grdInnerGearSection" Margin="0,0,0,149" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+
+
+            <StackPanel Orientation="Vertical"  Grid.RowSpan="1" Grid.Column="1"  Grid.Row="1" />
+
+            <StackPanel x:Name="spGearType" Orientation="Horizontal">
+                <Label x:Name="lblGearSelection" Foreground="#FFFD6B0D" Content="Gear Type" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" FontFamily="Montserrat" />
+                <ComboBox x:Name="ddlGear" VerticalAlignment="Center" Width="120" HorizontalAlignment="Right" SelectionChanged="ddlGearPercentile_SelectionChanged" FontFamily="Montserrat" />
+            </StackPanel>
+
+            <CheckBox x:Name="chkIsGearSet" Content="Gear Set Item" FlowDirection="RightToLeft" Grid.Column="0" Grid.Row="1" Foreground="#FF00FF80" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,1,0,44" FontFamily="Montserrat"/>
+            <Button x:Name="btnCalculatePercentile_Gear" Content="Calculate" Grid.Column="0" Grid.Row="1" Height="20"  Width="65" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" FontWeight="Bold" FontFamily="Montserrat SemiBold" Margin="0,0,15,40" Visibility="Collapsed" Click="btnCalculatePercentile_Gear_Click"/>
+            <Button x:Name="btnClearPercentile_Gear" Content="Clear" Grid.Column="0" Grid.Row="1" Height="20"  Width="65" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="#00DDDDDD" BorderBrush="#00707070" Foreground="#FFFD6B0D" FontWeight="Bold" FontFamily="Montserrat SemiBold" Margin="0,25,15,15" Visibility="Collapsed" Click="btnClearPercentile_Gear_Click" />
+        </Grid>
+        <!-- Row 1-->
+        <WrapPanel x:Name="wpAttributeDesc" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical" Height="280" Grid.RowSpan="3" />
+        <WrapPanel x:Name="wpChkAttributes" Grid.Row="0" Grid.Column="1" Orientation="Vertical" Grid.RowSpan="2"/>
+    </Grid>
+    
+</UserControl>

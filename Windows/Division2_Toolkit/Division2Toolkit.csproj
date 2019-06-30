@@ -12,7 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
@@ -50,10 +50,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Division2Toolkit.App</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
@@ -62,8 +63,12 @@
     <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -83,12 +88,38 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ErrorLog.cs" />
-    <Compile Include="Exotic.cs" />
-    <Compile Include="Gear.cs" />
-    <Compile Include="Talent.cs" />
-    <Compile Include="Version.cs" />
-    <Compile Include="WeaponModel.cs" />
+    <Compile Include="ApplicationViewModel.cs" />
+    <Compile Include="Classes\Shared Classes\ErrorLog.cs" />
+    <Compile Include="Models\Exotic.cs" />
+    <Compile Include="Models\Gear.cs" />
+    <Compile Include="Classes\Helper Classes\ObservableObject.cs" />
+    <Compile Include="Classes\Helper Classes\RelayCommand.cs" />
+    <Compile Include="IPageViewModel.cs" />
+    <Compile Include="User Controls\ToggleButton.xaml.cs">
+      <DependentUpon>ToggleButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\GearPercentileViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
+    <Compile Include="Views\Gear\Percentiles\GearPercentile.xaml.cs">
+      <DependentUpon>GearPercentile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Talent.cs" />
+    <Compile Include="Classes\Shared Classes\Version.cs" />
+    <Compile Include="Views\Home.xaml.cs">
+      <DependentUpon>Home.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Weapons\DPS Calculator\DPSCalculator.xaml.cs">
+      <DependentUpon>DPSCalculator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\DPSCalculatorViewModel.cs" />
+    <Compile Include="Views\Weapons\Percentiles\TypeDamageWindow.xaml.cs">
+      <DependentUpon>TypeDamageWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Weapons\Percentiles\WeaponPercentile.xaml.cs">
+      <DependentUpon>WeaponPercentile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\WeaponPercentileViewModel.cs" />
+    <Compile Include="Models\WeaponModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -101,6 +132,30 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="User Controls\ToggleButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Gear\Percentiles\GearPercentile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Home.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Weapons\DPS Calculator\DPSCalculator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Weapons\Percentiles\TypeDamageWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Weapons\Percentiles\WeaponPercentile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -120,7 +175,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Assets\Data\Spreadsheets\gearsheet.csv" />
+    <None Include="Resources\Data\Spreadsheets\gearsheet.csv" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -143,16 +198,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Views\" />
+    <Resource Include="Resources\images\shd_logo_black.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\images\icon.png" />
-    <Resource Include="Assets\images\logo.png" />
-    <Resource Include="Assets\images\menu.png" />
+    <Resource Include="Resources\images\icon.png" />
+    <Resource Include="Resources\images\logo.png" />
+    <Resource Include="Resources\images\menu.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icon.ico" />
+    <Resource Include="Resources\icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
