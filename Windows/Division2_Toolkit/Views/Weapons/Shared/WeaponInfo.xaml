@@ -1,0 +1,54 @@
+﻿<Window x:Class="Division2Toolkit.Views.Weapons.Shared.WeaponInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Division2Toolkit.Views.Weapons.Shared"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        Title="WeaponInfo" Height="275" Width="650">
+
+    <DockPanel Background="#FF1E1E1E">
+        <Label x:Name="lblWeaponName" DockPanel.Dock="Top" Content="WeaponName" Background="#00000000" Foreground="#FFFD6B0F" FontSize="24" FontWeight="Bold" />
+        <Separator DockPanel.Dock="Top" Background="#FFFD6B0F" VerticalAlignment="Bottom" Margin="0" />
+
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+        
+        
+            <Label x:Name="lblCritMinMax"       Grid.Row="0" Grid.Column="0" Content="Min/Max Crit Distance" HorizontalAlignment="Left" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblOptimalRange"     Grid.Row="1" Grid.Column="0" Content="Optimal Range" HorizontalAlignment="Left" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblRPM"              Grid.Row="2" Grid.Column="0" Content="RPM" HorizontalAlignment="Left" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblMagSize"          Grid.Row="3" Grid.Column="0" Content="Magazine Size" HorizontalAlignment="Left" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblTypeBonus"        Grid.Row="4" Grid.Column="0" Content="Type Bonus" HorizontalAlignment="Left" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblHSMultiplier"     Grid.Row="0" Grid.Column="2" Content="Headshot Multiplier" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblReloadSpeed"      Grid.Row="1" Grid.Column="2" Content="Reload Speed (ms)" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblNormalizedDmg"    Grid.Row="2" Grid.Column="2" Content="Normalized Damage" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+            <Label x:Name="lblDamageRange"      Grid.Row="3" Grid.Column="2" Content="Damage Range" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat Medium"/>
+
+
+            <Label x:Name="lblCritMinMaxVal"       Grid.Row="0" Grid.Column="1" Content="{Binding Path=CritMinMax, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblOptimalRangeVal"     Grid.Row="1" Grid.Column="1" Content="{Binding Path=OptimalRange, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblRPMVal"              Grid.Row="2" Grid.Column="1" Content="{Binding Path=RPM, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblMagSizeVal"          Grid.Row="3" Grid.Column="1" Content="{Binding Path=MagSize, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblTypeBonusVal"        Grid.Row="4" Grid.Column="1" Content="{Binding Path=TypeBonus, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Top" Width="175" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblHSMultiplierVal"     Grid.Row="0" Grid.Column="3" Content="{Binding Path=HSMultiplier, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblReloadSpeedVal"      Grid.Row="1" Grid.Column="3" Content="{Binding Path=ReloadSpeed, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblNormalizedDmgVal"    Grid.Row="2" Grid.Column="3" Content="{Binding Path=NormalizedDmg, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+            <Label x:Name="lblDamageRangeVal"      Grid.Row="3" Grid.Column="3" Content="{Binding Path=DamageRangeStr, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="0,5,10,0" VerticalAlignment="Center" Width="145" Foreground="#FFFD6B0D" FontFamily="Montserrat"/>
+
+        </Grid>
+    </DockPanel>
+</Window>

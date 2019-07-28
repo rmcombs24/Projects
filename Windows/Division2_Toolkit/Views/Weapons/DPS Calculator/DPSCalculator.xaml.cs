@@ -107,7 +107,7 @@ namespace Division2Toolkit.Views
             }
             else
             {
-                MessageBox.Show("Please add an acceptable have value before adding to the compare.", "Error.", MessageBoxButton.OK);
+                MessageBox.Show("Please add an acceptable value(s) before adding to the compare.", "Error.", MessageBoxButton.OK);
             }
         }
 

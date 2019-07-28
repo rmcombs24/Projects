@@ -7,6 +7,5 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <!--<Image x:Name="imgHomeSplash" Height="400" Source="/Resources/images/shd_logo_black.jpg"/>-->
-
+    <Image x:Name="imgHomeSplash" Source="/Division2Toolkit;component/Resources/images/shd_white.png" Margin="137,22,165,58"/>
 </UserControl>

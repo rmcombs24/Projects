@@ -89,6 +89,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationViewModel.cs" />
+    <Compile Include="Classes\Helper Classes\EventHandlers.cs" />
     <Compile Include="Classes\Shared Classes\ErrorLog.cs" />
     <Compile Include="Models\Exotic.cs" />
     <Compile Include="Models\Gear.cs" />
@@ -112,14 +113,14 @@
       <DependentUpon>DPSCalculator.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\DPSCalculatorViewModel.cs" />
-    <Compile Include="Views\Weapons\Percentiles\TypeDamageWindow.xaml.cs">
-      <DependentUpon>TypeDamageWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Weapons\Percentiles\WeaponPercentile.xaml.cs">
       <DependentUpon>WeaponPercentile.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\WeaponPercentileViewModel.cs" />
     <Compile Include="Models\WeaponModel.cs" />
+    <Compile Include="Views\Weapons\Shared\WeaponInfo.xaml.cs">
+      <DependentUpon>WeaponInfo.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -148,11 +149,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Weapons\Percentiles\TypeDamageWindow.xaml">
+    <Page Include="Views\Weapons\Percentiles\WeaponPercentile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Weapons\Percentiles\WeaponPercentile.xaml">
+    <Page Include="Views\Weapons\Shared\WeaponInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -208,6 +209,8 @@
   <ItemGroup>
     <Resource Include="Resources\icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\images\shd_white.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

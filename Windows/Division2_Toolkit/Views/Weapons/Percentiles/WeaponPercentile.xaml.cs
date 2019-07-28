@@ -16,19 +16,7 @@ namespace Division2Toolkit.Views
     {
         Brush DivisionOrange = new SolidColorBrush(Color.FromArgb(100, 253, 107, 13));
 
-        private void textbox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = !IsTextAllowed(e.Text);
-        }
-
-        private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text
-
-        private static bool IsTextAllowed(string text)
-        {
-            return !_regex.IsMatch(text);
-        }
-
-        public static Dictionary<string, double> dicTypeDamage = new Dictionary<string, double>
+        private Dictionary<string, double> dicTypeDamage = new Dictionary<string, double>
         {
             ["Assault Rifle"] = 0,
             ["Pistol"] = 0,
@@ -39,48 +27,70 @@ namespace Division2Toolkit.Views
             ["MMR"] = 0
         };
 
-        private static List<WeaponModel> weaponList = WeaponModel.ReadCSV("weapons.csv");
+        private static List<WeaponModel> weaponList = WeaponModel.GetWeaponsList();
 
-
-        public WeaponPercentile()
-        {
-            InitializeComponent();
-
-            ddlFamily.ItemsSource = WeaponModel.GetWeaponFamilies(weaponList);
-            CheckBox chkTalents = new CheckBox()
-            {
-                Name = "chkTalents",
-                Content = "Weapon Talents",
-                FlowDirection = FlowDirection.RightToLeft,
-                Foreground = DivisionOrange
-            };
-
-            grpTalents.Header = chkTalents;
-
-            chkTalents.Checked += chkTalents_Checking;
-            chkTalents.Unchecked += chkTalents_Checking;
-        }
+        public static WeaponModel selectedWeapon;
 
         private void chkTalents_Checking(object sender, RoutedEventArgs e)
         {
-            if (((CheckBox)sender).IsChecked == true) { spTglTalents.IsEnabled = true; }
-            else { spTglTalents.IsEnabled = false; }
-        }
+            CheckBox chkCurrent = (CheckBox)sender;
 
-        private void LoadValues(WeaponModel selected)
-        {
-            foreach (UIElement ele in spModeVal_col_1.Children)
+            if (chkCurrent.Name == "chkMeasured" && chkMeasured.IsChecked == true)
             {
-                ((Label)ele).DataContext = selected;
+                tglMeasured.IsEnabled = true;
+
+                wrpTalentOptimist.IsEnabled = false;
+                wrpTalentUnhinged.IsEnabled = false;
+            }
+            else if (chkCurrent.Name == "chkMeasured" && chkMeasured.IsChecked == false)
+            {
+                tglMeasured.IsEnabled = false;
+                tglMeasured.isToggled = false;
+
+                wrpTalentOptimist.IsEnabled = true;
+                tglOptimist.IsEnabled = false;
+
+                wrpTalentUnhinged.IsEnabled = true;
+                tglUnhinged.IsEnabled = false;
             }
 
-            foreach (UIElement ele in spModelVal_col_3.Children)
+            if (chkCurrent.Name == "chkOptimist" && chkOptimist.IsChecked == true)
             {
-                ((Label)ele).DataContext = selected;
+                tglOptimist.IsEnabled = true;
+                wrpTalentMeasured.IsEnabled = false;
+                wrpTalentUnhinged.IsEnabled = false;
+            }
+            else if (chkCurrent.Name == "chkOptimist" && chkOptimist.IsChecked == false)
+            {
+                tglOptimist.IsEnabled = false;
+                tglOptimist.isToggled = false;
+
+                wrpTalentMeasured.IsEnabled = true;
+                tglMeasured.IsEnabled = false;
+
+                wrpTalentUnhinged.IsEnabled = true;
+                tglUnhinged.IsEnabled = false;
+            }
+
+            if (chkCurrent.Name == "chkUnhinged" && chkUnhinged.IsChecked == true)
+            {
+                tglUnhinged.IsEnabled = true;
+
+                wrpTalentOptimist.IsEnabled = false;
+                wrpTalentMeasured.IsEnabled = false;
+            }
+            else if (chkCurrent.Name == "chkUnhinged" && chkUnhinged.IsChecked == false)
+            {
+                tglUnhinged.IsEnabled = false;
+                tglUnhinged.isToggled = false;
+
+                wrpTalentOptimist.IsEnabled = true;
+                tglOptimist.IsEnabled = false;
+
+                wrpTalentMeasured.IsEnabled = true;
+                tglMeasured.IsEnabled = false;
             }
         }
-
-
         private void ddlWeaponFamilyMakeModel_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string selectedDDLValue = (((ComboBox)sender).SelectedValue != null) ? ((ComboBox)sender).SelectedValue.ToString() : string.Empty;
@@ -93,49 +103,69 @@ namespace Division2Toolkit.Views
                     ddlMake.ItemsSource = WeaponModel.GetWeaponMakesByFamily(weaponList, selectedDDLValue);
                     ddlMake.IsEnabled = true;
 
-                    spModelInfo_col_0.Visibility = Visibility.Hidden;
-                    spModelInfo_col_2.Visibility = Visibility.Hidden;
-                    spModelVal_col_3.Visibility = Visibility.Hidden;
-                    spModeVal_col_1.Visibility = Visibility.Hidden;
                     btnCalculate.Visibility = Visibility.Hidden;
                     lblCalculateRoll.Visibility = Visibility.Hidden;
                     spWeaponRoll.Visibility = Visibility.Hidden;
+                    lblUpdatedRng.Visibility = Visibility.Hidden;
 
                     break;
                 case "ddlMake":
                     ddlModel.ItemsSource = (String.IsNullOrEmpty(selectedDDLValue)) ? null : WeaponModel.GetWeaponModelsByMake(weaponList, ddlFamily.SelectedValue.ToString(), selectedDDLValue);
                     ddlModel.IsEnabled = (String.IsNullOrEmpty(selectedDDLValue)) ? false : true;
 
-                    spModelInfo_col_0.Visibility = Visibility.Hidden;
-                    spModelInfo_col_2.Visibility = Visibility.Hidden;
-                    spModelVal_col_3.Visibility = Visibility.Hidden;
-                    spModeVal_col_1.Visibility = Visibility.Hidden;
                     btnCalculate.Visibility = Visibility.Hidden;
                     lblCalculateRoll.Visibility = Visibility.Hidden;
                     spWeaponRoll.Visibility = Visibility.Hidden;
-
+                    lblUpdatedRng.Visibility = Visibility.Hidden;
                     break;
                 case "ddlModel":
 
                     if (!String.IsNullOrEmpty(selectedDDLValue))
                     {
-                        LoadValues((WeaponModel)weaponList.Where(x => x.Model == selectedDDLValue).ToArray()[0]);
-                        spModelInfo_col_0.Visibility = Visibility.Visible;
-                        spModelInfo_col_2.Visibility = Visibility.Visible;
-                        spModelVal_col_3.Visibility = Visibility.Visible;
-                        spModeVal_col_1.Visibility = Visibility.Visible;
+                        selectedWeapon = WeaponModel.GetWeaponByName(selectedDDLValue);
                         btnCalculate.Visibility = Visibility.Visible;
-                        spWeaponRoll.Visibility = Visibility.Hidden;
+                        btnWeaponInfo.Visibility = Visibility.Visible;
                     }
+
+                    spWeaponRoll.Visibility = Visibility.Hidden;
+                    lblUpdatedRng.Visibility = Visibility.Hidden;
+                    lblCalculateRoll.Visibility = Visibility.Hidden;
 
                     break;
                 default:
                     break;
             }
+        }        
+        private void btnAddItem_Click(object sender, RoutedEventArgs e)
+        {
+            string typeDmg = getTypeDamage(ddlFamily.SelectedValue.ToString()).ToString();
+            double AddlDmg = String.IsNullOrEmpty(txtAddDmg.Text) ? 0 : Convert.ToDouble(txtAddDmg.Text);
+            double bonusDmg = 1 + ((Convert.ToDouble(typeDmg) + AddlDmg)/100);
+
+            PercentileGridItem newItem = new PercentileGridItem()
+            {
+                ModelName = ddlModel.SelectedValue.ToString(),
+                Percentage = lblWeaponRoll.Content.ToString(),
+                UIDamage = String.IsNullOrEmpty(txtUIDmg.Text) ? "0" : txtUIDmg.Text,
+                AllWeaponDamage = String.IsNullOrEmpty(txtAddDmg.Text) ? "0%" : txtAddDmg.Text + "%",
+                TypeDamage = String.IsNullOrEmpty(typeDmg) ? "0%" : typeDmg + "%",
+                dmgRange = String.Format("{0}/{1}", Math.Round(selectedWeapon.DamageRange[0] * ((bonusDmg < 0) ? 1 : bonusDmg), 0),Math.Round(selectedWeapon.DamageRange[1] * ((bonusDmg < 0) ? 1 : bonusDmg), 0))
+            };
+
+            lvPercentileComp.Items.Add(newItem);
+
+            if (lvPercentileComp.Items.Count == 1)
+            {
+                btnCalculate.IsEnabled = true;
+                btnRemove.IsEnabled = true;
+                btnAdd.IsEnabled = true;
+
+                lvPercentileComp.Visibility = Visibility.Visible;
+                btnRemove.Visibility = Visibility.Visible;
+                btnCalculate.Visibility = Visibility.Visible;
+            }
         }
-
-
-        private void btnCalculatePercentile_Weapon_Click(object sender, RoutedEventArgs e)
+        private void btnCalculatePercentile_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -145,25 +175,101 @@ namespace Division2Toolkit.Views
                 // (UIdmg/(1+(AddlDmg+TypeDmg)/100)-int[0])/(int[1]-int[0])
                 // (UIdmg / (1 + (AddlDmg + TypeDmg) / 100) - intArray[0]) / (intArray[1] - intArray[0])
 
-                double UIdmg = Convert.ToDouble(txtUIDmg.Text);
+                double UIdmg =  String.IsNullOrEmpty(txtUIDmg.Text) ? 0 : Convert.ToDouble(txtUIDmg.Text);
                 double TypeDmg = getTypeDamage(ddlFamily.SelectedValue.ToString());
-                double AddlDmg = Convert.ToDouble(txtAddDmg.Text) + getTalentDamage();
-                double basedmg = (UIdmg / (1 + (AddlDmg + TypeDmg) / 100));
+                double AddlDmg = String.IsNullOrEmpty(txtAddDmg.Text) ? 0 : Convert.ToDouble(txtAddDmg.Text);
+                AddlDmg += getTalentDamage();
 
-                int[] intArray = Array.ConvertAll(lblDamageRangeVal.Content.ToString().Split('/'), el => Convert.ToInt32(el));
-                double rollPercentage = (basedmg - intArray[0]) / (intArray[1] - intArray[0]);
+                double bonusDmg =  1 + ((AddlDmg + TypeDmg) / 100);
+                double baseDmg = UIdmg / bonusDmg;
 
-                lblCalculateRoll.Content = String.Format("Top Damage for \n{0} ", ddlModel.SelectedValue.ToString());
+
+                int[] intArray = ((WeaponModel)weaponList.Where(x => x.Model == ddlModel.SelectedValue.ToString()).ToArray()[0]).DamageRange;
+
+                double rollPercentage = (baseDmg - intArray[0]) / (intArray[1] - intArray[0]);
+
+                lblCalculateRoll.Text = String.Format("{0} roll percentage", ddlModel.SelectedValue.ToString());
                 lblCalculateRoll.Visibility = Visibility.Visible;
 
                 spWeaponRoll.Visibility = Visibility.Visible;
                 prgWeaponRoll.Value = Math.Round(rollPercentage * 100, 2);
                 lblWeaponRoll.Content = String.Format("{0}%", prgWeaponRoll.Value);
+                lblUpdatedRng.Content = String.Format("Damage Range:\n{0}/{1}", Math.Round(selectedWeapon.DamageRange[0] * ((bonusDmg < 0) ? 1 : bonusDmg), 0), Math.Round(selectedWeapon.DamageRange[1] * ((bonusDmg < 0) ? 1 : bonusDmg), 0));
+
+                btnAdd.Visibility = Visibility.Visible;
+                btnRemove.Visibility = Visibility.Visible;
+                lblUpdatedRng.Visibility = Visibility.Visible;
             }
             catch (FormatException ex)
             {
                 MessageBox.Show("Please enter values before calculating", "Error", MessageBoxButton.OK);
             }
+        }
+        private void btnCloseSections_Click(object sender, RoutedEventArgs e)
+        {
+            Button currentButton = (Button)sender;
+
+            if (currentButton.Name == "btnTypeClose")
+            {
+                updateTypes();
+            }
+
+            dpTypeDamage.Visibility = Visibility.Collapsed;
+            dpTalents.Visibility = Visibility.Collapsed;
+
+            btnTypeOpen.Visibility = Visibility.Visible;
+            btnTalentsOpen.Visibility = Visibility.Visible;
+        }
+        private void btnOpenWeaponTalents_Click(object sender, RoutedEventArgs e)
+        {
+            ((Button)sender).Visibility = Visibility.Collapsed;
+            btnTypeOpen.Visibility = Visibility.Collapsed;
+            dpTalents.Visibility = Visibility.Visible;
+        }
+        private void btnOpenWeaponInfo_Click(object sender, RoutedEventArgs e)
+        {
+            Weapons.Shared.WeaponInfo wiWindow = new Weapons.Shared.WeaponInfo();
+            wiWindow.Show();
+        }
+        private void btnOpenWeaponTypes_Click(object sender, RoutedEventArgs e)
+        {
+            ((Button)sender).Visibility = Visibility.Collapsed;
+            btnTalentsOpen.Visibility = Visibility.Collapsed;
+
+            dpTypeDamage.Visibility = Visibility.Visible;
+        } 
+        private void btnRemoveItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (lvPercentileComp.HasItems)
+            {
+                if (lvPercentileComp.SelectedItem != null)
+                {
+                    lvPercentileComp.Items.RemoveAt(lvPercentileComp.SelectedIndex);
+
+                    if (!lvPercentileComp.HasItems)
+                    {
+                        //lvPercentileComp.IsEnabled = false;
+                        //btnDPSCalc_Clear.IsEnabled = false;
+                        btnRemove.IsEnabled = false;
+                        if (ddlModel.SelectedValue == null) { btnAdd.IsEnabled = false; }
+
+                        //btnDPSCalc_Clear.Visibility = Visibility.Collapsed;
+                        btnRemove.Visibility = Visibility.Collapsed;
+                        btnCalculate.Visibility = Visibility.Collapsed;
+                        lvPercentileComp.Visibility = Visibility.Collapsed;
+                    }
+                }
+
+                lvPercentileComp.Items.Refresh();
+            }
+        }
+        private void txtTypeDamage_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            updateTypes();
+        }
+        private void textbox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = Classes.Helper_Classes.EventHandlers.IsTextAllowed(e.Text);
         }
 
         private double getTypeDamage(string WeaponFamily)
@@ -200,82 +306,51 @@ namespace Division2Toolkit.Views
 
             return TypeDamage;
         }
-
         private double getTalentDamage()
         {
             double allWeaponDamage = 0;
-            if (spTglTalents.IsEnabled)
+
+            if (chkMeasured.IsChecked == true)
             {
                 if (tglMeasured.isToggled && tglMeasured.IsEnabled) { allWeaponDamage = 30; }
                 else if (!tglMeasured.isToggled && tglMeasured.IsEnabled) { allWeaponDamage = -15; }
+            }
 
+            if (chkOptimist.IsChecked == true)
+            {
                 if (tglOptimist.isToggled && tglOptimist.IsEnabled) { allWeaponDamage = 30; }
                 else if (tglOptimist.isToggled && tglOptimist.IsEnabled) { allWeaponDamage = 0; }
+            }
 
+            if (chkUnhinged.IsChecked == true)
+            {
                 if (tglUnhinged.isToggled && tglUnhinged.IsEnabled) { allWeaponDamage = 20; }
                 else if (tglUnhinged.isToggled && tglUnhinged.IsEnabled) { allWeaponDamage = 0; }
             }
-            else { allWeaponDamage = 0; }
+
+            if (chkUnhinged.IsChecked == false && chkOptimist.IsChecked == false && chkMeasured.IsChecked == false) { allWeaponDamage = 0; }
 
             return allWeaponDamage;
         }
-
-        private void btnOpenWeaponTypes_Click(object sender, RoutedEventArgs e)
+        private void updateTypes()
         {
-            Window window = new Weapons.Percentiles.TypeDamageWindow();
-
-            window.ShowDialog();
+            dicTypeDamage["Assault Rifle"] = String.IsNullOrEmpty(txtARDmg.Text) ? 0 : Convert.ToDouble(txtARDmg.Text);
+            dicTypeDamage["Pistol"] = String.IsNullOrEmpty(txtPistolDmg.Text) ? 0 : Convert.ToDouble(txtPistolDmg.Text);
+            dicTypeDamage["Rifle"] = String.IsNullOrEmpty(txtRifleDmg.Text) ? 0 : Convert.ToDouble(txtRifleDmg.Text);
+            dicTypeDamage["Shotgun"] = String.IsNullOrEmpty(txtShotgunDmg.Text) ? 0 : Convert.ToDouble(txtShotgunDmg.Text);
+            dicTypeDamage["SMG"] = String.IsNullOrEmpty(txtSMGDmg.Text) ? 0 : Convert.ToDouble(txtSMGDmg.Text);
+            dicTypeDamage["LMG"] = String.IsNullOrEmpty(txtLMGDmg.Text) ? 0 : Convert.ToDouble(txtLMGDmg.Text);
+            dicTypeDamage["MMR"] = String.IsNullOrEmpty(txtMMRDmg.Text) ? 0 : Convert.ToDouble(txtMMRDmg.Text);
+        }
+        private struct PercentileGridItem
+        {
+            public string ModelName { get; set; }
+            public string Percentage { get; set; }
+            public string AllWeaponDamage { get; set; }
+            public string TypeDamage { get; set; }
+            public string UIDamage { get; set; }
+            public string dmgRange { get; set; }
         }
 
-        private void tglMeasured_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (tglMeasured.isToggled)
-            {
-                tglUnhinged.IsEnabled = false;
-                tglUnhinged.isToggled = false;
-
-                tglOptimist.IsEnabled = false;
-                tglOptimist.isToggled = false;
-            }
-            else if (!tglMeasured.isToggled)
-            {
-                tglUnhinged.IsEnabled = true;
-                tglOptimist.IsEnabled = true;
-            }
-        }
-
-        private void tglOptimist_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (tglOptimist.isToggled)
-            {
-                tglMeasured.IsEnabled = false;
-                tglMeasured.isToggled = false;
-
-                tglUnhinged.IsEnabled = false;
-                tglUnhinged.isToggled = false;
-            }
-            else if (!tglOptimist.isToggled)
-            {
-                tglMeasured.IsEnabled = true;
-                tglUnhinged.IsEnabled = true;
-            }
-        }
-
-        private void tglUnhinged_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (tglUnhinged.isToggled)
-            {
-                tglMeasured.IsEnabled = false;
-                tglMeasured.isToggled = false;
-
-                tglOptimist.IsEnabled = false;
-                tglOptimist.isToggled = false;
-            }
-            else if (!tglUnhinged.isToggled)
-            {
-                tglMeasured.IsEnabled = true;
-                tglOptimist.IsEnabled = true;
-            }
-        }
     }
 }

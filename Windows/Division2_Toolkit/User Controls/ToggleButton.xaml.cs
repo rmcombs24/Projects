@@ -13,7 +13,7 @@ namespace ToggleSwitch
         Thickness LeftSide = new Thickness(-39, 0, 0, 0);
         Thickness RightSide = new Thickness(0, 0, -39, 0);
         SolidColorBrush Off = new SolidColorBrush(Color.FromRgb(160, 160, 160));
-        SolidColorBrush On = new SolidColorBrush(Color.FromRgb(253, 107, 13));
+        SolidColorBrush On = new SolidColorBrush(Color.FromRgb(150, 230, 120));
         private bool Toggled = false;
 
         public ToggleButton()

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Division2Toolkit
 {
-    class WeaponModel
+    public class WeaponModel
     {
         public string Family { get; set; }
         public string Make { get; set; }
@@ -44,6 +44,10 @@ namespace Division2Toolkit
             TypeBonus = typeBonus; 
             DamageRange = Array.ConvertAll(damageRange.Replace(" - ", ";").Split(';'), int.Parse);
             isExotic = false;
+        }
+
+        public WeaponModel()
+        {
         }
 
         public static List<WeaponModel> ReadCSV(string fileName)
@@ -115,6 +119,17 @@ namespace Division2Toolkit
         public static List<string> GetWeaponModelsByMake(List<WeaponModel> weaponsList, string currentFamily, string currentMake)
         {
             return weaponsList.Where(x => (x.Make == currentMake) && (x.Family == currentFamily)).Select(o => o.Model).Distinct().ToList();
+        }
+
+        public static WeaponModel GetWeaponByName(string WeaponName)
+        {
+            WeaponModel wm = GetWeaponsList().Where(x => x.Model == WeaponName).FirstOrDefault();
+            return wm;
+        }
+
+        public static List<WeaponModel> GetWeaponsList()
+        {
+              return ReadCSV("weapons.csv");
         }
     }
 }
