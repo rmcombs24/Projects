@@ -14,6 +14,13 @@ namespace Division2Toolkit.Views
     /// </summary>
     public partial class WeaponPercentile : UserControl
     {
+        public WeaponPercentile()
+        {
+            InitializeComponent();
+
+            ddlFamily.ItemsSource = WeaponModel.GetWeaponFamilies(weaponList);
+        }
+
         Brush DivisionOrange = new SolidColorBrush(Color.FromArgb(100, 253, 107, 13));
 
         private Dictionary<string, double> dicTypeDamage = new Dictionary<string, double>
